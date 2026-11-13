@@ -1,4 +1,4 @@
-    @if($accounting && $invoice->owner_id && (in_array($workflow,['read','disputed'],true) || ($workflow === null && !$invoice->settled_at)))
+    @if($accounting && $invoice->owner_id && $invoice->owner_id !== auth()->id() && (in_array($workflow,['read','disputed'],true) || ($workflow === null && !$invoice->settled_at)))
         <form method="POST" action="{{route('expenses.workflow',$invoice)}}" data-form-draft="false" class="exp-workflow-fields">
             @csrf
             @isset($tab)<input type="hidden" name="from_list" value="1"><input type="hidden" name="tab" value="{{ $tab }}">@endisset

@@ -2,7 +2,7 @@
 @section('page-title','Rozliczenia faktur')
 @section('content')
 @include('expenses.style')
-<div class="exp-head"><div><h1>Rozliczenia faktur</h1><p class="exp-muted">Zgłoszenia zakupów i faktury wybrane przez księgowość do rozpoznania.</p></div><a class="exp-btn primary" href="{{route('expenses.create')}}">+ Dodaj zakup / fakturę</a></div>
+<div class="exp-head"><div><h1>Rozliczenia faktur</h1><p class="exp-muted">Zgłoszenia zakupów i faktury wybrane przez księgowość do rozpoznania.</p></div>@if($tab === 'all' && $accounting)<a class="exp-btn primary" href="{{route('expenses.create', ['accounting_entry' => 1])}}">+ Dodaj fakturę jako księgowość</a>@else<a class="exp-btn primary" href="{{route('expenses.create')}}">+ Dodaj zakup / fakturę</a>@endif</div>
 @if(session('success'))<div class="exp-message">{{session('success')}}</div>@endif
 <nav class="exp-tabs" aria-label="Rejestry faktur">
 <a class="exp-btn {{$tab==='own'?'active':''}}" href="{{route('expenses.index')}}">Moje faktury</a>

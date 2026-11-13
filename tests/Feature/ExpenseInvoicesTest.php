@@ -91,7 +91,7 @@ test('accounting publishes only chosen invoices and claiming atomically hides th
     $finance = expenseUser(true);
     $first = expenseUser();
     $second = expenseUser();
-    $this->actingAs($finance)->post(route('expenses.store'), expenseData(['owner_id' => null, 'accounting_note' => 'Poufne księgowość']))->assertSessionHasNoErrors();
+    $this->actingAs($finance)->post(route('expenses.store'), expenseData(['accounting_entry' => 1, 'owner_id' => null, 'accounting_note' => 'Poufne księgowość']))->assertSessionHasNoErrors();
     $invoice = ExpenseInvoice::firstOrFail();
     expect($invoice->is_unassigned)->toBeTrue()->and($invoice->owner_id)->toBeNull();
     foreach ([$first, $second] as $employee) {
@@ -232,7 +232,7 @@ test('repeated identical photos reuse the extraction and daily budget blocks new
 test('manual buyers remain private to accounting and are preserved during editing', function () {
     $finance = expenseUser(true);
     $employee = expenseUser();
-    $this->actingAs($finance)->post(route('expenses.store'), expenseData(['owner_mode' => 'manual', 'owner_name' => 'Kupujący spoza bazy']))->assertSessionHasNoErrors();
+    $this->actingAs($finance)->post(route('expenses.store'), expenseData(['accounting_entry' => 1, 'owner_mode' => 'manual', 'owner_name' => 'Kupujący spoza bazy']))->assertSessionHasNoErrors();
     $invoice = ExpenseInvoice::firstOrFail();
     expect($invoice->owner_id)->toBeNull()->and($invoice->owner_name)->toBe('Kupujący spoza bazy')->and($invoice->is_unassigned)->toBeFalse();
     $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('Kupujący spoza bazy')->assertSee('Wpisz ręcznie');
@@ -244,8 +244,9 @@ test('manual buyers remain private to accounting and are preserved during editin
 
 test('accounting closes invoices through payment status with inline validation and revision protection', function () {
     $finance = expenseUser(true);
-    $invoice = expenseRecord($finance);
-    $data = expenseData(['revision' => 1, 'owner_mode' => 'user', 'owner_id' => $finance->id, 'payment_status' => 'settled']);
+    $buyer = expenseUser();
+    $invoice = expenseRecord($buyer);
+    $data = expenseData(['revision' => 1, 'owner_mode' => 'user', 'owner_id' => $buyer->id, 'payment_status' => 'settled']);
     $this->actingAs($finance)->from(route('expenses.edit', $invoice))->put(route('expenses.update', $invoice), $data)
         ->assertRedirect(route('expenses.edit', $invoice))->assertSessionHasErrors(['gross_amount', 'payment_method', 'payment_source', 'paid_by']);
     expect($invoice->fresh()->settled_at)->toBeNull();
@@ -345,7 +346,7 @@ test('accounting can publish a simple invoice and remove it from the pool by ass
         'invoice_number' => 'SIMPLE-POOL',
     ];
 
-    $this->actingAs($accountant)->post(route('expenses.store'), $data)->assertSessionHasNoErrors();
+    $this->actingAs($accountant)->post(route('expenses.store'), $data + ['accounting_entry' => 1])->assertSessionHasNoErrors();
     $invoice = ExpenseInvoice::sole();
     expect($invoice->is_unassigned)->toBeTrue()->and($invoice->owner_id)->toBeNull();
 
@@ -404,4 +405,43 @@ test('accounting can mark a new invoice as read from the list', function () {
     $this->post(route('expenses.workflow', $invoice), $action)->assertRedirect(route('expenses.index', ['tab' => 'all']));
     expect($invoice->fresh()->workflow_status)->toBe('read');
     $this->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertSee('data-gross="123.45"', false);
+});
+
+test('accounting entry is explicit and an accountant who claims acts as the employee', function () {
+    $finance = expenseUser(true);
+    $employee = expenseUser();
+    $data = [
+        'simple_entry' => 1,
+        'purchase_date' => today()->toDateString(),
+        'gross_amount' => '123.45',
+        'paid_by' => '',
+    ];
+    $this->actingAs($employee)->post(route('expenses.store'), $data + ['accounting_entry' => 1])->assertForbidden();
+    $this->actingAs($finance)->get(route('expenses.index', ['tab' => 'all']))->assertSee('Dodaj fakturę jako księgowość');
+    $this->get(route('expenses.create'))->assertOk()->assertDontSee('name="owner_mode"', false)
+        ->assertSee('list="expense-payers"', false)->assertSee($employee->name);
+    $this->post(route('expenses.store'), $data + ['payment_choice' => 'personal'])->assertRedirect(route('expenses.index'));
+    $personal = ExpenseInvoice::sole();
+    expect($personal->owner_id)->toBe($finance->id)->and($personal->paid_by)->toBeNull();
+
+    $this->post(route('expenses.store'), $data + ['accounting_entry' => 1])->assertRedirect(route('expenses.index', ['tab' => 'all']));
+    $pool = ExpenseInvoice::where('is_unassigned', true)->sole();
+    expect($pool->payment_status)->toBe('unknown')->and($pool->paid_by)->toBeNull();
+    $this->post(route('expenses.claim', $pool), ['confirm' => 1])->assertRedirect(route('expenses.edit', $pool));
+    $this->get(route('expenses.edit', $pool))->assertOk()->assertDontSee('Rozlicz fakturę')->assertDontSee('name="owner_mode"', false);
+    expect($pool->fresh()->workflow_status)->toBe('new');
+
+    $pool->forceFill(['workflow_status' => 'read'])->save();
+    $this->post(route('expenses.workflow', $pool), [
+        'action' => 'settled',
+        'revision' => $pool->fresh()->revision,
+        'settlement_amount' => '123.45',
+        'settlement_method' => 'refund',
+    ])->assertForbidden();
+    $this->put(route('expenses.update', $pool), array_replace($data, [
+        'revision' => $pool->fresh()->revision,
+        'payment_choice' => 'personal',
+        'paid_by' => 'Osoba spoza systemu',
+    ]))->assertSessionHasNoErrors();
+    expect($pool->fresh()->paid_by)->toBe('Osoba spoza systemu');
 });

@@ -103,6 +103,8 @@ class ExpenseInvoiceController extends Controller
     {
         $this->access($request->user());
 
+        abort_if($request->boolean('accounting_entry') && ! $this->accounting($request->user()), 403);
+
         return $this->form($request, new ExpenseInvoice(['purchase_date' => today(), 'payment_method' => 'unknown', 'payment_source' => 'unknown', 'payment_status' => 'unknown']));
     }
 
@@ -118,11 +120,11 @@ class ExpenseInvoiceController extends Controller
         $this->access($request->user());
         abort_unless($this->visible($request->user())->whereKey($invoice->id)->exists(), 404);
 
-        if ($request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && ! $request->session()->has('support_user_preview')
+        if ($request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && $invoice->owner_id !== $request->user()->id && ! $request->session()->has('support_user_preview')
             && ! str_contains($request->header('Sec-Purpose', '').$request->header('Purpose', ''), 'prefetch')) {
             DB::transaction(function () use ($request, &$invoice): void {
                 $invoice = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
-                if ($invoice->workflow_status === 'new') {
+                if ($invoice->workflow_status === 'new' && $invoice->owner_id !== $request->user()->id) {
                     $invoice->recordWorkflow('read', $request->user());
                     $invoice->revision++;
                     $invoice->save();
@@ -137,10 +139,12 @@ class ExpenseInvoiceController extends Controller
     {
         $accounting = $this->accounting($request->user());
         $editable = ! $invoice->settled_at && ($accounting || ! $invoice->exists || $invoice->owner_id === $request->user()->id);
-        $employees = $accounting ? User::where('is_active', true)->whereHas('roles')->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get(['id', 'name']) : collect();
+        $accountingEntry = ! $invoice->exists && $request->boolean('accounting_entry');
+        $manageOwner = $accountingEntry || ($invoice->exists && $accounting && $invoice->owner_id !== $request->user()->id);
+        $employees = User::where('is_active', true)->whereHas('roles')->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get(['id', 'name']);
         $projects = $this->expenseProjects($request->user())->orderBy('name')->get(['id', 'name', 'number']);
 
-        return view('expenses.form', compact('invoice', 'accounting', 'editable', 'employees', 'projects'));
+        return view('expenses.form', compact('invoice', 'accounting', 'editable', 'employees', 'projects', 'accountingEntry', 'manageOwner'));
     }
 
     private function expenseProjects(User $user): Builder
@@ -160,6 +164,8 @@ class ExpenseInvoiceController extends Controller
     private function simpleData(Request $request, ?ExpenseInvoice $invoice): array
     {
         $user = $request->user();
+        $accountingEntry = ! $invoice && $request->boolean('accounting_entry');
+        $optionalPayment = $accountingEntry || $invoice?->payment_status === 'unknown';
         $data = $request->validate([
             'purchase_date' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'],
             'invoice_number' => ['nullable', 'string', 'max:255'],
@@ -167,7 +173,7 @@ class ExpenseInvoiceController extends Controller
             'paid_by' => ['nullable', 'string', 'max:255'],
             'project_id' => ['nullable', 'integer'],
             'cost_center' => ['nullable', 'string', 'max:255'],
-            'payment_choice' => ['required', Rule::in($invoice && ! $invoice->simple_entry ? ['personal', 'company', 'unpaid', 'unchanged'] : ['personal', 'company', 'unpaid'])],
+            'payment_choice' => [$optionalPayment ? 'nullable' : 'required', Rule::in($invoice && ! $invoice->simple_entry ? ['personal', 'company', 'unpaid', 'unchanged'] : ['personal', 'company', 'unpaid'])],
             'description' => ['nullable', 'string', 'max:5000'],
         ]);
         $projectId = $data['project_id'] ?? null;
@@ -180,19 +186,27 @@ class ExpenseInvoiceController extends Controller
         } elseif ($projectId) {
             $data['cost_center'] = $invoice->cost_center;
         }
-        $choice = $data['payment_choice'];
+        $choice = $data['payment_choice'] ?? null;
         unset($data['payment_choice']);
         $data['simple_entry'] = $choice !== 'unchanged';
         $data['project_id'] = $projectId;
         if ($choice !== 'unchanged') {
-            $data['payment_source'] = $choice === 'unpaid' ? 'unknown' : $choice;
-            $data['payment_status'] = $choice === 'unpaid' ? 'unpaid' : 'paid';
-            $data['paid_by'] = $choice === 'unpaid' ? null : ($data['paid_by'] ?? $invoice?->paid_by ?? $user->name);
+            $data['payment_source'] = in_array($choice, ['personal', 'company'], true) ? $choice : 'unknown';
+            $data['payment_status'] = match ($choice) {
+                null => 'unknown',
+                'unpaid' => 'unpaid',
+                default => 'paid',
+            };
         }
-        if (! $invoice && $this->accounting($user)) {
+        if ($choice === 'unpaid') {
+            $data['paid_by'] = null;
+        } elseif (! array_key_exists('paid_by', $data) && ! $invoice && ! $accountingEntry) {
+            $data['paid_by'] = $user->name;
+        }
+        if ($accountingEntry) {
             $request->mergeIfMissing(['owner_mode' => 'pool']);
         }
-        if ($this->accounting($user) && $request->has('owner_mode')) {
+        if (($accountingEntry || ($invoice && $this->accounting($user) && $invoice->owner_id !== $user->id)) && $request->has('owner_mode')) {
             $ownerData = $request->validate([
                 'owner_mode' => ['required', Rule::in(['user', 'manual', 'pool'])],
                 'owner_id' => ['nullable', 'required_if:owner_mode,user', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at')->where('is_active', true)],
@@ -216,6 +230,8 @@ class ExpenseInvoiceController extends Controller
         if ($request->boolean('simple_entry') || $invoice?->simple_entry) {
             return $this->simpleData($request, $invoice);
         }
+        $user = $request->user();
+        $manageOwner = $this->accounting($user) && ($invoice ? $invoice->owner_id !== $user->id : $request->boolean('accounting_entry'));
         $rules = [
             'purchase_date' => ['required', 'date_format:Y-m-d', 'before_or_equal:today'], 'invoice_number' => ['nullable', 'string', 'max:255'],
             'ksef_number' => ['nullable', 'string', 'max:100', Rule::unique('expense_invoices', 'ksef_number')->ignore($invoice?->id)], 'wz_number' => ['nullable', 'string', 'max:255'],
@@ -234,14 +250,14 @@ class ExpenseInvoiceController extends Controller
         if ($invoice) {
             $rules['revision'] = ['required', 'integer', 'min:1'];
         }
-        if ($this->accounting($request->user())) {
+        if ($manageOwner) {
             $rules['owner_mode'] = ['nullable', Rule::in(['user', 'manual', 'pool'])];
             $rules['owner_name'] = ['nullable', 'string', 'max:255', 'required_if:owner_mode,manual'];
             $rules['owner_id'] = ['nullable', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at')->where('is_active', true)];
             $rules['accounting_note'] = ['nullable', 'string', 'max:5000'];
         }
         $data = $request->validate($rules);
-        if ($this->accounting($request->user())) {
+        if ($manageOwner) {
             $mode = $data['owner_mode'] ?? (! empty($data['owner_id']) ? 'user' : 'pool');
             if ($mode === 'user') {
                 $request->validate(['owner_id' => ['required', 'integer']]);
@@ -258,6 +274,7 @@ class ExpenseInvoiceController extends Controller
         }
         if ($data['payment_status'] === 'settled') {
             abort_unless($this->accounting($request->user()), 403);
+            abort_if($invoice && ($invoice->owner_id === $request->user()->id || ($data['owner_id'] ?? null) === $request->user()->id), 403);
             if (! $invoice || $invoice->workflow_status !== null) {
                 throw ValidationException::withMessages(['payment_status' => 'Użyj przycisku „Rozlicz fakturę”.']);
             }
@@ -286,11 +303,12 @@ class ExpenseInvoiceController extends Controller
     public function store(Request $request)
     {
         $this->access($request->user());
+        abort_if($request->boolean('accounting_entry') && ! $this->accounting($request->user()), 403);
         $invoice = new ExpenseInvoice($this->data($request) + ['created_by' => $request->user()->id]);
         $invoice->recordWorkflow('new', $request->user());
         $invoice->save();
 
-        return redirect()->route('expenses.index')->with('success', 'Zakup został zapisany.');
+        return redirect()->route('expenses.index', $request->boolean('accounting_entry') ? ['tab' => 'all'] : [])->with('success', 'Zakup został zapisany.');
     }
 
     public function update(Request $request, ExpenseInvoice $invoice)
@@ -334,6 +352,7 @@ class ExpenseInvoiceController extends Controller
         $request->validate(['confirm' => ['required', 'accepted'], 'revision' => ['required', 'integer']]);
         DB::transaction(function () use ($invoice, $request): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
+            abort_if($current->owner_id === $request->user()->id, 403);
             abort_unless($current->workflow_status === null, 409, 'Użyj nowego obiegu rozliczenia.');
             abort_unless($current->owner_id && ! $current->is_unassigned && ! $current->settled_at && $current->revision === (int) $request->input('revision'), 409, 'Faktura jest nieprzypisana, rozliczona lub została zmieniona.');
             abort_unless($current->gross_amount !== null && $current->payment_status !== 'unknown' && $current->payment_method !== 'unknown' && $current->payment_source !== 'unknown' && filled($current->paid_by), 422, 'Uzupełnij kwotę brutto, status i sposób płatności, źródło środków oraz osobę płacącą.');
@@ -360,7 +379,7 @@ class ExpenseInvoiceController extends Controller
 
         DB::transaction(function () use ($invoice, $user, $action, $forAccounting, $data): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
-            abort_unless($forAccounting || $current->owner_id === $user->id, 403);
+            abort_unless($forAccounting ? $current->owner_id !== $user->id : $current->owner_id === $user->id, 403);
             abort_unless($current->revision === (int) $data['revision'], 409, 'Faktura została zmieniona. Odśwież stronę.');
             abort_unless($action === 'read' || ($current->owner_id && ! $current->is_unassigned), 409, 'Najpierw przypisz fakturę do pracownika.');
             $allowed = match ($action) {
