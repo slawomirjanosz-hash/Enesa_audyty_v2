@@ -67,7 +67,7 @@ test('training decks are displayed inside their own ISO clause on full pages', f
     $dom = new DOMDocument;
     $dom->loadHTML('<?xml encoding="utf-8" ?>'.$response->getContent(), LIBXML_NOERROR | LIBXML_NOWARNING);
     $xpath = new DOMXPath($dom);
-    foreach (['4-1', '4-2', '4-3'] as $section) {
+    foreach (['4-1', '4-2', '4-3', '4-4'] as $section) {
         $deck = IsoPresentation::where('section_id', $section)->firstOrFail();
         $cards = $xpath->query('//section[@data-iso-panel="'.$section.'"]//article[@data-presentation-title]');
         expect($cards->length)->toBe(1, 'Presentation missing from clause '.$section.' in '.$view);
@@ -102,7 +102,7 @@ test('client can view slides only through an owned audit with ISO assigned', fun
     $this->actingAs($client)->get(route('audit-types.presentations.slide', [$type, $presentation, 1]))->assertForbidden();
     $this->post(route('audit-types.presentations.store', $type), ['section_id' => '4-1', 'title' => 'Nie', 'presentation_file' => presentationFixture()])->assertForbidden();
     $this->delete(route('audit-types.presentations.destroy', [$type, $presentation]))->assertForbidden();
-})->with(['4-1', '4-2', '4-3']);
+})->with(['4-1', '4-2', '4-3', '4-4']);
 
 test('training migration adds a complete deck without replacing existing presentations', function (string $section, string $migrationFile) {
     $deck = IsoPresentation::where('section_id', $section)->firstOrFail();
@@ -138,6 +138,7 @@ test('training migration adds a complete deck without replacing existing present
 })->with([
     ['4-2', '2026_11_13_140000_add_iso_stakeholder_presentation.php'],
     ['4-3', '2026_11_13_150000_add_iso_scope_presentation.php'],
+    ['4-4', '2026_11_13_160000_add_iso_system_presentation.php'],
 ]);
 
 test('authorized manager uploads edits and replaces presentation and failed conversion keeps previous slides', function () {

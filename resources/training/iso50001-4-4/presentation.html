@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>4.4 System zarządzania energią — ENESA</title>
+<style>
+/* Editable slide master. The platform serves only the rendered PNG slides. */
+:root{--navy:#0d2536;--teal:#0099a5;--lime:#99c93c;--blue:#28a8d1;--muted:#526571;--paper:#f4f8fa;--line:#d9e4e9}
+*{box-sizing:border-box}body{margin:0;background:#dce4e8;color:var(--navy);font-family:Calibri,"Segoe UI",Arial,sans-serif}
+.slide{position:relative;width:1280px;height:720px;margin:0;overflow:hidden;background:var(--paper);padding:46px 54px 62px;page-break-after:always}
+.slide.dark{background:var(--navy);color:white}.eyebrow{margin:0 0 10px;color:var(--teal);font-size:15px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase}.dark .eyebrow{color:#48ced7}
+h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.6px}h2{font-size:38px;line-height:1.13;margin:0 0 12px;max-width:1060px}h3{font-size:26px;line-height:1.12;margin:0 0 12px}p{font-size:23px;line-height:1.3;margin:0 0 14px}.lead{font-size:26px;max-width:1040px;color:var(--muted)}.dark .lead{color:#c1d8e6}.small{font-size:19px}.muted{color:var(--muted)}.dark .muted{color:#b8d0df}.teal{color:var(--teal)}.lime{color:var(--lime)}
+.logo{position:absolute;right:43px;top:14px;width:82px;text-align:center;line-height:1}.logo img{display:block;width:69px;height:69px;object-fit:contain;margin:0 auto 2px}.logo b{font-family:Arial,sans-serif;font-size:15px;letter-spacing:2px;color:#68a729}.dark .logo b{color:#a4cb42}
+footer{position:absolute;left:54px;right:54px;bottom:23px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#637783;letter-spacing:.35px}.dark footer{color:#adc2ce}.ref{position:absolute;left:54px;right:54px;bottom:48px;font-size:14px;color:#536c7a}.dark .ref{color:#b3cbd9}
+.content{margin-top:30px}.grid{display:grid;gap:22px}.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.four{grid-template-columns:repeat(4,1fr)}.card{background:white;border:1px solid var(--line);border-radius:9px;padding:25px 27px}.dark .card{background:#16384f;border-color:#28516a}.card p:last-child{margin-bottom:0}.card.accent{border-top:5px solid var(--teal)}.card.green{border-top:5px solid var(--lime)}.label{display:block;margin-bottom:12px;font-size:15px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);font-weight:700}.dark .label{color:#4bd0d9}.number{display:inline-grid;place-items:center;background:var(--teal);color:white;min-width:39px;height:34px;border-radius:6px;font-size:20px;font-weight:700;margin-right:14px}.banner{padding:20px 26px;background:var(--navy);color:white;border-radius:8px;font-size:25px;font-weight:700;line-height:1.25}.dark .banner{background:#16384f}.row{display:flex;align-items:center;gap:20px}.stack{display:grid;gap:15px}.pill{display:inline-block;background:#e6f4f4;color:#007f88;padding:6px 12px;border-radius:5px;font-size:18px;font-weight:700}.bullet{padding-left:20px;position:relative}.bullet:before{content:"";position:absolute;left:0;top:11px;width:7px;height:7px;border-radius:50%;background:var(--teal)}.flow{display:flex;gap:16px;align-items:stretch}.flow>div{flex:1}.arrow{flex:0 0 28px!important;align-self:center;color:var(--teal);font-size:36px;text-align:center}.outline{border:2px solid var(--teal);border-radius:9px;padding:24px}.kicker{font-size:78px;line-height:1;font-weight:700;color:var(--teal)}.compact p{font-size:21px}.qa{display:grid;grid-template-columns:52px 1fr 1fr;gap:15px;align-items:center;background:white;border:1px solid var(--line);border-radius:7px;padding:17px 21px}.qa p{font-size:22px;margin:0}.qa .answer{color:var(--muted);font-size:20px}.qa .number{margin:0}.source{font-size:18px;line-height:1.4;color:#c6dce8}
+.slide[data-slide="15"] .qa{padding:13px 21px}
+@media print{body{background:white}.slide{margin:0}@page{size:1280px 720px;margin:0}}
+
+.boundary-layout{display:grid;grid-template-columns:1.65fr 1fr;gap:24px;margin-top:28px}.boundary{border:3px solid var(--teal);border-radius:10px;padding:23px;background:#ebf7f7}.map-box{background:white;border:1px solid #c7dcdf;border-radius:6px;text-align:center;padding:16px 8px;font-size:23px;font-weight:700;display:grid;place-items:center;min-height:85px}.energy-line{background:var(--navy);color:white;border-radius:6px;font-size:22px;text-align:center;margin-top:20px;padding:16px}.energy-chart{display:flex;height:45px;border-radius:7px;overflow:hidden;margin-top:30px}.slide[data-slide="11"] .card,.slide[data-slide="12"] .card{padding:19px 24px}.slide[data-slide="14"] .qa{padding:13px 21px}
+
+.slide[data-slide="3"] .card{padding:20px 25px}.slide[data-slide="3"] .card p{font-size:21px}.slide[data-slide="3"] .small{font-size:18px}.slide[data-slide="5"] .qa{padding:10px 21px}.slide[data-slide="5"] .qa p{font-size:20px}.slide[data-slide="5"] .qa .answer{font-size:19px}.slide[data-slide="11"] .qa{padding:10px 21px}
+</style>
+</head>
+<body>
+<section class="slide dark" data-slide="1">
+ <p class="eyebrow">Moduł 1 / Punkt 4.4</p>
+ <h1 style="margin-top:22px;max-width:1000px">Jak działa nasz<br>system zarządzania energią?</h1>
+ <p class="lead">Procesy, przepływ informacji i odpowiedzialność</p>
+ <div class="grid" style="grid-template-columns:.7fr 1.4fr;margin-top:38px;align-items:center">
+  <div class="card" style="text-align:center"><span style="font-size:100px;line-height:1;font-weight:700;color:#46ced8">3</span><p style="margin:15px 0 0">miesiące bez koordynatora</p></div>
+  <div><h3 style="font-size:33px">Kto odbierze alarm,<br>podejmie decyzję i sprawdzi efekt?</h3><p>W punkcie 4.4 opisujesz, jak firma zarządza energią w codziennej pracy.</p><p class="lime"><b>Odpowiedzialności i zastępstwa mają działać w praktyce.</b></p></div>
+ </div>
+ <div class="ref">Test ciągłości na podstawie książki Bronisława Pytla, „Energia pod kontrolą”, tom 2, s. 30–33.</div>
+</section>
+
+<section class="slide" data-slide="2">
+ <p class="eyebrow">Wymaganie</p><h2>Doskonalenie systemu i wyniku energetycznego</h2>
+ <p class="lead">Dwa obszary, dla których potrzebujesz dowodów.</p>
+ <div class="grid two content">
+  <div class="card accent"><span class="label">Sposób zarządzania</span><h3>System działa sprawniej</h3><p>Jasne role, dostępne dane, regularne analizy i skuteczna reakcja.</p><p class="small muted">Przykład dowodu: zapis zmiany obiegu informacji oraz potwierdzenie, że nowy sposób działa.</p></div>
+  <div class="card green"><span class="label">Rezultaty energetyczne</span><h3>Wynik się poprawia</h3><p>Oceń efektywność, wykorzystanie i zużycie energii za pomocą odpowiednich wskaźników.</p><p class="small muted">Przykład dowodu: porównanie wyniku z okresem odniesienia przy porównywalnych warunkach.</p></div>
+ </div>
+ <div class="banner" style="margin-top:28px">Sprawdź zarówno wykonane usprawnienie, jak i jego rezultat energetyczny.</div>
+ <div class="ref">Źródło: tom 2, s. 30–31. Omówienie własnymi słowami, nie dosłowny tekst normy.</div>
+</section>
+
+<section class="slide" data-slide="3">
+ <p class="eyebrow">Cztery pytania kontrolne</p><h2>Ustanowić, wdrożyć, utrzymywać, doskonalić</h2>
+ <div class="grid two content">
+  <div class="card accent"><span class="label">Ustanowić</span><h3>Czy system jest zaprojektowany?</h3><p>Procesy, zasady, cele i odpowiedzialności.</p><p class="small muted">Pokaż politykę, podział ról i powiązania procesów.</p></div>
+  <div class="card accent"><span class="label">Wdrożyć</span><h3>Czy działa w praktyce?</h3><p>Ludzie znają role i wykonują zadania.</p><p class="small muted">Pokaż odczyty, analizy oraz zapisy działań.</p></div>
+  <div class="card green"><span class="label">Utrzymywać</span><h3>Czy działa stale?</h3><p>Aktualne dane, przeglądy i zastępstwa.</p><p class="small muted">Pokaż regularność pracy, również podczas nieobecności.</p></div>
+  <div class="card green"><span class="label">Doskonalić</span><h3>Co zostało poprawione?</h3><p>Usprawnienia systemu i wynik energetyczny.</p><p class="small muted">Pokaż porównanie wskaźników oraz warunki oceny.</p></div>
+ </div>
+ <div class="ref">Źródło: tom 2, s. 30–31; materiał ENESA do punktu 4.4.</div>
+</section>
+
+<section class="slide" data-slide="4">
+ <p class="eyebrow">Powiązania</p><h2>Dane wejściowe i dalsze wykorzystanie ustaleń</h2>
+ <div class="grid three content compact">
+  <div class="card"><span class="kicker">4.1</span><h3 style="margin-top:20px">Kontekst</h3><p>Istotne czynniki i wnioski wpływają na ryzyka, cele oraz przeglądy.</p></div>
+  <div class="card"><span class="kicker">4.2</span><h3 style="margin-top:20px">Wymagania stron</h3><p>Wskaż, kto pilnuje ich realizacji i gdzie sprawdzana jest zgodność.</p></div>
+  <div class="card green"><span class="kicker">4.3</span><h3 style="margin-top:20px">Zakres i granice</h3><p>Procesy systemu mają obejmować ustaloną działalność i granice.</p></div>
+ </div>
+ <div class="banner" style="margin-top:26px">W 4.4 ustalasz procesy, ich właścicieli i przepływ wyników między nimi.</div>
+ <p class="small" style="margin-top:22px"><b>7.5:</b> wykorzystaj listę procesów przy porządkowaniu dokumentacji.<br><b>9.2:</b> wykorzystaj mapę procesów przy planowaniu audytu wewnętrznego.</p>
+ <div class="ref">Źródło: powiązania procesów w materiale ENESA do punktu 4.4.</div>
+</section>
+
+<section class="slide" data-slide="5">
+ <p class="eyebrow">Przykład z książki</p><h2>Obieg informacji w sprężarkowni</h2>
+ <div class="stack content compact">
+  <div class="qa"><span class="number">1</span><p><b>Sytuacja</b><br>Wskaźnik przekracza ustalony próg.</p><p class="answer">Odczyt rośnie z ok. 0,12 do 0,13 kWh/Nm³. Wyznaczona osoba odbiera sygnał.</p></div>
+  <div class="qa"><span class="number">2</span><p><b>Znaczenie</b><br>Ustalenie przyczyny.</p><p class="answer">Utrzymanie ruchu sprawdza instalację i znajduje nieszczelność.</p></div>
+  <div class="qa"><span class="number">3</span><p><b>Decyzja</b><br>Wybór działania.</p><p class="answer">Kierownik zleca naprawę i zmianę częstotliwości kontroli szczelności.</p></div>
+  <div class="qa"><span class="number">4</span><p><b>Działanie</b><br>Wykonanie i zapis.</p><p class="answer">Naprawa jest udokumentowana. Zaktualizowano plan przeglądów.</p></div>
+  <div class="qa"><span class="number">5</span><p><b>Sprawdzenie</b><br>Ocena efektu i przekazanie wniosku.</p><p class="answer">Po miesiącu wskaźnik wraca do ok. 0,12 kWh/Nm³. Wniosek trafia na przegląd.</p></div>
+ </div>
+ <div class="ref">Źródło: tom 2, s. 31. Liczby ilustracyjne z książki; nie stanowią progów dla konkretnego zakładu.</div>
+</section>
+
+<section class="slide" data-slide="6">
+ <p class="eyebrow">Reakcja na wynik</p><h2>Ustal częstotliwość, próg i czas reakcji</h2>
+ <div class="grid two content">
+  <div class="card accent"><h3>Jak często analizujemy?</h3><p>Osobno określ rytm analiz dla zakładu i znaczących użyć energii, czyli SEU.</p></div>
+  <div class="card accent"><h3>Co uruchamia reakcję?</h3><p>Wskaż wskaźnik, punkt odniesienia i warunek przekroczenia progu.</p></div>
+  <div class="card green"><h3>Kto i w jakim czasie?</h3><p>Określ odbiorcę sygnału, termin sprawdzenia przyczyny i podjęcia decyzji.</p></div>
+  <div class="card green"><h3>Gdzie zapisujemy rezultat?</h3><p>Zapisz działanie, ocenę jego efektu oraz odbiorcę wniosków.</p></div>
+ </div>
+ <p class="small" style="margin-top:26px"><b>Zalecenie autora:</b> dane zakładu analizuj co najmniej raz w miesiącu, a dla SEU częściej.<br>Ta częstotliwość jest radą autora, nie terminem narzuconym przez punkt 4.4.</p>
+ <div class="ref">Źródło: tom 2, s. 32; pytania o progi reakcji w materiale ENESA do 4.4.</div>
+</section>
+
+<section class="slide" data-slide="7">
+ <p class="eyebrow">Ocena zdarzenia</p><h2>Odchylenie i niezgodność</h2>
+ <div class="grid two content">
+  <div class="card accent"><span class="label">Odchylenie wyniku</span><h3>Wskaźnik odbiega od oczekiwań</h3><p>Zbadaj znaczące odchylenie, ustal przyczynę i odpowiednio zareaguj.</p><p class="small muted">Sprawdź dane, warunki pracy i stan instalacji. Sam wzrost wskaźnika nie rozstrzyga jeszcze o niezgodności.</p></div>
+  <div class="card green"><span class="label">Niezgodność</span><h3>Nie spełniono wymagania</h3><p>Wskaż konkretne wymaganie i dowód jego niespełnienia.</p><p class="small muted">Wtedy zastosuj postępowanie dla niezgodności i działań korygujących w punkcie 10.1.</p></div>
+ </div>
+ <div class="banner" style="margin-top:30px">Zapisz rozpoznanie zdarzenia i uzasadnienie przyjętego sposobu postępowania.</div>
+ <div class="ref">Źródło: tom 2, s. 32; pytanie SYS-07 w materiale ENESA do 4.4.</div>
+</section>
+
+<section class="slide" data-slide="8">
+ <p class="eyebrow">Dowód poprawy</p><h2>Porównanie wyniku energetycznego</h2>
+ <div class="stack content">
+  <div class="qa"><span class="number">1</span><p>Wskaźnik i jednostka</p><p class="answer">Co mierzymy i w którym kierunku zmiana oznacza poprawę?</p></div>
+  <div class="qa"><span class="number">2</span><p>Okres odniesienia</p><p class="answer">Kiedy zmierzono wynik bazowy i jaka była jego wartość?</p></div>
+  <div class="qa"><span class="number">3</span><p>Okres oceny</p><p class="answer">Kiedy zmierzono wynik po działaniu i jaka jest jego wartość?</p></div>
+  <div class="qa"><span class="number">4</span><p>Porównywalne warunki</p><p class="answer">Wyjaśnij wpływ istotnych warunków pracy i zastosowany sposób porównania.</p></div>
+ </div>
+ <div class="banner" style="margin-top:24px">Wartość planowana opisuje zamiar. Poprawę potwierdza osiągnięty wynik.</div>
+ <div class="ref">Źródło: tom 2, s. 30–31; porównanie WYNIK w materiale ENESA do 4.4. Dowody ocenia audytor.</div>
+</section>
+
+<section class="slide" data-slide="9">
+ <p class="eyebrow">Procesy systemu</p><h2>Właściciel, wynik procesu i jego odbiorca</h2>
+ <p class="lead">Biblioteka ENESA zawiera 11 procesów. Możesz też opisać procesy własne.</p>
+ <div class="grid three content compact">
+  <div class="card accent"><h3>Kto odpowiada?</h3><p>Wskaż właściciela i zakres jego decyzji.</p><p class="small muted">Dla procesów kluczowych opisz zastępstwo i sposób zapewnienia ciągłości.</p></div>
+  <div class="card accent"><h3>Co powstaje?</h3><p>Określ wynik procesu i miejsce zapisu.</p><p class="small muted">Na przykład: analiza wskaźników, plan działań albo protokół przeglądu.</p></div>
+  <div class="card green"><h3>Kto korzysta dalej?</h3><p>Wskaż odbiorcę, termin i sposób przekazania.</p><p class="small muted">Wynik monitoringu służy decyzjom, a decyzje trafiają do planów i działań.</p></div>
+ </div>
+ <div class="banner" style="margin-top:28px">Sprawdź cały przepływ: dane, analiza, decyzja, wykonanie i ocena skuteczności.</div>
+ <div class="ref">Źródło: tom 2, s. 31–33; biblioteka procesów ENESA do punktu 4.4.</div>
+</section>
+
+<section class="slide" data-slide="10">
+ <p class="eyebrow">Dokumentowanie i integracja</p><h2>Wybierz formę odpowiednią dla organizacji</h2>
+ <div class="grid three content compact">
+  <div class="card"><span class="number">1</span><h3 style="margin-top:20px">Zestaw procedur</h3><p>Opisy poszczególnych procesów i ich powiązań.</p></div>
+  <div class="card"><span class="number">2</span><h3 style="margin-top:20px">Jeden opis systemu</h3><p>Wspólny dokument, do którego odwołują się osoby realizujące procesy.</p></div>
+  <div class="card green"><span class="number">3</span><h3 style="margin-top:20px">Istniejący system ISO</h3><p>Uzupełnienie dokumentacji ISO 9001 lub ISO 14001 o potrzeby EnMS.</p></div>
+ </div>
+ <div class="banner" style="margin-top:28px">Przy integracji wskaż dokument i wersję. Zachowaj właściciela oraz wynik procesu.</div>
+ <p class="small" style="margin-top:22px">Wspólne zasady mogą obejmować kompetencje i komunikację, nadzór nad dokumentacją,<br>audyty oraz działania korygujące. Sprawdź, czy obejmują także wymagania dotyczące energii.</p>
+ <div class="ref">Źródło: tom 1, s. 43–46; wybór formy systemu i integracja procesów w materiale ENESA do 4.4.</div>
+</section>
+
+<section class="slide" data-slide="11">
+ <p class="eyebrow">Test ciągłości</p><h2>Trzy miesiące nieobecności koordynatora</h2>
+ <div class="stack content">
+  <div class="qa"><span class="number">1</span><p>Kto odbierze alarm?</p><p class="answer">Kto zauważy przekroczenie progu i podejmie decyzję?</p></div>
+  <div class="qa"><span class="number">2</span><p>Kto przygotuje przegląd?</p><p class="answer">Kto zbierze dane i zwoła przegląd zarządzania?</p></div>
+  <div class="qa"><span class="number">3</span><p>Kto zaproponuje cele?</p><p class="answer">Kto przygotuje propozycję na kolejny rok?</p></div>
+  <div class="qa"><span class="number">4</span><p>Kto zadba o świadomość?</p><p class="answer">Czy ludzie znają politykę i jej znaczenie dla swojej pracy?</p></div>
+  <div class="qa"><span class="number">5</span><p>Z czego skorzysta zastępca?</p><p class="answer">Czy ma dostęp do aktualnych zasad, danych i uprawnień?</p></div>
+ </div>
+ <p class="small" style="margin-top:22px">Przy odpowiedzi „nikt” lub „nie wiem” ustal działanie, osobę, termin i sposób sprawdzenia.</p>
+ <div class="ref">Źródło: tom 2, s. 32–33; test ciągłości w materiale ENESA do 4.4.</div>
+</section>
+
+<section class="slide" data-slide="12">
+ <p class="eyebrow">Praca w platformie ENESA</p><h2>Kolejność wypełniania ankiety 4.4</h2>
+ <div class="grid two content compact" style="gap:16px">
+  <div class="card"><h3><span class="number">1</span>Decyzje o systemie</h3><p>Forma opisu, zakres i odpowiedzialność.</p></div>
+  <div class="card"><h3><span class="number">2</span>Cztery czasowniki</h3><p>Stan działania, dowody lub plan oraz wynik.</p></div>
+  <div class="card"><h3><span class="number">3</span>Obieg informacji</h3><p>Pięć ogniw, częstotliwość analiz i progi reakcji.</p></div>
+  <div class="card"><h3><span class="number">4</span>Test ciągłości</h3><p>Osoby i zasady zapewniające zastępstwo.</p></div>
+  <div class="card"><h3><span class="number">5</span>Procesy systemu</h3><p>Właściciele, opisy, wyniki i procesy własne.</p></div>
+  <div class="card green"><h3><span class="number">6</span>Powiązania procesów</h3><p>Co działa, co zaplanowano i uzasadnienia.</p></div>
+ </div>
+ <div class="ref">Kolejność zakładek istniejącej ankiety ENESA. Treść opracowana na podstawie materiału źródłowego 4.4.</div>
+</section>
+
+<section class="slide" data-slide="13">
+ <p class="eyebrow">Zatwierdzenie i dokument</p><h2>Odpowiedzi, analiza i D-EnMS-SYS-01</h2>
+ <div class="stack content">
+  <div class="qa"><span class="number">1</span><p>Sprawdź dane wejściowe.</p><p class="answer">Przed zatwierdzeniem 4.4 potrzebne są aktualne zatwierdzenia i dokumenty 4.1, 4.2 oraz 4.3.</p></div>
+  <div class="qa"><span class="number">2</span><p>Klient zapisuje i zatwierdza.</p><p class="answer">Odpowiedzi robocze można zapisać wcześniej. Sprawdź kompletność i komunikaty platformy.</p></div>
+  <div class="qa"><span class="number">3</span><p>Audytor analizuje i zatwierdza.</p><p class="answer">Zakładka 7: analiza konsultanta. Zakładka 8: zatwierdzenia i kontrola ustaleń.</p></div>
+  <div class="qa"><span class="number">4</span><p>Generuj i zapisz PDF.</p><p class="answer">Zakładka 9: dokument D-EnMS-SYS-01. Plik trafia do Dokumentacji punktu 4.4.</p></div>
+ </div>
+ <p class="small" style="margin-top:22px"><b>D-EnMS-SYS-01 jest metodą ENESA.</b> Punkt 4.4 nie narzuca osobnego dokumentu o takim symbolu.</p>
+ <div class="ref">Aktualny obieg platformy ENESA; tom 2, s. 35; manifest źródłowego HTML 4.4.</div>
+</section>
+
+<section class="slide" data-slide="14">
+ <p class="eyebrow">Weryfikacja</p><h2>Lista kontrolna i dowody działania</h2>
+ <p class="lead">Lista III-07 obejmuje 37 pozycji dla punktów 4.1–4.4.</p>
+ <div class="grid three content compact">
+  <div class="card accent"><h3>Stan w platformie</h3><p>Sprawdź aktualność źródeł, zapisane odpowiedzi i statusy punktów.</p><p class="small muted">Automatyczna kontrola korzysta z informacji zapisanych w systemie.</p></div>
+  <div class="card accent"><h3>Dowody w zakładzie</h3><p>Zweryfikuj zapisy, porozmawiaj z właścicielami procesów i sprawdź praktykę.</p><p class="small muted">Część ustaleń wymaga kontroli poza platformą.</p></div>
+  <div class="card green"><h3>Ocena audytora</h3><p>Potwierdź znaczenie dowodów i rzeczywistą poprawę wyniku energetycznego.</p><p class="small muted">Wypełnienie pól nie zastępuje tej oceny.</p></div>
+ </div>
+ <div class="banner" style="margin-top:28px">Prześledź jedno rzeczywiste zdarzenie od sygnału do sprawdzenia efektu.</div>
+ <div class="ref">Źródło: tom 2, s. 31–35; lista III-07 w materiale ENESA; aktualny sposób opisu kontroli w platformie.</div>
+</section>
+
+<section class="slide" data-slide="15">
+ <p class="eyebrow">Sprawdź zrozumienie</p><h2>Pięć pytań przed zatwierdzeniem 4.4</h2>
+ <div class="stack content">
+  <div class="qa"><span class="number">1</span><p>Mamy procedury.<br>Jak potwierdzić działanie?</p><p class="answer">Pokaż wykonane zadania, przekazane wyniki, decyzje i sprawdzenie efektu.</p></div>
+  <div class="qa"><span class="number">2</span><p>Wskaźnik się pogorszył.<br>Czy to zawsze niezgodność?</p><p class="answer">Ustal przyczynę i sprawdź, czy nie spełniono konkretnego wymagania.</p></div>
+  <div class="qa"><span class="number">3</span><p>Plan przewiduje oszczędność.<br>Czy wykazano już poprawę?</p><p class="answer">Potrzebny jest osiągnięty wynik i porównanie przy właściwych warunkach.</p></div>
+  <div class="qa"><span class="number">4</span><p>Proces opisuje ISO 9001.<br>Co wskazać w EnMS?</p><p class="answer">Właściciela, dokument i wersję oraz sposób uwzględnienia wymagań energetycznych.</p></div>
+  <div class="qa"><span class="number">5</span><p>Zmieniła się działalność zakładu.<br>Gdzie poprawić zakres?</p><p class="answer">W punkcie 4.3, a następnie sprawdzić aktualność danych i opisu systemu w 4.4.</p></div>
+ </div>
+</section>
+
+<section class="slide dark" data-slide="16">
+ <p class="eyebrow">Następny krok</p><h2>Przygotuj materiały do punktu 4.4</h2>
+ <div class="grid three content compact">
+  <div class="card"><span class="number">1</span><h3 style="margin-top:20px">Procesy i ludzie</h3><p>Lista właścicieli, zastępstwa, aktualne zasady i odniesienia do dokumentów.</p></div>
+  <div class="card"><span class="number">2</span><h3 style="margin-top:20px">Dane i decyzje</h3><p>Przykład zdarzenia, obieg informacji, progi oraz zapisy reakcji i oceny efektu.</p></div>
+  <div class="card"><span class="number">3</span><h3 style="margin-top:20px">Wynik i ciągłość</h3><p>Porównanie wskaźników oraz odpowiedzi na test nieobecności koordynatora.</p></div>
+ </div>
+ <div style="margin-top:26px"><span class="label">Źródła i opracowanie</span><p class="source">Bronisław Pytel, „Energia pod kontrolą”, wersje testowe 2026-10:<br>tom 2 (v2), punkt 4.4 i podsumowanie rozdziału, s. 30–35;<br>tom 1, integracja systemów, s. 43–46.<br>Materiał ENESA do punktu 4.4, wersja HTML „platforma-5”.</p><p class="source">Opracowanie szkoleniowe ENESA, 13.11.2026. Przykłady służą nauce.<br>Wskaźniki, progi i podział odpowiedzialności ustal dla swojego zakładu.</p></div>
+</section>
+
+<script>
+document.querySelectorAll('.slide').forEach((slide, index) => {
+ const logo = document.createElement('div'); logo.className = 'logo';
+ const image = document.createElement('img'); image.src = '../../../public/logo1.png'; image.alt = 'ENESA';
+ const name = document.createElement('b'); name.textContent = 'ENESA'; logo.append(image, name); slide.append(logo);
+ const footer = document.createElement('footer');
+ const label = document.createElement('span'); label.textContent = 'ENERGIA POD KONTROLĄ · ISO 50001 · moduł 4.4';
+ const number = document.createElement('span'); number.textContent = String(index + 1).padStart(2, '0');
+ footer.append(label, number); slide.append(footer);
+});
+</script>
+</body>
+</html>
