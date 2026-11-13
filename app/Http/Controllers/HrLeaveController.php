@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\HrLeaveApproved;
+use App\Mail\HrLeaveSubmitted;
 use App\Models\CompanySettings;
 use App\Models\HrLeave;
 use App\Models\HrLeaveApprovalTask;
@@ -26,13 +27,27 @@ class HrLeaveController extends Controller
     {
         $data = $this->leaveData($request);
         $data['created_by'] = $request->user()->id;
-        DB::transaction(function () use ($data): void {
+        $leave = DB::transaction(function () use ($data): HrLeave {
             $data += $this->approvalData($data);
             $leave = HrLeave::create($data);
             $this->syncApprovalTask($leave);
+
+            return $leave;
         });
 
-        return redirect()->route('hr.index', ['tab' => 'leaves'])->with('success', 'Wniosek został wysłany do przełożonego (L4 jest rejestrowane bez akceptacji).');
+        $message = 'Nieobecność została zarejestrowana.';
+        if ($leave->approval_status === 'pending') {
+            $message = 'Wniosek został przekazany przełożonemu do rozpatrzenia.';
+            try {
+                $approver = User::findOrFail($leave->approver_id);
+                Mail::to($approver->email)->send(new HrLeaveSubmitted($leave->id));
+            } catch (\Throwable $error) {
+                Log::warning('hr.leave.submission_mail_failed', ['leave_id' => $leave->id, 'error_type' => get_class($error)]);
+                $message .= ' Nie udało się wysłać e-maila. Wniosek nadal jest widoczny na tablicy przełożonego.';
+            }
+        }
+
+        return redirect()->route('hr.index', ['tab' => 'leaves'])->with('success', $message);
     }
 
     public function updateLeave(Request $request, HrLeave $leave): RedirectResponse

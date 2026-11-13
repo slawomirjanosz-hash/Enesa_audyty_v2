@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\HrLeaveApproved;
+use App\Mail\HrLeaveSubmitted;
 use App\Models\CompanySettings;
 use App\Models\HrLeave;
 use App\Models\HrLeaveApprovalTask;
@@ -44,7 +45,8 @@ test('employee sees recipient and submits a pending request with an in progress 
     $this->get(route('hr.index', ['tab' => 'leaves', 'leave_scope' => 'team']))->assertOk()->assertSee('Akceptuj')->assertSee('Odrzuć');
     $this->actingAs($stranger)->get(route('board.mine'))->assertOk()->assertDontSee('data-leave-task=', false);
     $this->get(route('hr.leaves.pdf', $leave))->assertForbidden();
-    Mail::assertNothingSent();
+    Mail::assertSent(HrLeaveSubmitted::class, fn ($mail) => $mail->hasTo($supervisor->email) && $mail->leaveId === $leave->id);
+    Mail::assertSentCount(1);
 });
 
 test('only the captured supervisor can decide and acceptance archives the task sends one mail and locks the request', function () {
@@ -61,7 +63,7 @@ test('only the captured supervisor can decide and acceptance archives the task s
     expect($employee->annualLeaveUsedDays(2026))->toBe(3);
     Mail::assertSent(HrLeaveApproved::class, fn ($mail) => $mail->hasTo($employee->email));
     $this->post(route('hr.leaves.decide', $leave), $decision)->assertStatus(409);
-    Mail::assertSentCount(1);
+    Mail::assertSentCount(2);
     $this->get(route('board.mine'))->assertDontSee('data-leave-task=', false);
     $this->get(route('board.mine', ['archive' => 1]))->assertOk()->assertSee('data-leave-task=', false)->assertSee('Zaakceptowany');
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'leaves']))->assertOk()->assertSee('Zaakceptowany');
@@ -75,7 +77,7 @@ test('rejection is visible to the employee and resubmission invalidates stale de
     $this->actingAs($employee)->post(route('hr.leaves.store'), approvalRequest());
     $leave = HrLeave::firstOrFail();
     $this->actingAs($supervisor)->post(route('hr.leaves.decide', $leave), ['decision' => 'rejected', 'approval_revision' => 1, 'decision_note' => 'Inny termin'])->assertSessionHas('success');
-    Mail::assertNothingSent();
+    Mail::assertNotSent(HrLeaveApproved::class);
     $this->actingAs($employee)->get(route('hr.index', ['tab' => 'leaves']))->assertOk()->assertSee('Odrzucony')->assertSee('Inny termin');
     $this->put(route('hr.leaves.update', $leave), approvalRequest(['approval_revision' => 2, 'start_date' => '2026-11-09']))->assertSessionHasNoErrors();
     expect($leave->fresh()->approval_status)->toBe('pending')->and($leave->fresh()->decision_note)->toBeNull()->and(HrLeaveApprovalTask::count())->toBe(1)->and(HrLeaveApprovalTask::first()->archived_at)->toBeNull();
@@ -107,6 +109,7 @@ test('a missing inactive or self supervisor prevents submitting a holiday reques
     $this->post(route('hr.leaves.store'), approvalRequest(['type' => 'sick_leave']))->assertSessionHas('success');
     expect(HrLeave::first()->approval_status)->toBe('recorded');
     $this->assertDatabaseCount('hr_leave_approval_tasks', 0);
+    Mail::assertNothingSent();
 });
 
 test('authorized user administration assigns a supervisor and rejects clients self references and cycles', function () {
