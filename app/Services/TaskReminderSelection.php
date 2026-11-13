@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BoardTask;
 use App\Models\CompanySettings;
+use App\Models\HrLeave;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -33,7 +34,15 @@ class TaskReminderSelection
             }
         }
 
-        return $groups;
+        $usersOnLeave = HrLeave::query()
+            ->whereIn('user_id', $groups->keys())
+            ->where('approval_status', 'approved')
+            ->where('type', '!=', 'sick_leave')
+            ->whereDate('start_date', '<=', $date)
+            ->whereDate('end_date', '>=', $date)
+            ->distinct()->pluck('user_id');
+
+        return $groups->except($usersOnLeave->all());
     }
 
     private function allowed(?User $user, Task|BoardTask $task): bool

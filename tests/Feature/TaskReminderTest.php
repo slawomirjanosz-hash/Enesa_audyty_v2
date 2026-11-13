@@ -5,6 +5,7 @@ use App\Models\Audit;
 use App\Models\BoardTask;
 use App\Models\Company;
 use App\Models\CompanySettings;
+use App\Models\HrLeave;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -64,6 +65,30 @@ test('one daily email per recipient survives repeated commands and next day send
     $this->travelTo(Carbon::parse('2026-10-15 08:01', 'Europe/Warsaw'));
     $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
     Mail::assertSent(TaskOverdue::class, 2);
+});
+
+test('approved leave pauses overdue reminders through the last day without affecting other participants', function () {
+    $employee = reminderUser();
+    $colleague = reminderUser();
+    reminderTask($employee)->participants()->attach($colleague);
+    $leave = [
+        'type' => 'annual', 'start_date' => '2026-10-14', 'end_date' => '2026-10-15',
+        'document_date' => '2026-10-13', 'days' => 2,
+    ];
+    HrLeave::create($leave + ['user_id' => $employee->id, 'created_by' => $employee->id, 'approval_status' => 'approved']);
+    HrLeave::create($leave + ['user_id' => $colleague->id, 'created_by' => $colleague->id, 'approval_status' => 'pending']);
+
+    $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
+    Mail::assertSent(TaskOverdue::class, fn ($mail) => $mail->hasTo($colleague->email));
+    Mail::assertNotSent(TaskOverdue::class, fn ($mail) => $mail->hasTo($employee->email));
+
+    $this->travelTo(Carbon::parse('2026-10-15 08:01', 'Europe/Warsaw'));
+    $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
+    $this->assertDatabaseMissing('task_reminder_deliveries', ['user_id' => $employee->id]);
+
+    $this->travelTo(Carbon::parse('2026-10-16 08:01', 'Europe/Warsaw'));
+    $this->artisan('tasks:send-overdue-reminders --scheduled')->assertSuccessful();
+    Mail::assertSent(TaskOverdue::class, fn ($mail) => $mail->hasTo($employee->email));
 });
 
 test('scheduled worker respects Polish time including daylight saving', function (string $utc, bool $send) {
