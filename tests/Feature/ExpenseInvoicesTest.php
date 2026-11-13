@@ -362,3 +362,46 @@ test('accounting can publish a simple invoice and remove it from the pool by ass
     $this->actingAs($employee)->get($pool)->assertOk()->assertDontSee('SIMPLE-POOL');
     $this->get(route('expenses.edit', $invoice))->assertNotFound();
 });
+
+test('invoice purchase date cannot be in the future and saving opens my invoices', function () {
+    $this->actingAs(expenseUser());
+    $data = [
+        'simple_entry' => 1,
+        'payment_choice' => 'personal',
+        'gross_amount' => '123.45',
+    ];
+    $this->post(route('expenses.store'), $data + ['purchase_date' => today()->addDay()->toDateString()])->assertSessionHasErrors('purchase_date');
+    $this->post(route('expenses.store'), $data + ['purchase_date' => today()->toDateString()])->assertRedirect(route('expenses.index'));
+    $invoice = ExpenseInvoice::sole();
+    $this->put(route('expenses.update', $invoice), $data + [
+        'revision' => $invoice->revision,
+        'purchase_date' => today()->addDay()->toDateString(),
+    ])->assertSessionHasErrors('purchase_date');
+});
+
+test('only the owner can confirm a settled invoice from their list', function () {
+    $owner = expenseUser();
+    $accountant = expenseUser(true);
+    $invoice = expenseRecord($owner, ['workflow_status' => 'settled', 'settled_at' => now(), 'revision' => 1]);
+    $this->actingAs($accountant)->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertDontSee('Potwierdzam rozliczenie');
+    $this->actingAs($owner)->get(route('expenses.index'))->assertOk()->assertSee('Potwierdzam rozliczenie');
+    $this->post(route('expenses.workflow', $invoice), [
+        'revision' => $invoice->revision,
+        'action' => 'closed',
+        'from_list' => 1,
+    ])->assertRedirect(route('expenses.index', ['tab' => 'own']));
+    expect($invoice->fresh()->workflow_status)->toBe('closed');
+});
+
+test('accounting can mark a new invoice as read from the list', function () {
+    $owner = expenseUser();
+    $accountant = expenseUser(true);
+    $invoice = expenseRecord($owner, ['workflow_status' => 'new', 'revision' => 1, 'gross_amount' => '123.45']);
+    $action = ['action' => 'read', 'revision' => 1, 'from_list' => 1, 'tab' => 'all'];
+    $this->actingAs($owner)->get(route('expenses.index'))->assertOk()->assertDontSee('Oznacz jako odczytaną');
+    $this->post(route('expenses.workflow', $invoice), $action)->assertForbidden();
+    $this->actingAs($accountant)->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertSee('Oznacz jako odczytaną');
+    $this->post(route('expenses.workflow', $invoice), $action)->assertRedirect(route('expenses.index', ['tab' => 'all']));
+    expect($invoice->fresh()->workflow_status)->toBe('read');
+    $this->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertSee('data-gross="123.45"', false);
+});

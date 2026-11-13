@@ -3,6 +3,22 @@
 @forelse($invoices as $invoice)<tr>
 <td>{{$invoice->id}}</td><td data-sort-value="{{$invoice->purchase_date->toDateString()}}">{{$invoice->purchase_date->format('d.m.Y')}}</td><td><a href="{{route('expenses.edit',$invoice)}}">{{$invoice->invoice_number ?: 'Bez numeru'}}</a></td><td class="exp-extra-col">{{$invoice->wz_number ?: '—'}}</td><td class="exp-extra-col">{{$invoice->ksef_number ?: '—'}}</td><td>{{$invoice->supplier_name}}</td>
 @foreach(['net_amount','gross_amount'] as $amount)<td class="exp-number" data-sort-value="{{$invoice->$amount}}">{{$invoice->$amount !== null ? number_format((float)$invoice->$amount,2,',',' ') : '—'}}</td>@endforeach
-<td>{{$invoice->owner_name ?: 'Nieprzypisana'}}</td><td>{{\App\Models\ExpenseInvoice::METHODS[$invoice->payment_method]}}</td><td class="exp-extra-col">{{\App\Models\ExpenseInvoice::SOURCES[$invoice->payment_source]}}</td><td>{{$invoice->settled_at ? \App\Models\ExpenseInvoice::PAYMENTS['settled'] : \App\Models\ExpenseInvoice::PAYMENTS[$invoice->payment_status]}}</td><td class="exp-extra-col">{{$invoice->paid_by ?: '—'}}</td><td>{{$invoice->cost_center ?: '—'}}</td><td class="exp-extra-col">{{$invoice->description ?: '—'}}</td><td class="exp-extra-col"><span class="exp-badge">{{$invoice->statusLabel()}}</span></td><td><span class="exp-badge">{{\App\Models\ExpenseInvoice::WORKFLOW[$invoice->workflow_status] ?? "—"}}</span></td><td><a class="exp-btn" href="{{route('expenses.edit',$invoice)}}">{{$invoice->settled_at || (!$accounting && $invoice->owner_id!==auth()->id()) ? 'Podgląd' : 'Edytuj'}}</a>@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)@include('expenses.claim')@endif @include('expenses.delete')</td>
+<td>{{$invoice->owner_name ?: 'Nieprzypisana'}}</td><td>{{\App\Models\ExpenseInvoice::METHODS[$invoice->payment_method]}}</td><td class="exp-extra-col">{{\App\Models\ExpenseInvoice::SOURCES[$invoice->payment_source]}}</td><td>{{$invoice->settled_at ? \App\Models\ExpenseInvoice::PAYMENTS['settled'] : \App\Models\ExpenseInvoice::PAYMENTS[$invoice->payment_status]}}</td><td class="exp-extra-col">{{$invoice->paid_by ?: '—'}}</td><td>{{$invoice->cost_center ?: '—'}}</td><td class="exp-extra-col">{{$invoice->description ?: '—'}}</td><td class="exp-extra-col"><span class="exp-badge">{{$invoice->statusLabel()}}</span></td><td><span class="exp-badge">{{\App\Models\ExpenseInvoice::WORKFLOW[$invoice->workflow_status] ?? "—"}}</span>
+@if($accounting && $invoice->workflow_status === 'new')
+    <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false">
+        @csrf
+        <input type="hidden" name="action" value="read">
+        <input type="hidden" name="revision" value="{{ $invoice->revision }}">
+        <input type="hidden" name="from_list" value="1">
+        <input type="hidden" name="tab" value="{{ $tab }}">
+        <button class="exp-btn" type="submit">Oznacz jako odczytaną</button>
+    </form>
+@elseif(($accounting && $invoice->owner_id && (in_array($invoice->workflow_status, ['read', 'disputed'], true) || ($invoice->workflow_status === null && !$invoice->settled_at))) || ($invoice->owner_id === auth()->id() && in_array($invoice->workflow_status, ['settled', 'returned'], true)))
+    <details class="exp-list-workflow">
+        <summary>{{ $invoice->workflow_status === 'returned' ? 'Uzupełnij' : 'Rozliczenie' }}</summary>
+        @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
+    </details>
+@endif
+</td><td><a class="exp-btn" href="{{route('expenses.edit',$invoice)}}">{{$invoice->settled_at || (!$accounting && $invoice->owner_id!==auth()->id()) ? 'Podgląd' : 'Edytuj'}}</a>@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)@include('expenses.claim')@endif @include('expenses.delete')</td>
 </tr>@empty<tr><td colspan="18">Brak faktur spełniających wybrane kryteria.</td></tr>@endforelse
 </tbody></table></div>{{$invoices->links()}}

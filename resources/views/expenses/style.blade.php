@@ -9,3 +9,12 @@
 <style>
 #main,.content-area{min-width:0}.exp-card{box-sizing:border-box;max-width:100%}.exp-table-wrap{padding:0;width:100%;max-width:100%;overflow-x:auto}.exp-table{table-layout:fixed;font-size:12px}.exp-table th,.exp-table td{padding:9px 6px;overflow-wrap:anywhere;white-space:normal}.exp-table .exp-number{font-variant-numeric:tabular-nums;white-space:normal}.exp-table .exp-btn{padding:5px;font-size:11px;max-width:100%;box-sizing:border-box}.exp-table th:first-child{width:38px}.exp-table th:last-child{width:66px}.exp-table .exp-extra-col{display:none}.exp-show-extra .exp-extra-col{display:table-cell}.exp-show-extra .exp-table{min-width:1400px}.exp-table .exp-badge{white-space:normal}.exp-filters{align-items:flex-end}.exp-filters>label:not(.exp-columns){display:flex;flex-direction:column;gap:6px}.exp-filters>label:nth-of-type(2){flex:1;min-width:180px}.exp-filters .exp-btn{height:42px;box-sizing:border-box}.exp-columns{display:flex;align-items:center;gap:6px;min-height:42px;font-size:13px}.exp-columns input{width:auto}.exp-field[hidden]{display:none}.exp-table .app-table-sort{white-space:normal;overflow-wrap:anywhere;text-align:left}.exp-grid small{color:#64748b;font-size:12px}@media(max-width:900px){.exp-table{min-width:850px}.exp-filters .exp-btn{padding:8px 12px}}
 </style>
+
+<style>
+.exp-workflow-fields{display:grid;gap:10px;max-width:36rem;margin-block:10px}
+.exp-workflow-fields label{display:grid;gap:4px}
+.exp-workflow-fields input,.exp-workflow-fields select,.exp-workflow-fields textarea{width:100%;min-width:0;font:inherit}
+.exp-workflow-fields button{justify-self:start}
+.exp-list-workflow summary{cursor:pointer}.exp-table:has(.exp-list-workflow[open]){table-layout:auto}.exp-list-workflow[open]{min-width:13rem}
+</style>
+<script src="{{ asset('js/expense-workflow.js') }}" defer></script>

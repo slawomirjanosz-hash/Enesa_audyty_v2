@@ -2,13 +2,13 @@
 @section('page-title','Rozliczenia faktur — dane zakupu')
 @section('content')
 @include('expenses.style')
-<style>#expense-form [hidden]{display:none!important}</style>
+<style>#expense-form [hidden]{display:none!important}#expense-form .exp-grid{grid-template-columns:minmax(0,1fr);max-width:36rem}#expense-form .exp-field>label{display:flex;flex-direction:column;gap:6px}</style>
 <div class="exp-head"><h1>{{$invoice->exists ? 'Faktura / zakup #'.$invoice->id : 'Dodaj zakup / fakturę'}}</h1><a class="exp-btn" href="{{route('expenses.index')}}">Wróć do rejestru</a></div>
 @if(session('success'))<div class="exp-message">{{session('success')}}</div>@endif
 @if($errors->any())<div class="exp-message error" role="alert">@foreach($errors->all() as $error)<p>{{$error}}</p>@endforeach</div>@endif
 @if($invoice->is_unassigned)<div class="exp-card"><strong>Faktura do rozpoznania</strong><p>Ten zakup jest Twój? Po przypisaniu faktura będzie widoczna tylko dla Ciebie i księgowości.</p>@include('expenses.claim')</div>@endif
 @include('expenses.workflow')
-<form class="exp-card" method="POST" action="{{$invoice->exists ? route('expenses.update',$invoice) : route('expenses.store')}}" id="expense-form" data-form-draft="false" data-entry-wizard="{{!$invoice->exists && !$errors->any() && $editable ? '1' : '0'}}" data-existing="{{$invoice->exists ? '1' : '0'}}">@csrf @if($invoice->exists)@method('PUT')<input type="hidden" name="revision" value="{{$invoice->revision}}">@endif
+<form class="exp-card" method="POST" action="{{$invoice->exists ? route('expenses.update',$invoice) : route('expenses.store')}}" id="expense-form" data-form-draft="false" data-entry-wizard="{{!$invoice->exists && !$errors->any() && $editable ? '1' : '0'}}">@csrf @if($invoice->exists)@method('PUT')<input type="hidden" name="revision" value="{{$invoice->revision}}">@endif
 <fieldset style="border:0;padding:0" @disabled(!$editable)><div class="exp-grid">
 @include('expenses.entry-fields')
 @if($accounting)

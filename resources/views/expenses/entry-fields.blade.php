@@ -9,7 +9,7 @@
     });
     $projectId = old('project_id', $invoice->project_id);
 @endphp
-<label class="exp-field" data-expense-step>Data zakupu *<input name="purchase_date" type="date" value="{{old('purchase_date',$invoice->purchase_date?->toDateString())}}" required></label>
+<label class="exp-field" data-expense-step>Data zakupu *<input name="purchase_date" type="date" max="{{ today()->toDateString() }}" value="{{old('purchase_date',$invoice->purchase_date?->toDateString())}}" required></label>
 <label class="exp-field" data-expense-step>Numer faktury (opcjonalnie)<input name="invoice_number" value="{{old('invoice_number',$invoice->invoice_number)}}" maxlength="255"></label>
 <label class="exp-field" data-expense-step>Kwota brutto (zł) *<input name="gross_amount" type="number" inputmode="decimal" min="0" max="999999999999.99" step="0.01" value="{{old('gross_amount',$invoice->gross_amount)}}" required></label>
 <label class="exp-field" data-expense-step>Kto zapłacił<input name="paid_by" value="{{old('paid_by',$invoice->exists ? $invoice->paid_by : auth()->user()->name)}}" maxlength="255"></label>
