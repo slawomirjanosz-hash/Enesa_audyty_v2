@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>4.3 Zakres i granice systemu — ENESA</title>
+<style>
+/* Editable slide master. The platform serves only the rendered PNG slides. */
+:root{--navy:#0d2536;--teal:#0099a5;--lime:#99c93c;--blue:#28a8d1;--muted:#526571;--paper:#f4f8fa;--line:#d9e4e9}
+*{box-sizing:border-box}body{margin:0;background:#dce4e8;color:var(--navy);font-family:Calibri,"Segoe UI",Arial,sans-serif}
+.slide{position:relative;width:1280px;height:720px;margin:0;overflow:hidden;background:var(--paper);padding:46px 54px 62px;page-break-after:always}
+.slide.dark{background:var(--navy);color:white}.eyebrow{margin:0 0 10px;color:var(--teal);font-size:15px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase}.dark .eyebrow{color:#48ced7}
+h1{font-size:54px;line-height:1.08;margin:0 0 18px;letter-spacing:-.6px}h2{font-size:38px;line-height:1.13;margin:0 0 12px;max-width:1060px}h3{font-size:26px;line-height:1.12;margin:0 0 12px}p{font-size:23px;line-height:1.3;margin:0 0 14px}.lead{font-size:26px;max-width:1040px;color:var(--muted)}.dark .lead{color:#c1d8e6}.small{font-size:19px}.muted{color:var(--muted)}.dark .muted{color:#b8d0df}.teal{color:var(--teal)}.lime{color:var(--lime)}
+.logo{position:absolute;right:43px;top:14px;width:82px;text-align:center;line-height:1}.logo img{display:block;width:69px;height:69px;object-fit:contain;margin:0 auto 2px}.logo b{font-family:Arial,sans-serif;font-size:15px;letter-spacing:2px;color:#68a729}.dark .logo b{color:#a4cb42}
+footer{position:absolute;left:54px;right:54px;bottom:23px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#637783;letter-spacing:.35px}.dark footer{color:#adc2ce}.ref{position:absolute;left:54px;right:54px;bottom:48px;font-size:14px;color:#536c7a}.dark .ref{color:#b3cbd9}
+.content{margin-top:30px}.grid{display:grid;gap:22px}.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.four{grid-template-columns:repeat(4,1fr)}.card{background:white;border:1px solid var(--line);border-radius:9px;padding:25px 27px}.dark .card{background:#16384f;border-color:#28516a}.card p:last-child{margin-bottom:0}.card.accent{border-top:5px solid var(--teal)}.card.green{border-top:5px solid var(--lime)}.label{display:block;margin-bottom:12px;font-size:15px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);font-weight:700}.dark .label{color:#4bd0d9}.number{display:inline-grid;place-items:center;background:var(--teal);color:white;min-width:39px;height:34px;border-radius:6px;font-size:20px;font-weight:700;margin-right:14px}.banner{padding:20px 26px;background:var(--navy);color:white;border-radius:8px;font-size:25px;font-weight:700;line-height:1.25}.dark .banner{background:#16384f}.row{display:flex;align-items:center;gap:20px}.stack{display:grid;gap:15px}.pill{display:inline-block;background:#e6f4f4;color:#007f88;padding:6px 12px;border-radius:5px;font-size:18px;font-weight:700}.bullet{padding-left:20px;position:relative}.bullet:before{content:"";position:absolute;left:0;top:11px;width:7px;height:7px;border-radius:50%;background:var(--teal)}.flow{display:flex;gap:16px;align-items:stretch}.flow>div{flex:1}.arrow{flex:0 0 28px!important;align-self:center;color:var(--teal);font-size:36px;text-align:center}.outline{border:2px solid var(--teal);border-radius:9px;padding:24px}.kicker{font-size:78px;line-height:1;font-weight:700;color:var(--teal)}.compact p{font-size:21px}.qa{display:grid;grid-template-columns:52px 1fr 1fr;gap:15px;align-items:center;background:white;border:1px solid var(--line);border-radius:7px;padding:17px 21px}.qa p{font-size:22px;margin:0}.qa .answer{color:var(--muted);font-size:20px}.qa .number{margin:0}.source{font-size:18px;line-height:1.4;color:#c6dce8}
+.slide[data-slide="15"] .qa{padding:13px 21px}
+@media print{body{background:white}.slide{margin:0}@page{size:1280px 720px;margin:0}}
+
+.boundary-layout{display:grid;grid-template-columns:1.65fr 1fr;gap:24px;margin-top:28px}.boundary{border:3px solid var(--teal);border-radius:10px;padding:23px;background:#ebf7f7}.map-box{background:white;border:1px solid #c7dcdf;border-radius:6px;text-align:center;padding:16px 8px;font-size:23px;font-weight:700;display:grid;place-items:center;min-height:85px}.energy-line{background:var(--navy);color:white;border-radius:6px;font-size:22px;text-align:center;margin-top:20px;padding:16px}.energy-chart{display:flex;height:45px;border-radius:7px;overflow:hidden;margin-top:30px}.slide[data-slide="11"] .card,.slide[data-slide="12"] .card{padding:19px 24px}.slide[data-slide="14"] .qa{padding:13px 21px}
+</style>
+</head>
+<body>
+<section class="slide dark" data-slide="1">
+ <p class="eyebrow">Moduł 1 / Punkt 4.3</p>
+ <h1 style="margin-top:22px;max-width:1000px">Co obejmuje nasz<br>system zarządzania energią?</h1>
+ <p class="lead">Zakres, granice i uprawnienia do sterowania energią</p>
+ <div class="grid" style="grid-template-columns:.7fr 1.4fr;margin-top:38px;align-items:center">
+  <div class="card" style="text-align:center"><span style="font-size:100px;line-height:1;font-weight:700;color:#46ced8">1%</span><p style="margin:15px 0 0">LPG do wózków widłowych</p></div>
+  <div><h3 style="font-size:33px">Mały udział w zużyciu.<br>Czy uwzględnić go w systemie?</h3><p>Tak, jeżeli wózki pracują w ustalonych granicach systemu.</p><p class="lime"><b>W granicach uwzględniamy wszystkie rodzaje energii.</b></p></div>
+ </div>
+ <div class="ref">Przykład AutoParts z książki: tom 2, s. 26–27. Wartość służy ilustracji, nie opisuje bieżącego audytu.</div>
+</section>
+
+<section class="slide" data-slide="2">
+ <p class="eyebrow">Trzy podstawowe pytania</p><h2>Co? Gdzie? Kto decyduje?</h2>
+ <p class="lead">Te trzy odpowiedzi tworzą spójny opis systemu.</p>
+ <div class="grid three" style="margin-top:38px">
+  <div class="card accent"><span class="label">Zakres</span><h3 style="font-size:34px">Co obejmujemy?</h3><p>Działalność, procesy i jednostki organizacyjne.</p><p class="small muted">Na przykład produkcja, magazyn, utrzymanie ruchu i administracja zakładu.</p></div>
+  <div class="card accent"><span class="label">Granice</span><h3 style="font-size:34px">Gdzie działamy?</h3><p>Lokalizacje, obiekty i granice organizacyjne.</p><p class="small muted">Adresy, plan terenu, wskazane budynki i jednostki objęte systemem.</p></div>
+  <div class="card green"><span class="label">Uprawnienia</span><h3 style="font-size:34px">Kto steruje?</h3><p>Osoby i podmioty, które decydują o energii.</p><p class="small muted">Podstawa decyzji, odpowiedzialność i uzgodnienia z innymi podmiotami.</p></div>
+ </div>
+ <div class="banner" style="margin-top:30px">Opis działalności, mapa granic i rzeczywiste uprawnienia muszą do siebie pasować.</div>
+ <div class="ref">Źródło: Bronisław Pytel, „Energia pod kontrolą”, tom 2, s. 26–28.</div>
+</section>
+
+<section class="slide" data-slide="3">
+ <p class="eyebrow">Dane wejściowe</p><h2>Wróć do ustaleń 4.1 i 4.2</h2>
+ <div class="flow" style="margin-top:40px">
+  <div class="card"><span class="kicker">4.1</span><h3 style="margin-top:18px">Kontekst organizacji</h3><p>Lokalizacje, procesy, instalacje i sposób prowadzenia działalności.</p></div>
+  <div class="arrow">+</div>
+  <div class="card"><span class="kicker">4.2</span><h3 style="margin-top:18px">Wymagania stron</h3><p>Sprawdź, jakiej działalności i których lokalizacji dotyczą wymagania.</p></div>
+  <div class="arrow">→</div>
+  <div class="card accent"><span class="kicker">4.3</span><h3 style="margin-top:18px">Wybór zakresu</h3><p>Zapisz, jak wcześniejsze ustalenia wpłynęły na granice systemu.</p></div>
+ </div>
+ <div class="banner" style="margin-top:26px;font-size:23px">Jeżeli klient wymaga certyfikatu zakładu produkującego jego wyroby,<br>system obejmujący samo biuro nie odpowiada temu wymaganiu.</div>
+ <p class="small" style="margin-top:22px">Przy integracji z ISO 9001 lub ISO 14001 wykorzystaj wspólne procesy, a granice EnMS ustal osobno.</p>
+ <div class="ref">Źródła: tom 2, s. 26, 28–29; tom 1, s. 43–46; najnowszy materiał ENESA do 4.3.</div>
+</section>
+
+<section class="slide" data-slide="4">
+ <p class="eyebrow">Wymaganie</p><h2>Czego wymaga punkt 4.3?</h2>
+ <p class="lead">Omówienie na podstawie książki, własnymi słowami.</p>
+ <div class="grid two content compact">
+  <div class="card accent"><h3>Ustalenie zakresu i granic</h3><p>Określ zastosowanie systemu, uwzględniając kontekst i wymagania stron.</p></div>
+  <div class="card accent"><h3>Zapewnienie uprawnień</h3><p>Ustal możliwość sterowania efektywnością energetyczną, wykorzystaniem i zużyciem energii.</p></div>
+  <div class="card green"><h3>Wszystkie rodzaje energii</h3><p>Uwzględnij każdy rodzaj energii występujący w ustalonych granicach.</p></div>
+  <div class="card green"><h3>Udokumentowany zapis</h3><p>Utrzymuj zakres i granice jako aktualną udokumentowaną informację.</p></div>
+ </div>
+ <div class="ref">Źródło: tom 2, s. 26–28. Omówienie nie jest dosłownym tekstem normy.</div>
+</section>
+
+<section class="slide" data-slide="5">
+ <p class="eyebrow">Mapa granic</p><h2>Najpierw działalność i granice</h2>
+ <p class="lead">Przykład schematyczny: system obejmuje zakład produkcyjny.</p>
+ <div class="boundary-layout">
+  <div class="boundary">
+   <span class="label">W granicach systemu</span>
+   <div class="grid three" style="gap:14px"><div class="map-box">Produkcja</div><div class="map-box">Magazyn</div><div class="map-box">Administracja<br>zakładu</div><div class="map-box">Kotłownia</div><div class="map-box">Sprężarkownia</div><div class="map-box">Wózki<br>w zakładzie</div></div>
+   <div class="energy-line">Energia elektryczna &nbsp; / &nbsp; Gaz &nbsp; / &nbsp; LPG</div>
+   <p class="small" style="margin:18px 0 0">Dla każdego obszaru sprawdź granicę i uprawnienia. Zestawienie energii musi objąć całą tę działalność.</p>
+  </div>
+  <div class="stack"><div class="card"><span class="label">Poza granicami w tym przykładzie</span><h3>Biuro w innym mieście</h3><p class="small">Osobna lokalizacja. Wybór zakresu wymaga uzasadnienia.</p></div><div class="card"><h3>Przewoźnik zewnętrzny</h3><p class="small">Własna flota przewoźnika. Opisz relację z zakładem.</p></div></div>
+ </div>
+ <div class="ref">Własny schemat dydaktyczny na podstawie tomu 2, s. 27–29. Nie zastępuje planu rzeczywistego zakładu.</div>
+</section>
+
+<section class="slide" data-slide="6">
+ <p class="eyebrow">Kompletność energii</p><h2>Mały udział nadal należy do bilansu</h2>
+ <p class="lead">AutoParts w książce: trzy rodzaje energii w granicach zakładu.</p>
+ <div class="energy-chart" aria-label="Energia elektryczna 70%, gaz 29%, LPG 1%"><div style="width:70%;background:var(--teal)"></div><div style="width:29%;background:var(--navy)"></div><div style="width:1%;background:var(--lime)"></div></div>
+ <div class="grid three" style="margin-top:20px;text-align:center"><div><span class="kicker">70%</span><p>Energia elektryczna</p></div><div><span class="kicker" style="color:var(--navy)">29%</span><p>Gaz</p></div><div><span class="kicker" style="color:#659424">1%</span><p>LPG</p></div></div>
+ <div class="grid two" style="margin-top:22px"><div class="card"><h3>Uwzględnij w przeglądzie</h3><p class="small">Sprawdź zużycie, miejsce wykorzystania i źródło danych każdego nośnika.</p></div><div class="card green"><h3>Dostosuj sposób zarządzania</h3><p class="small">Mały nośnik nie musi automatycznie mieć osobnego celu lub wskaźnika EnPI.</p></div></div>
+ <div class="ref">Źródło: tom 2, s. 26–27. Udziały z przykładu ilustracyjnego AutoParts, nie z danych klienta.</div>
+</section>
+
+<section class="slide" data-slide="7">
+ <p class="eyebrow">Uprawnienia</p><h2>Kto naprawdę może zmienić nastawy?</h2>
+ <p class="lead">Wynajmowana hala i wspólne instalacje wymagają sprawdzenia podziału decyzji.</p>
+ <div class="grid three content">
+  <div class="card accent"><span class="number">1</span><h3 style="margin-top:20px">Obiekt i decyzje</h3><p>Kto ustawia ogrzewanie, godziny pracy i parametry instalacji?</p><p class="small muted">Wskaż konkretny obiekt oraz zakres uprawnień.</p></div>
+  <div class="card accent"><span class="number">2</span><h3 style="margin-top:20px">Podstawa</h3><p>Co wynika z umowy, porozumienia albo podziału odpowiedzialności?</p><p class="small muted">Potwierdź dostęp do danych i możliwość sterowania.</p></div>
+  <div class="card green"><span class="number">3</span><h3 style="margin-top:20px">Brak uprawnień</h3><p>Ustal potrzebne uzgodnienia z właścicielem lub operatorem.</p><p class="small muted">Przed ostatecznym zatwierdzeniem rozstrzygnij rzeczywistą granicę.</p></div>
+ </div>
+ <div class="ref">Źródło: tom 2, s. 27–28; materiał ENESA do punktu 4.3.</div>
+</section>
+
+<section class="slide" data-slide="8">
+ <p class="eyebrow">Usługi i przepływy przez granicę</p><h2>Sprawdź, jaką działalność wykonuje dostawca</h2>
+ <div class="grid two" style="margin-top:35px">
+  <div class="card accent"><span class="label">Serwis sprężarkowni zakładu</span><h3>Praca przy systemie objętym EnMS</h3><p>Sprężarkownia obsługuje produkcję zakładu.</p><p>Ustal odpowiedzialność, zasady eksploatacji i potrzebny nadzór nad usługą.</p><p class="small muted">Samo zlecenie serwisu nie przenosi instalacji poza granice.</p></div>
+  <div class="card green"><span class="label">Transport własną flotą przewoźnika</span><h3>Działalność poza ustaloną granicą</h3><p>Paliwo przewoźnika jest zużywane w jego działalności.</p><p>Opisz relację z zakładem i sprawdź wymagania dotyczące tej usługi.</p><p class="small muted">Ustalenie zależy od rzeczywistego podziału działalności i uprawnień.</p></div>
+ </div>
+ <div class="banner" style="margin-top:26px;font-size:23px">Przy cieple kupowanym od innego podmiotu opisz dostawę<br>i uwzględnij ciepło wykorzystywane przez działalność objętą systemem.</div>
+ <div class="ref">Źródło: tom 2, s. 27.</div>
+</section>
+
+<section class="slide" data-slide="9">
+ <p class="eyebrow">Działalność poza granicami</p><h2>Uzasadnienie powinno opisywać relację</h2>
+ <p class="lead">Przy każdym obszarze pozostającym poza systemem sprawdź trzy rzeczy.</p>
+ <div class="grid three content">
+  <div class="card"><span class="number">1</span><h3 style="margin-top:20px">Przynależność</h3><p>Do kogo należy działalność i kto ją prowadzi?</p><p class="small muted">Na przykład powierzchnia użytkowana przez odrębnego najemcę.</p></div>
+  <div class="card"><span class="number">2</span><h3 style="margin-top:20px">Uprawnienia</h3><p>Kto podejmuje decyzje dotyczące energii?</p><p class="small muted">Sprawdź umowę i faktyczny podział odpowiedzialności.</p></div>
+  <div class="card green"><span class="number">3</span><h3 style="margin-top:20px">Przepływy energii</h3><p>Co przechodzi przez granicę i jak to rozliczasz?</p><p class="small muted">Opisz zasilanie, pomiary oraz powiązanie z działalnością zakładu.</p></div>
+ </div>
+ <div class="banner" style="margin-top:28px">Sam procent udziału w zużyciu nie uzasadnia pozostawienia obszaru poza granicami.</div>
+ <div class="ref">Źródło: tom 2, s. 27–29; materiał ENESA do punktu 4.3.</div>
+</section>
+
+<section class="slide" data-slide="10">
+ <p class="eyebrow">Przykład z książki</p><h2>Dwie lokalizacje, uzasadniony pierwszy etap</h2>
+ <p class="lead">Producent opakowań: zakład produkcyjny i osobne biuro sprzedaży z magazynem.</p>
+ <div class="grid two content"><div class="card accent"><span class="label">Wymaganie klienta</span><h3>Certyfikat dla zakładu produkcyjnego</h3><p>To tutaj powstają opakowania dla klienta. Zakład odpowiada za 95% zużycia energii firmy.</p></div><div class="card green"><span class="label">Decyzja o zakresie</span><h3>Najpierw zakład, później biuro</h3><p>W zakładzie uwzględniono prąd, gaz i LPG. Osobne biuro opisano jako działalność poza granicami.</p></div></div>
+ <div class="banner" style="margin-top:28px">Decyzję uzasadnia zgodność z wymaganiami stron<br>oraz rzeczywisty przebieg granic i uprawnienia.</div>
+ <p class="small" style="margin-top:20px">Rozszerzanie systemu etapami wymaga sprawdzenia wymagań dotyczących całej organizacji.</p>
+ <div class="ref">Źródło: tom 2, s. 29. Przykład ilustracyjny autora; nie jest uniwersalną decyzją dla każdej firmy.</div>
+</section>
+
+<section class="slide" data-slide="11">
+ <p class="eyebrow">Dokumentowanie</p><h2>Sześć elementów zapisu zakresu</h2>
+ <div class="grid two content compact" style="gap:16px">
+  <div class="card"><h3>Działalność i granice</h3><p>Procesy, jednostki, adresy, obiekty i plan.</p></div>
+  <div class="card"><h3>Wnioski z 4.1 i 4.2</h3><p>Źródła decyzji oraz konsekwencje dla zakresu.</p></div>
+  <div class="card"><h3>Wszystkie rodzaje energii</h3><p>Lista uzgodniona z fakturami i ewidencją.</p></div>
+  <div class="card"><h3>Uprawnienia do sterowania</h3><p>Odpowiedzialni i podstawa podejmowania decyzji.</p></div>
+  <div class="card"><h3>Obszary poza granicami</h3><p>Uzasadnienie oraz relacje i przepływy energii.</p></div>
+  <div class="card green"><h3>Aktualność i zmiany</h3><p>Data, powód zmiany i zatwierdzenie zapisu.</p></div>
+ </div>
+ <div class="ref">Źródło: tom 2, s. 28. W ENESA dokumentem tego punktu jest D-EnMS-ZAK-01.</div>
+</section>
+
+<section class="slide" data-slide="12">
+ <p class="eyebrow">Praca w platformie ENESA</p><h2>Kolejność wypełniania ankiety 4.3</h2>
+ <div class="grid two content compact" style="gap:16px">
+  <div class="card"><h3><span class="number">1</span>Konsekwencje z 4.1 i 4.2</h3><p>Sprawdź propozycje i uzasadnij decyzje.</p></div>
+  <div class="card"><h3><span class="number">2</span>Zakres</h3><p>Opisz działalność, procesy i jednostki.</p></div>
+  <div class="card"><h3><span class="number">3</span>Granice</h3><p>Ustal lokalizacje i przebieg granicy.</p></div>
+  <div class="card"><h3><span class="number">4</span>Uprawnienia</h3><p>Wskaż, kto i na jakiej podstawie steruje energią.</p></div>
+  <div class="card"><h3><span class="number">5</span>Rodzaje energii</h3><p>Sprawdź występowanie i źródła danych.</p></div>
+  <div class="card green"><h3><span class="number">6</span>Poza granicami</h3><p>Opisz działalność i uzasadnij jej położenie poza systemem.</p></div>
+ </div>
+ <div class="ref">Kolejność zakładek istniejącej ankiety ENESA; treść opracowana na podstawie materiału źródłowego 4.3.</div>
+</section>
+
+<section class="slide" data-slide="13">
+ <p class="eyebrow">Zatwierdzenie i dokument</p><h2>Od zapisanych odpowiedzi do D-EnMS-ZAK-01</h2>
+ <div class="stack content">
+  <div class="qa"><span class="number">1</span><p>Sprawdź dane źródłowe.</p><p class="answer">Profil, 4.1 i 4.2 muszą mieć aktualne zatwierdzenia klienta i audytora.</p></div>
+  <div class="qa"><span class="number">2</span><p>Klient zapisuje i zatwierdza.</p><p class="answer">Zapis roboczy jest możliwy wcześniej. Zatwierdzenie wymaga gotowych źródeł.</p></div>
+  <div class="qa"><span class="number">3</span><p>Audytor przegląda zakres.</p><p class="answer">Sprawdza ustalenia, opracowuje analizę i zatwierdza albo zwraca do poprawy.</p></div>
+  <div class="qa"><span class="number">4</span><p>Generuj i zapisz PDF.</p><p class="answer">Dokument pozostaje w Dokumentacji punktu 4.3.</p></div>
+ </div>
+ <p class="small" style="margin-top:20px">Gdy zmienią się źródła, sprawdź aktualność zakresu i komunikaty platformy przed dalszym zatwierdzaniem.</p>
+ <div class="ref">Opis aktualnego obiegu ENESA. Dla punktu 4.4 potrzebne są zatwierdzone i aktualne dokumenty 4.1–4.3.</div>
+</section>
+
+<section class="slide" data-slide="14">
+ <p class="eyebrow">Audyt</p><h2>Co powinno dać się pokazać audytorowi?</h2>
+ <div class="stack content">
+  <div class="qa"><span class="number">1</span><p>Gdzie przebiega granica?</p><p class="answer">Opis, adresy i plan odpowiadający rzeczywistemu zakładowi.</p></div>
+  <div class="qa"><span class="number">2</span><p>Dlaczego wybrano taki zakres?</p><p class="answer">Powiązanie z 4.1 oraz wymaganiami stron z 4.2.</p></div>
+  <div class="qa"><span class="number">3</span><p>Czy lista energii jest kompletna?</p><p class="answer">Faktury, ewidencja paliw i miejsca wykorzystania energii.</p></div>
+  <div class="qa"><span class="number">4</span><p>Kto ma uprawnienia?</p><p class="answer">Ustalenia dla obiektów własnych, wynajmowanych i wspólnych.</p></div>
+  <div class="qa"><span class="number">5</span><p>Co pozostało poza systemem?</p><p class="answer">Uzasadnienie, przepływy przez granicę i aktualna decyzja.</p></div>
+ </div>
+ <div class="ref">Źródło: tom 2, s. 28–29; wskazówki ENESA do punktu 4.3.</div>
+</section>
+
+<section class="slide" data-slide="15">
+ <p class="eyebrow">Sprawdź zrozumienie</p><h2>Pięć pytań przed zatwierdzeniem zakresu</h2>
+ <div class="stack content">
+  <div class="qa"><span class="number">1</span><p>LPG ma udział 1%.<br>Czy można je pominąć?</p><p class="answer">W granicach systemu uwzględniasz je niezależnie od małego udziału.</p></div>
+  <div class="qa"><span class="number">2</span><p>Czy można zacząć<br>od jednej lokalizacji?</p><p class="answer">Sprawdź wymagania stron i zastosowanie innych obowiązków.</p></div>
+  <div class="qa"><span class="number">3</span><p>Serwis sprężarkowni jest zewnętrzny.<br>Czy instalacja wypada z systemu?</p><p class="answer">Samo zlecenie usługi<br>nie zmienia granicy.</p></div>
+  <div class="qa"><span class="number">4</span><p>Czy granice muszą być<br>takie same jak w ISO 14001?</p><p class="answer">Ustal je osobno dla EnMS,<br>na podstawie działalności i wymagań.</p></div>
+  <div class="qa"><span class="number">5</span><p>Czy ustne uzgodnienie zakresu<br>wystarczy?</p><p class="answer">Zakres i granice utrzymuj jako<br>udokumentowaną informację.</p></div>
+ </div>
+</section>
+
+<section class="slide dark" data-slide="16">
+ <p class="eyebrow">Następny krok</p><h2>Przygotuj materiały do punktu 4.3</h2>
+ <div class="grid three" style="margin-top:35px">
+  <div class="card"><span class="number">1</span><h3 style="margin-top:18px">Działalność i mapa</h3><p class="small">Procesy, lokalizacje, plan zakładu oraz ustalenia z 4.1 i 4.2.</p></div>
+  <div class="card"><span class="number">2</span><h3 style="margin-top:18px">Energia i uprawnienia</h3><p class="small">Faktury, ewidencja paliw, umowy i porozumienia dotyczące instalacji.</p></div>
+  <div class="card"><span class="number">3</span><h3 style="margin-top:18px">Decyzja o zakresie</h3><p class="small">Uzasadniona granica, zatwierdzony zapis i data przeglądu.</p></div>
+ </div>
+ <div style="margin-top:26px"><span class="label">Źródła i opracowanie</span><p class="source">Bronisław Pytel, „Energia pod kontrolą”, wersje testowe 2026-10:<br>tom 2 (v2), punkt 4.3, s. 25–30; tom 1, integracja systemów, s. 43–46.<br>Materiał ENESA do punktu 4.3, wersja HTML „platforma-4”.</p><p class="source">Opracowanie szkoleniowe ENESA, 13.11.2026. Przykłady służą nauce.<br>Zakres konkretnej organizacji wymaga sprawdzenia jej dokumentów i działalności.</p></div>
+</section>
+
+<script>
+document.querySelectorAll('.slide').forEach((slide, index) => {
+ const logo = document.createElement('div'); logo.className = 'logo';
+ const image = document.createElement('img'); image.src = '../../../public/logo1.png'; image.alt = 'ENESA';
+ const name = document.createElement('b'); name.textContent = 'ENESA'; logo.append(image, name); slide.append(logo);
+ const footer = document.createElement('footer');
+ const label = document.createElement('span'); label.textContent = 'ENERGIA POD KONTROLĄ · ISO 50001 · moduł 4.3';
+ const number = document.createElement('span'); number.textContent = String(index + 1).padStart(2, '0');
+ footer.append(label, number); slide.append(footer);
+});
+</script>
+</body>
+</html>
