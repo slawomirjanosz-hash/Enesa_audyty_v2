@@ -49,7 +49,12 @@ class ExpenseInvoiceController extends Controller
         } elseif ($tab === 'pool') {
             $query->where('is_unassigned', true)->whereNull('owner_id');
         }
-        $filters = $request->validate(['month' => ['nullable', 'date_format:Y-m'], 'search' => ['nullable', 'string', 'max:100']]);
+        $filters = $request->validate(['month' => ['nullable', 'date_format:Y-m'], 'search' => ['nullable', 'string', 'max:100'], 'workflow' => ['nullable', Rule::in([...array_keys(ExpenseInvoice::WORKFLOW), 'pending'])]]);
+        if (! empty($filters['workflow'])) {
+            $query->whereIn('workflow_status', $filters['workflow'] === 'pending'
+                ? ($accounting ? ['new', 'disputed'] : ['settled', 'returned'])
+                : [$filters['workflow']]);
+        }
         if (! empty($filters['month'])) {
             $start = Carbon::createFromFormat('Y-m-d', $filters['month'].'-01');
             $query->whereBetween('purchase_date', [$start->toDateString(), $start->copy()->endOfMonth()->toDateString()]);
@@ -62,13 +67,13 @@ class ExpenseInvoiceController extends Controller
                 }
             });
         }
-        $sorts = ['id', 'purchase_date', 'invoice_number', 'ksef_number', 'wz_number', 'supplier_name', 'net_amount', 'gross_amount', 'owner_name', 'payment_method', 'payment_source', 'payment_status', 'paid_by', 'cost_center', 'description'];
+        $sorts = ['id', 'purchase_date', 'invoice_number', 'ksef_number', 'wz_number', 'supplier_name', 'net_amount', 'gross_amount', 'owner_name', 'payment_method', 'payment_source', 'payment_status', 'workflow_status', 'paid_by', 'cost_center', 'description'];
         $sort = in_array($request->input('table_sort'), $sorts, true) ? $request->input('table_sort') : 'purchase_date';
         $direction = $request->input('table_direction') === 'asc' ? 'asc' : 'desc';
         if ($request->input('table_sort') === 'status') {
             $query->orderByRaw("CASE WHEN settled_at IS NOT NULL THEN 'Rozliczona' WHEN is_unassigned = true THEN 'Do przypisania' ELSE 'Do rozliczenia' END ".$direction);
         } else {
-            $labels = ['payment_method' => ExpenseInvoice::METHODS, 'payment_source' => ExpenseInvoice::SOURCES, 'payment_status' => ExpenseInvoice::PAYMENTS];
+            $labels = ['payment_method' => ExpenseInvoice::METHODS, 'payment_source' => ExpenseInvoice::SOURCES, 'payment_status' => ExpenseInvoice::PAYMENTS, 'workflow_status' => ExpenseInvoice::WORKFLOW];
             if (isset($labels[$sort])) {
                 $expression = $sort === 'payment_status' ? "CASE WHEN settled_at IS NOT NULL THEN 'Rozliczona — zamknięta' ELSE CASE ".$sort : 'CASE '.$sort;
                 $bindings = [];
@@ -94,10 +99,29 @@ class ExpenseInvoiceController extends Controller
         return $this->form($request, new ExpenseInvoice(['purchase_date' => today(), 'payment_method' => 'unknown', 'payment_source' => 'unknown', 'payment_status' => 'unknown']));
     }
 
+    public function pending(Request $request)
+    {
+        $this->access($request->user());
+
+        return response()->json(['count' => ExpenseInvoice::pendingWorkflowCount($request->user(), $this->accounting($request->user()))])->header('Cache-Control', 'private, no-store');
+    }
+
     public function edit(Request $request, ExpenseInvoice $invoice)
     {
         $this->access($request->user());
         abort_unless($this->visible($request->user())->whereKey($invoice->id)->exists(), 404);
+
+        if ($request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && ! $request->session()->has('support_user_preview')
+            && ! str_contains($request->header('Sec-Purpose', '').$request->header('Purpose', ''), 'prefetch')) {
+            DB::transaction(function () use ($request, &$invoice): void {
+                $invoice = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
+                if ($invoice->workflow_status === 'new') {
+                    $invoice->recordWorkflow('read', $request->user());
+                    $invoice->revision++;
+                    $invoice->save();
+                }
+            });
+        }
 
         return $this->form($request, $invoice);
     }
@@ -162,6 +186,9 @@ class ExpenseInvoiceController extends Controller
         }
         if ($data['payment_status'] === 'settled') {
             abort_unless($this->accounting($request->user()), 403);
+            if (! $invoice || $invoice->workflow_status !== null) {
+                throw ValidationException::withMessages(['payment_status' => 'Użyj przycisku „Rozlicz fakturę”.']);
+            }
             $request->validate([
                 'gross_amount' => ['required', 'numeric'],
                 'payment_method' => [Rule::notIn(['unknown'])],
@@ -187,7 +214,9 @@ class ExpenseInvoiceController extends Controller
     public function store(Request $request)
     {
         $this->access($request->user());
-        $invoice = ExpenseInvoice::create($this->data($request) + ['created_by' => $request->user()->id]);
+        $invoice = new ExpenseInvoice($this->data($request) + ['created_by' => $request->user()->id]);
+        $invoice->recordWorkflow('new', $request->user());
+        $invoice->save();
 
         return redirect()->route('expenses.edit', $invoice)->with('success', 'Zakup został zapisany.');
     }
@@ -202,7 +231,12 @@ class ExpenseInvoiceController extends Controller
             $data = $this->data($request, $current);
             abort_unless($current->revision === (int) $request->input('revision'), 409, 'Faktura została zmieniona. Odśwież stronę.');
             abort_if($current->settled_at && (($data['owner_id'] ?? $current->owner_id) !== $current->owner_id || ($data['is_unassigned'] ?? false)), 422, 'Rozliczonej faktury nie można ponownie publikować ani przypisywać.');
-            $current->fill($data)->forceFill(['revision' => $current->revision + 1])->save();
+            $current->fill($data);
+            if ($current->workflow_status === 'returned' && $current->owner_id === $request->user()->id && ! $current->is_unassigned) {
+                $current->recordWorkflow('new', $request->user());
+            }
+            $current->revision++;
+            $current->save();
         });
 
         return redirect()->route('expenses.edit', $invoice)->with('success', 'Dane zostały zapisane.');
@@ -228,12 +262,55 @@ class ExpenseInvoiceController extends Controller
         $request->validate(['confirm' => ['required', 'accepted'], 'revision' => ['required', 'integer']]);
         DB::transaction(function () use ($invoice, $request): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
+            abort_unless($current->workflow_status === null, 409, 'Użyj nowego obiegu rozliczenia.');
             abort_unless($current->owner_id && ! $current->is_unassigned && ! $current->settled_at && $current->revision === (int) $request->input('revision'), 409, 'Faktura jest nieprzypisana, rozliczona lub została zmieniona.');
             abort_unless($current->gross_amount !== null && $current->payment_status !== 'unknown' && $current->payment_method !== 'unknown' && $current->payment_source !== 'unknown' && filled($current->paid_by), 422, 'Uzupełnij kwotę brutto, status i sposób płatności, źródło środków oraz osobę płacącą.');
             $current->forceFill(['settled_at' => now(), 'settled_by' => $request->user()->id, 'revision' => $current->revision + 1])->save();
         });
 
         return back()->with('success', 'Faktura została oznaczona jako rozliczona.');
+    }
+
+    public function workflow(Request $request, ExpenseInvoice $invoice)
+    {
+        $user = $request->user();
+        $this->access($user);
+        $data = $request->validate([
+            'action' => ['required', Rule::in(['settled', 'returned', 'disputed', 'closed'])],
+            'revision' => ['required', 'integer'],
+            'note' => ['nullable', 'string', 'max:1000', 'required_if:action,returned,disputed'],
+            'settlement_method' => ['required_if:action,settled', Rule::in(array_keys(ExpenseInvoice::SETTLEMENT_METHODS))],
+            'settlement_amount' => ['nullable', 'numeric', 'decimal:0,2', 'min:0', 'max:999999999999.99', 'required_if:action,settled'],
+        ]);
+        $action = $data['action'];
+        $forAccounting = in_array($action, ['settled', 'returned'], true);
+        abort_unless($forAccounting ? $this->accounting($user) : $invoice->owner_id === $user->id, 403);
+
+        DB::transaction(function () use ($invoice, $user, $action, $forAccounting, $data): void {
+            $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
+            abort_unless($forAccounting || $current->owner_id === $user->id, 403);
+            abort_unless($current->revision === (int) $data['revision'], 409, 'Faktura została zmieniona. Odśwież stronę.');
+            abort_unless($current->owner_id && ! $current->is_unassigned, 409, 'Najpierw przypisz fakturę do pracownika.');
+            abort_unless($forAccounting
+                ? in_array($current->workflow_status, ['read', 'disputed'], true) || ($current->workflow_status === null && ! $current->settled_at)
+                : $current->workflow_status === 'settled', 409, 'Ta czynność jest niedostępna w bieżącym statusie.');
+
+            if ($action === 'settled') {
+                abort_unless($current->gross_amount !== null && $current->payment_status !== 'unknown' && $current->payment_method !== 'unknown' && $current->payment_source !== 'unknown' && filled($current->paid_by), 422, 'Uzupełnij dane płatności przed rozliczeniem.');
+                $amount = (float) $data['settlement_amount'];
+                if ($data['settlement_method'] === 'none' ? $amount !== 0.0 : $amount <= 0 || $amount > (float) $current->gross_amount) {
+                    throw ValidationException::withMessages(['settlement_amount' => 'Podaj kwotę rozliczenia do wysokości brutto albo 0 przy rozliczeniu bez zwrotu.']);
+                }
+                $current->forceFill(['settled_at' => now(), 'settled_by' => $user->id, 'settlement_method' => $data['settlement_method'], 'settlement_amount' => $data['settlement_amount']]);
+            } elseif ($action === 'returned') {
+                $current->forceFill(['settled_at' => null, 'settled_by' => null, 'settlement_amount' => null, 'settlement_method' => null]);
+            }
+            $current->recordWorkflow($action, $user, $data['note'] ?? null);
+            $current->revision++;
+            $current->save();
+        });
+
+        return redirect()->route('expenses.edit', $invoice)->with('success', 'Status: '.ExpenseInvoice::WORKFLOW[$action].'.');
     }
 
     public function destroy(Request $request, ExpenseInvoice $invoice)

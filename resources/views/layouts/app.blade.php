@@ -487,8 +487,16 @@
                 <a href="{{ route('warehouse.index') }}" class="nav-link {{ request()->routeIs('warehouse.*') ? 'active' : '' }}"><i class="ti ti-building-warehouse"></i> Magazyn</a>
             </li>
             @endif
-            @if(($appBrand?->moduleEnabled('expenses') ?? false) && (auth()->user()->hasRole('superadmin') || auth()->user()->canAny(['expenses.use', 'expenses.accounting'])))
-            <li class="nav-item"><a href="{{route('expenses.index')}}" class="nav-link {{request()->routeIs('expenses.*') ? 'active' : ''}}"><i class="ti ti-receipt"></i> Rozliczenia faktur</a></li>
+            @if(($appBrand?->moduleEnabled('expenses') ?? false) && !auth()->user()->hasAnyRole(['client_admin','client_user']) && (auth()->user()->hasRole('superadmin') || auth()->user()->canAny(['expenses.use', 'expenses.accounting'])))
+            @php
+                $expenseAccounting = auth()->user()->hasRole('superadmin') || auth()->user()->can('expenses.accounting');
+                $expensePending = \App\Models\ExpenseInvoice::pendingWorkflowCount(auth()->user(), $expenseAccounting);
+            @endphp
+            <li class="nav-item"><a href="{{route('expenses.index', $expensePending ? ['tab'=>$expenseAccounting?'all':'own','workflow'=>'pending'] : [])}}" class="nav-link {{request()->routeIs('expenses.*') ? 'active' : ''}}" data-expense-alert="{{route('expenses.pending')}}" data-pending-url="{{route('expenses.index',['tab'=>$expenseAccounting?'all':'own','workflow'=>'pending'])}}" data-index-url="{{route('expenses.index')}}"><i class="ti ti-receipt"></i> <span class="{{$expensePending && $expenseAccounting ? 'expense-nav-pulse' : ''}}" data-expense-label @if($expenseAccounting)data-accounting @endif>Rozliczenia faktur</span><strong data-expense-count @if(!$expensePending)hidden @endif title="Faktury wymagające Twojej uwagi">{{$expensePending}}</strong></a></li>
+            @once
+                <style>.expense-nav-pulse{animation:expense-nav-pulse 1.8s ease-in-out infinite}@keyframes expense-nav-pulse{50%{opacity:.58}}@media(prefers-reduced-motion:reduce){.expense-nav-pulse{animation:none}}</style>
+                <script src="{{asset('js/expense-nav.js')}}" defer></script>
+            @endonce
             @endif
             @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
             <li class="nav-item nav-group {{ request()->is('audit*', 'energy-passports*') ? 'open' : '' }}">

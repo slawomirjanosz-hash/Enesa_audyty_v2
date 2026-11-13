@@ -35,6 +35,7 @@
     };
     form.elements.namedItem('search').addEventListener('input', schedule);
     form.elements.namedItem('month').addEventListener('change', schedule);
+    form.elements.namedItem('workflow').addEventListener('change', schedule);
     form.addEventListener('submit', event => { event.preventDefault(); clearTimeout(timer); search(); });
     document.getElementById('expense-extra-columns').addEventListener('change', event => {
         results.classList.toggle('exp-show-extra', event.target.checked);

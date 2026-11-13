@@ -41,6 +41,37 @@ beforeEach(function () {
     Http::preventStrayRequests();
 });
 
+test('invoice workflow signals accounting and requires the owner to confirm settlement', function () {
+    $owner = expenseUser();
+    $accountant = expenseUser(true);
+    $other = expenseUser();
+    expenseRecord($owner);
+    $this->actingAs($accountant)->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
+    $this->actingAs($owner)->post(route('expenses.store'), expenseData(['invoice_number' => 'NEW-WORKFLOW', 'payment_method' => 'cash', 'payment_source' => 'personal', 'payment_status' => 'paid', 'gross_amount' => '123', 'paid_by' => $owner->name]))->assertSessionHasNoErrors();
+    $invoice = ExpenseInvoice::where('invoice_number', 'NEW-WORKFLOW')->sole();
+    expect($invoice->workflow_status)->toBe('new');
+    $this->actingAs($accountant)->getJson(route('expenses.pending'))->assertJsonPath('count', 1);
+    $this->get(route('expenses.index', ['tab' => 'all', 'workflow' => 'pending', 'table_sort' => 'workflow_status']))->assertOk()->assertSee('NEW-WORKFLOW');
+    expect($invoice->fresh()->workflow_status)->toBe('new');
+    $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('Odczytana');
+    $this->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
+    $this->post(route('expenses.workflow', $invoice), ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'refund', 'settlement_amount' => '123'])->assertSessionHasNoErrors();
+    expect($invoice->fresh()->workflow_status)->toBe('settled');
+    $this->actingAs($other)->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
+    $this->post(route('expenses.workflow', $invoice), ['action' => 'closed', 'revision' => $invoice->fresh()->revision])->assertForbidden();
+    $this->actingAs($owner)->getJson(route('expenses.pending'))->assertJsonPath('count', 1);
+    $this->post(route('expenses.workflow', $invoice), ['action' => 'disputed', 'revision' => $invoice->fresh()->revision, 'note' => 'Kwota do sprawdzenia'])->assertSessionHasNoErrors();
+    $this->actingAs($accountant)->getJson(route('expenses.pending'))->assertJsonPath('count', 1);
+    $this->post(route('expenses.workflow', $invoice), ['action' => 'returned', 'revision' => $invoice->fresh()->revision, 'note' => 'Uzupełnij koszt'])->assertSessionHasNoErrors();
+    $this->actingAs($owner)->put(route('expenses.update', $invoice), expenseData(['revision' => $invoice->fresh()->revision, 'cost_center' => 'Budowa', 'gross_amount' => '123', 'payment_method' => 'cash', 'payment_source' => 'personal', 'payment_status' => 'paid', 'paid_by' => $owner->name]))->assertSessionHasNoErrors();
+    expect($invoice->fresh()->workflow_status)->toBe('new');
+    $this->actingAs($accountant)->get(route('expenses.edit', $invoice))->assertOk();
+    $this->post(route('expenses.workflow', $invoice), ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'advance', 'settlement_amount' => '123'])->assertSessionHasNoErrors();
+    $this->actingAs($owner)->post(route('expenses.workflow', $invoice), ['action' => 'closed', 'revision' => $invoice->fresh()->revision])->assertSessionHasNoErrors();
+    expect(array_column($invoice->fresh()->workflow_history, 'status'))->toBe(['new', 'read', 'settled', 'disputed', 'returned', 'new', 'read', 'settled', 'closed']);
+    $this->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
+});
+
 test('employees create only their own invoices and cannot forge ownership settlement or accounting data', function () {
     $user = expenseUser();
     $other = expenseUser();
@@ -204,7 +235,7 @@ test('manual buyers remain private to accounting and are preserved during editin
     $invoice = ExpenseInvoice::firstOrFail();
     expect($invoice->owner_id)->toBeNull()->and($invoice->owner_name)->toBe('Kupujący spoza bazy')->and($invoice->is_unassigned)->toBeFalse();
     $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('Kupujący spoza bazy')->assertSee('Wpisz ręcznie');
-    $this->put(route('expenses.update', $invoice), expenseData(['revision' => 1, 'owner_mode' => 'manual', 'owner_name' => 'Poprawiony kupujący']))->assertSessionHasNoErrors();
+    $this->put(route('expenses.update', $invoice), expenseData(['revision' => $invoice->fresh()->revision, 'owner_mode' => 'manual', 'owner_name' => 'Poprawiony kupujący']))->assertSessionHasNoErrors();
     expect($invoice->fresh()->owner_name)->toBe('Poprawiony kupujący');
     $this->actingAs($employee)->get(route('expenses.index', ['tab' => 'pool']))->assertDontSee('FV/23/2026');
     $this->get(route('expenses.edit', $invoice))->assertNotFound();
