@@ -44,7 +44,7 @@ class ExpenseInvoiceController extends Controller
         $accounting = $this->accounting($request->user());
         $tab = $request->input('tab', 'own');
         abort_unless(in_array($tab, $accounting ? ['own', 'pool', 'all'] : ['own', 'pool'], true), 403);
-        $query = $this->visible($request->user())->with('owner');
+        $query = $this->visible($request->user())->with('owner')->select('expense_invoices.*')->selectRaw(ExpenseInvoice::PAYMENT_LABEL_SQL.' AS payment_label');
         if ($tab === 'own') {
             $query->where('owner_id', $request->user()->id);
         } elseif ($tab === 'pool') {
@@ -68,7 +68,7 @@ class ExpenseInvoiceController extends Controller
                 }
             });
         }
-        $sorts = ['id', 'purchase_date', 'invoice_number', 'ksef_number', 'wz_number', 'supplier_name', 'net_amount', 'gross_amount', 'owner_name', 'payment_method', 'payment_source', 'payment_status', 'workflow_status', 'paid_by', 'cost_center', 'description'];
+        $sorts = ['id', 'purchase_date', 'invoice_number', 'ksef_number', 'wz_number', 'supplier_name', 'net_amount', 'gross_amount', 'owner_name', 'payment_method', 'payment_source', 'payment_status', 'workflow_status', 'paid_by', 'cost_center', 'description', 'payment_label'];
         $sort = in_array($request->input('table_sort'), $sorts, true) ? $request->input('table_sort') : 'purchase_date';
         $direction = $request->input('table_direction') === 'asc' ? 'asc' : 'desc';
         if ($request->input('table_sort') === 'status') {

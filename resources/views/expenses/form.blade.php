@@ -25,6 +25,6 @@
 </p>@endif</fieldset>
 @if(!$editable)<p class="exp-muted">{{$invoice->settled_at ? 'Faktura została rozliczona i jest zamknięta do edycji.' : 'Przypisz fakturę do siebie, aby uzupełnić dane swojego zakupu.'}}</p>@endif
 </form>
-@if($invoice->exists)@include('expenses.delete')@endif
+@if($invoice->exists)@include('expenses.legacy-details')@include('expenses.delete')@endif
 @endsection
 @push('scripts')<script type="module" src="{{asset('js/expense-form.js')}}?v=4"></script>@endpush

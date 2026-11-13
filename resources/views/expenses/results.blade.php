@@ -1,9 +1,19 @@
-<div class="exp-card exp-table-wrap"><table class="exp-table" data-server-sort="id,purchase_date,invoice_number,wz_number,ksef_number,supplier_name,net_amount,gross_amount,owner_name,payment_method,payment_source,payment_status,paid_by,cost_center,description,status,workflow_status,"><thead><tr>
-<th>ID</th><th title="Data zakupu">Data</th><th title="Nr faktury">Faktura</th><th class="exp-extra-col">Nr WZ</th><th class="exp-extra-col">Nr KSeF</th><th>Dostawca</th><th title="Netto PLN">Netto</th><th title="Brutto PLN">Brutto</th><th>Kupujący</th><th>Płatność</th><th class="exp-extra-col">Środki</th><th title="Stan zapłaty">Stan</th><th class="exp-extra-col">Kto zapłacił</th><th title="Miejsce kosztu">Koszt</th><th class="exp-extra-col">Opis</th><th class="exp-extra-col">Rozliczenie</th><th>Status</th><th data-sortable="false">Akcje</th></tr></thead><tbody>
-@forelse($invoices as $invoice)<tr>
-<td>{{$invoice->id}}</td><td data-sort-value="{{$invoice->purchase_date->toDateString()}}">{{$invoice->purchase_date->format('d.m.Y')}}</td><td><a href="{{route('expenses.edit',$invoice)}}">{{$invoice->invoice_number ?: 'Bez numeru'}}</a></td><td class="exp-extra-col">{{$invoice->wz_number ?: '—'}}</td><td class="exp-extra-col">{{$invoice->ksef_number ?: '—'}}</td><td>{{$invoice->supplier_name}}</td>
-@foreach(['net_amount','gross_amount'] as $amount)<td class="exp-number" data-sort-value="{{$invoice->$amount}}">{{$invoice->$amount !== null ? number_format((float)$invoice->$amount,2,',',' ') : '—'}}</td>@endforeach
-<td>{{$invoice->owner_name ?: 'Nieprzypisana'}}</td><td>{{\App\Models\ExpenseInvoice::METHODS[$invoice->payment_method]}}</td><td class="exp-extra-col">{{\App\Models\ExpenseInvoice::SOURCES[$invoice->payment_source]}}</td><td>{{$invoice->settled_at ? \App\Models\ExpenseInvoice::PAYMENTS['settled'] : \App\Models\ExpenseInvoice::PAYMENTS[$invoice->payment_status]}}</td><td class="exp-extra-col">{{$invoice->paid_by ?: '—'}}</td><td>{{$invoice->cost_center ?: '—'}}</td><td class="exp-extra-col">{{$invoice->description ?: '—'}}</td><td class="exp-extra-col"><span class="exp-badge">{{$invoice->statusLabel()}}</span></td><td><span class="exp-badge">{{\App\Models\ExpenseInvoice::WORKFLOW[$invoice->workflow_status] ?? "—"}}</span>
+<div class="exp-card exp-table-wrap">
+<table class="exp-table" data-server-sort="purchase_date,invoice_number,gross_amount,owner_name,paid_by,cost_center,payment_label,workflow_status,">
+<thead><tr>
+<th>Data zakupu</th><th>Faktura</th><th>Brutto</th><th>Kupujący</th><th>Kto zapłacił</th><th>Projekt / miejsce kosztu</th><th>Jak zapłacono</th><th>Status</th><th data-sortable="false">Akcje</th>
+</tr></thead>
+<tbody>
+@forelse($invoices as $invoice)
+<tr>
+<td data-sort-value="{{ $invoice->purchase_date->toDateString() }}">{{ $invoice->purchase_date->format('d.m.Y') }}</td>
+<td><a href="{{ route('expenses.edit', $invoice) }}">{{ $invoice->invoice_number ?: 'Bez numeru' }}</a></td>
+<td class="exp-number" data-sort-value="{{ $invoice->gross_amount }}">{{ $invoice->gross_amount !== null ? number_format((float) $invoice->gross_amount, 2, ',', ' ') : '—' }}</td>
+<td>{{ $invoice->owner_name ?: 'Nieprzypisana' }}</td>
+<td>{{ $invoice->paid_by ?: '—' }}</td>
+<td>{{ $invoice->cost_center ?: '—' }}</td>
+<td>{{ $invoice->payment_label }}</td>
+<td><span class="exp-badge">{{ \App\Models\ExpenseInvoice::WORKFLOW[$invoice->workflow_status] ?? '—' }}</span>
 @if($accounting && $invoice->owner_id !== auth()->id() && $invoice->workflow_status === 'new')
     <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false">
         @csrf
@@ -20,5 +30,5 @@
     </details>
 @endif
 </td><td><a class="exp-btn" href="{{route('expenses.edit',$invoice)}}">{{$invoice->settled_at || (!$accounting && $invoice->owner_id!==auth()->id()) ? 'Podgląd' : 'Edytuj'}}</a>@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)@include('expenses.claim')@endif @include('expenses.delete')</td>
-</tr>@empty<tr><td colspan="18">Brak faktur spełniających wybrane kryteria.</td></tr>@endforelse
+</tr>@empty<tr><td colspan="9">Brak faktur spełniających wybrane kryteria.</td></tr>@endforelse
 </tbody></table></div>{{$invoices->links()}}

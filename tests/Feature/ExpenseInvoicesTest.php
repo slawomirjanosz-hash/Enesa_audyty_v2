@@ -445,3 +445,20 @@ test('accounting entry is explicit and an accountant who claims acts as the empl
     ]))->assertSessionHasNoErrors();
     expect($pool->fresh()->paid_by)->toBe('Osoba spoza systemu');
 });
+
+test('invoice list sorts the combined payment label and keeps old fields in details', function () {
+    $owner = expenseUser();
+    $personal = expenseRecord($owner, [
+        'invoice_number' => 'PAY-PERSONAL',
+        'payment_status' => 'paid',
+        'payment_source' => 'personal',
+        'wz_number' => 'WZ-HISTORY',
+        'net_amount' => '12.00',
+    ]);
+    expenseRecord($owner, ['invoice_number' => 'PAY-UNPAID', 'payment_status' => 'unpaid']);
+    $this->actingAs($owner)->get(route('expenses.index', ['table_sort' => 'payment_label', 'table_direction' => 'asc']))
+        ->assertOk()->assertSeeInOrder(['PAY-UNPAID', 'PAY-PERSONAL'])->assertDontSee('WZ-HISTORY')->assertDontSee('Więcej kolumn');
+    $this->get(route('expenses.index', ['table_sort' => 'payment_label', 'table_direction' => 'desc']))
+        ->assertOk()->assertSeeInOrder(['PAY-PERSONAL', 'PAY-UNPAID']);
+    $this->get(route('expenses.edit', $personal))->assertOk()->assertSee('Dane ze starszego formularza')->assertSee('WZ-HISTORY');
+});

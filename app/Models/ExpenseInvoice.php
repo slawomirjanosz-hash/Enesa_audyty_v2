@@ -48,6 +48,8 @@ class ExpenseInvoice extends Model
         return $this->belongsTo(User::class, 'owner_id')->withTrashed();
     }
 
+    public const PAYMENT_LABEL_SQL = "CASE WHEN payment_status = 'unpaid' THEN 'Nieopłacono' WHEN payment_status = 'partial' THEN 'Częściowo opłacona' WHEN payment_source = 'personal' THEN 'Prywatnie' WHEN payment_source = 'company' THEN 'Służbowo' WHEN payment_status IN ('paid', 'settled') THEN 'Opłacona' ELSE 'Nie wiadomo' END";
+
     public function statusLabel(): string
     {
         return $this->settled_at ? 'Rozliczona' : ($this->is_unassigned ? 'Do przypisania' : 'Do rozliczenia');
