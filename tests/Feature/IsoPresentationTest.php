@@ -51,6 +51,38 @@ test('presentation library includes sixteen example slides but never a source do
         ->assertSee('data-slide-dialog', false)->assertDontSee('download="', false);
 });
 
+test('training decks are displayed inside their own ISO clause on full pages', function (string $view) {
+    $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
+    $user = presentationUser($view === 'client' ? 'client_user' : 'superadmin');
+    if ($view === 'catalogue') {
+        $url = route('audit-types.show', ['auditType' => $type, 'section' => '4-2']);
+    } else {
+        $company = Company::create(['name' => 'Firma prezentacji']);
+        $user->companies()->attach($company);
+        $audit = Audit::create(['company_id' => $company->id, 'number' => 'PRES/VISIBLE', 'title' => 'Audyt ISO', 'status' => 'draft']);
+        $audit->surveys()->create(['audit_type_id' => $type->id, 'title' => 'ISO', 'status' => 'draft']);
+        $url = route($view === 'client' ? 'client.audits.show' : 'audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => '4-2']);
+    }
+    $response = $this->actingAs($user)->get($url)->assertOk();
+    $dom = new DOMDocument;
+    $dom->loadHTML('<?xml encoding="utf-8" ?>'.$response->getContent(), LIBXML_NOERROR | LIBXML_NOWARNING);
+    $xpath = new DOMXPath($dom);
+    foreach (['4-1', '4-2'] as $section) {
+        $deck = IsoPresentation::where('section_id', $section)->firstOrFail();
+        $cards = $xpath->query('//section[@data-iso-panel="'.$section.'"]//article[@data-presentation-title]');
+        expect($cards->length)->toBe(1, 'Presentation missing from clause '.$section.' in '.$view);
+        expect($cards->item(0)->getAttribute('data-presentation-title'))->toBe($deck->title);
+        $slideUrl = $view === 'catalogue'
+            ? route('audit-types.presentations.slide', [$type, $deck, 1])
+            : route($view === 'client' ? 'client.audits.presentations.slide' : 'audits.presentations.slide', [$audit, $deck, 1]);
+        expect($xpath->query('.//img', $cards->item(0))->item(0)->getAttribute('src'))->toBe($slideUrl);
+    }
+    expect($xpath->query('//dialog[@data-slide-dialog]')->length)->toBe(1);
+    if ($view !== 'catalogue') {
+        $response->assertDontSee('Dodaj prezentację PowerPoint')->assertDontSee('Edytuj lub podmień');
+    }
+})->with(['catalogue', 'auditor', 'client']);
+
 test('client can view slides only through an owned audit with ISO assigned', function (string $section) {
     $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
     $company = Company::create(['name' => 'Firma klienta']);
