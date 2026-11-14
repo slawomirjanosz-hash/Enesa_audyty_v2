@@ -390,9 +390,11 @@ class ExpenseInvoiceController extends Controller
             abort_unless($allowed, 409, 'Ta czynność jest niedostępna w bieżącym statusie.');
 
             if ($action === 'settled') {
-                abort_unless($current->gross_amount !== null && ($current->simple_entry
-                    ? $current->payment_status === 'paid'
-                    : $current->payment_status !== 'unknown' && $current->payment_method !== 'unknown' && $current->payment_source !== 'unknown' && filled($current->paid_by)), 422, 'Uzupełnij dane płatności przed rozliczeniem. Nieopłaconą fakturę najpierw oznacz jako opłaconą.');
+                if ($current->gross_amount === null || $current->payment_status !== 'paid') {
+                    throw ValidationException::withMessages([
+                        'settlement_method' => 'Przed rozliczeniem uzupełnij kwotę brutto i oznacz fakturę jako opłaconą.',
+                    ]);
+                }
                 $amount = (float) $data['settlement_amount'];
                 if ($data['settlement_method'] === 'none' ? $amount !== 0.0 : $amount <= 0 || $amount > (float) $current->gross_amount) {
                     throw ValidationException::withMessages(['settlement_amount' => 'Podaj kwotę rozliczenia do wysokości brutto albo 0 przy rozliczeniu bez zwrotu.']);

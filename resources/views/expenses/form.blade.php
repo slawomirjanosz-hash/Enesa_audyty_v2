@@ -18,6 +18,8 @@
 <label class="exp-field" data-owner-user>Kupujący — użytkownik<select name="owner_id"><option value="">Wybierz osobę</option>@foreach($employees as $employee)<option value="{{$employee->id}}" @selected((string)old('owner_id',$invoice->owner_id)===(string)$employee->id)>{{$employee->name}}</option>@endforeach</select></label>
 <label class="exp-field" data-owner-manual>Kupujący — imię i nazwisko<input name="owner_name" value="{{old('owner_name',$invoice->owner_name)}}" maxlength="255"></label>
 </div>
+@else
+<p class="exp-field">Kupujący <strong>{{ $invoice->exists ? ($invoice->owner_name ?: 'Nieprzypisana') : auth()->user()->name }}</strong></p>
 @endif
 </div>@if($editable)<p class="exp-actions">
     @unless($invoice->exists)<button type="button" class="exp-btn" data-expense-back hidden>Wstecz</button><button type="button" class="exp-btn primary" data-expense-next hidden>Dalej</button><small data-expense-progress aria-live="polite"></small>@endunless

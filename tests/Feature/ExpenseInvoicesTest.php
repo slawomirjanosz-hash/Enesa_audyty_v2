@@ -56,7 +56,14 @@ test('invoice workflow signals accounting and requires the owner to confirm sett
     expect($invoice->fresh()->workflow_status)->toBe('new');
     $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('Odczytana');
     $this->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
-    $this->post(route('expenses.workflow', $invoice), ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'refund', 'settlement_amount' => '123'])->assertSessionHasNoErrors();
+    $invoice->update(['payment_status' => 'unpaid', 'paid_by' => null]);
+    $refund = ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'refund', 'settlement_amount' => '123'];
+    $this->from(route('expenses.edit', $invoice))->post(route('expenses.workflow', $invoice), $refund)
+        ->assertRedirect(route('expenses.edit', $invoice))->assertSessionHasErrors('settlement_method');
+    expect($invoice->fresh()->workflow_status)->toBe('read');
+
+    $invoice->update(['payment_status' => 'paid']);
+    $this->post(route('expenses.workflow', $invoice), $refund)->assertSessionHasNoErrors();
     expect($invoice->fresh()->workflow_status)->toBe('settled');
     $this->actingAs($other)->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
     $this->post(route('expenses.workflow', $invoice), ['action' => 'closed', 'revision' => $invoice->fresh()->revision])->assertForbidden();
@@ -419,7 +426,7 @@ test('accounting entry is explicit and an accountant who claims acts as the empl
     $this->actingAs($employee)->post(route('expenses.store'), $data + ['accounting_entry' => 1])->assertForbidden();
     $this->actingAs($finance)->get(route('expenses.index', ['tab' => 'all']))->assertSee('Dodaj fakturę jako księgowość');
     $this->get(route('expenses.create'))->assertOk()->assertDontSee('name="owner_mode"', false)
-        ->assertSee('list="expense-payers"', false)->assertSee($employee->name);
+        ->assertDontSee('name="paid_by"', false)->assertSee('Kupujący');
     $this->post(route('expenses.store'), $data + ['payment_choice' => 'personal'])->assertRedirect(route('expenses.index'));
     $personal = ExpenseInvoice::sole();
     expect($personal->owner_id)->toBe($finance->id)->and($personal->paid_by)->toBeNull();

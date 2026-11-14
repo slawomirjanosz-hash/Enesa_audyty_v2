@@ -1,7 +1,7 @@
 <div class="exp-card exp-table-wrap">
-<table class="exp-table" data-server-sort="purchase_date,invoice_number,gross_amount,owner_name,paid_by,cost_center,payment_label,workflow_status,">
+<table class="exp-table" data-server-sort="purchase_date,invoice_number,gross_amount,owner_name,cost_center,payment_label,workflow_status,">
 <thead><tr>
-<th>Data zakupu</th><th>Faktura</th><th>Brutto</th><th>Kupujący</th><th>Kto zapłacił</th><th>Projekt / miejsce kosztu</th><th>Jak zapłacono</th><th>Status</th><th data-sortable="false">Akcje</th>
+<th>Data zakupu</th><th>Faktura</th><th>Brutto</th><th>Kupujący</th><th>Projekt / miejsce kosztu</th><th>Jak zapłacono</th><th>Status</th><th data-sortable="false">Działania</th>
 </tr></thead>
 <tbody>
 @forelse($invoices as $invoice)
@@ -10,10 +10,9 @@
 <td><a href="{{ route('expenses.edit', $invoice) }}">{{ $invoice->invoice_number ?: 'Bez numeru' }}</a></td>
 <td class="exp-number" data-sort-value="{{ $invoice->gross_amount }}">{{ $invoice->gross_amount !== null ? number_format((float) $invoice->gross_amount, 2, ',', ' ') : '—' }}</td>
 <td>{{ $invoice->owner_name ?: 'Nieprzypisana' }}</td>
-<td>{{ $invoice->paid_by ?: '—' }}</td>
 <td>{{ $invoice->cost_center ?: '—' }}</td>
 <td>{{ $invoice->payment_label }}</td>
-<td><span class="exp-badge">{{ \App\Models\ExpenseInvoice::WORKFLOW[$invoice->workflow_status] ?? '—' }}</span>
+<td><span class="exp-badge">{{ \App\Models\ExpenseInvoice::WORKFLOW[$invoice->workflow_status] ?? '—' }}</span></td><td>
 @if($accounting && $invoice->owner_id !== auth()->id() && $invoice->workflow_status === 'new')
     <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false">
         @csrf
@@ -29,6 +28,6 @@
         @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
     </details>
 @endif
-</td><td><a class="exp-btn" href="{{route('expenses.edit',$invoice)}}">{{$invoice->settled_at || (!$accounting && $invoice->owner_id!==auth()->id()) ? 'Podgląd' : 'Edytuj'}}</a>@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)@include('expenses.claim')@endif @include('expenses.delete')</td>
-</tr>@empty<tr><td colspan="9">Brak faktur spełniających wybrane kryteria.</td></tr>@endforelse
+<a class="exp-btn" href="{{route('expenses.edit',$invoice)}}">{{$invoice->settled_at || (!$accounting && $invoice->owner_id!==auth()->id()) ? 'Podgląd' : 'Edytuj'}}</a>@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)@include('expenses.claim')@endif @include('expenses.delete')</td>
+</tr>@empty<tr><td colspan="8">Brak faktur spełniających wybrane kryteria.</td></tr>@endforelse
 </tbody></table></div>{{$invoices->links()}}

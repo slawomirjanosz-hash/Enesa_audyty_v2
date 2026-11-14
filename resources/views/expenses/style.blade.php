@@ -7,7 +7,7 @@
 </style>
 <style>.exp-delete-form{display:inline-block;margin:4px 0}.exp-btn.danger{color:#b91c1c;border-color:#fecaca;background:#fff1f2}.exp-table td:last-child{white-space:normal}.exp-table th:last-child{width:76px}</style>
 <style>
-#main,.content-area{min-width:0}.exp-card{box-sizing:border-box;max-width:100%}.exp-table-wrap{padding:0;width:100%;max-width:100%;overflow-x:auto}.exp-table{table-layout:fixed;font-size:12px}.exp-table th,.exp-table td{padding:9px 6px;overflow-wrap:anywhere;white-space:normal}.exp-table .exp-number{font-variant-numeric:tabular-nums;white-space:normal}.exp-table .exp-btn{padding:5px;font-size:11px;max-width:100%;box-sizing:border-box}.exp-table th:last-child{width:66px}.exp-table .exp-badge{white-space:normal}.exp-filters{align-items:flex-end}.exp-filters>label:not(.exp-filters>label:nth-of-type(2){flex:1;min-width:180px}.exp-filters .exp-btn{height:42px;box-sizing:border-box}.exp-field[hidden]{display:none}.exp-table .app-table-sort{white-space:normal;overflow-wrap:anywhere;text-align:left}.exp-grid small{color:#64748b;font-size:12px}@media(max-width:900px){.exp-table{min-width:850px}.exp-filters .exp-btn{padding:8px 12px}}
+#main,.content-area{min-width:0}.exp-card{box-sizing:border-box;max-width:100%}.exp-table-wrap{padding:0;width:100%;max-width:100%;overflow-x:auto}.exp-table{table-layout:fixed;font-size:12px}.exp-table th,.exp-table td{padding:9px 6px;overflow-wrap:anywhere;white-space:normal}.exp-table .exp-number{font-variant-numeric:tabular-nums;white-space:normal}.exp-table .exp-btn{padding:5px;font-size:11px;max-width:100%;box-sizing:border-box}.exp-table th:last-child{width:24%}.exp-table .exp-badge{white-space:normal}.exp-filters{align-items:flex-end}.exp-filters>label:not(:nth-of-type(2)){flex:1;min-width:180px}.exp-filters .exp-btn{height:42px;box-sizing:border-box}.exp-field[hidden]{display:none}.exp-table .app-table-sort{white-space:normal;overflow-wrap:anywhere;text-align:left}.exp-grid small{color:#64748b;font-size:12px}@media(max-width:900px){.exp-table th,.exp-table td{padding-inline:4px}.exp-filters .exp-btn{padding:8px 12px}}
 </style>
 
 <style>
@@ -15,6 +15,6 @@
 .exp-workflow-fields label{display:grid;gap:4px}
 .exp-workflow-fields input,.exp-workflow-fields select,.exp-workflow-fields textarea{width:100%;min-width:0;font:inherit}
 .exp-workflow-fields button{justify-self:start}
-.exp-list-workflow summary{cursor:pointer}.exp-table:has(.exp-list-workflow[open]){table-layout:auto}.exp-list-workflow[open]{min-width:13rem}
+.exp-list-workflow summary{cursor:pointer}.exp-table .exp-workflow-fields>*{min-width:0}.exp-workflow-fields input,.exp-workflow-fields select,.exp-workflow-fields textarea{box-sizing:border-box}
 </style>
 <script src="{{ asset('js/expense-workflow.js') }}" defer></script>
