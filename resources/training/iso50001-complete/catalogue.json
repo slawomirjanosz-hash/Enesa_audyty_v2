@@ -1,0 +1,398 @@
+[
+  {
+    "section_id": "intro",
+    "title": "1 Wstęp o ISO",
+    "description": "Poznaj drogę od danych zakładu do decyzji i wykazanej poprawy wyniku energetycznego. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_intro_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 1, s. 19–20, 50–52; tom 2, s. 9–10. Numeracja 1–3 i 11 opisuje etapy platformy.",
+    "source_sha256": "8667368cee7cd44d0fefcaacfafa9c73eaa22c846636b1e95dd44b929199594c"
+  },
+  {
+    "section_id": "training",
+    "title": "2 Filmy szkoleniowe",
+    "description": "Wykorzystaj slajdy i filmy do zrozumienia zadań, a potem sprawdź wiedzę w praktyce. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_training_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 100–105; istniejąca przeglądarka prezentacji ENESA. Materiały nie są testem zgodności.",
+    "source_sha256": "f86e4d1f50796dbc2c22263952ba1a948c50ed947738e941d4ce9fff380a7993"
+  },
+  {
+    "section_id": "preparation",
+    "title": "3 Przygotowanie wdrożenia",
+    "description": "Przygotuj decyzję, zespół, dane i plan potrzebny do rozpoczęcia wdrożenia. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_preparation_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 1, s. 29–30, 36–38, 43–46, 50–52. Rozdział 3 platformy jest etapem przygotowania.",
+    "source_sha256": "a6f5d0a1db86fcd0206787940cf2ed361e6bc204d7f6d5b9bd5709815dc831c8"
+  },
+  {
+    "section_id": "3-1",
+    "title": "3.1 Decyzja i uzasadnienie biznesowe",
+    "description": "Podejmij decyzję o wdrożeniu na podstawie danych, korzyści i realnych zasobów. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_3-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 1, s. 29–30, 50–52. Punkt 3.1 jest etapem platformy, nie numerem wymagania ISO.",
+    "source_sha256": "ef9b079387b9542cf45f64557deb91664b3587d6723666eb8f6daf2e84cb93d7"
+  },
+  {
+    "section_id": "3-2",
+    "title": "3.2 Analiza luk i plan wdrożenia",
+    "description": "Zamień rozpoznane braki w wykonalny plan wdrożenia. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_3-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 1, s. 50–52. Analiza luk i harmonogram są narzędziami przygotowania wdrożenia.",
+    "source_sha256": "5403231d55d2e346cf9bfb4f86283e1c04f231fedd7130db9f14f9d440905e33"
+  },
+  {
+    "section_id": "3-3",
+    "title": "3.3 Zespół, role i zasoby",
+    "description": "Zbuduj zespół, który ma zadania, uprawnienia i czas na ich wykonanie. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_3-3_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 1, s. 36–38, 50–52. Skład zespołu dopasuj do skali i złożoności organizacji.",
+    "source_sha256": "acbc68ffadc8b42b7a1c26e9e35fd26a2339a95d3829c941c27085e15ea2ecac"
+  },
+  {
+    "section_id": "3-4",
+    "title": "3.4 Integracja z innymi systemami",
+    "description": "Wykorzystaj działające procesy firmy, zachowując treść właściwą zarządzaniu energią. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_3-4_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 1, s. 43–46. Integracja jest sposobem organizacji pracy, a nie automatyczną zgodnością zakresów.",
+    "source_sha256": "adebc191d11d04e983c6a7c4ad0d71c3abbd92970e865c61aad0b7eea3de0f66"
+  },
+  {
+    "section_id": "3-5",
+    "title": "3.5 Ocena gotowości do startu",
+    "description": "Oceń gotowość do rozpoczęcia wdrożenia i nazwij brakujące warunki. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_3-5_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 1, s. 50–52. Lista gotowości do startu jest pomocą organizacyjną, nie oceną certyfikacyjną.",
+    "source_sha256": "f688ef261986430da6221f98013fa6b51b792f92c7785f01473658f01661a0fb"
+  },
+  {
+    "section_id": "context",
+    "title": "4 Kontekst organizacji",
+    "description": "Ustal, dla jakiej organizacji i w jakich granicach będzie działał system. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_context_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 13–35; prezentacje i materiały 4.1–4.4 ENESA. Profil pozostaje we Wstępie do ISO.",
+    "source_sha256": "4c9cf05f2c1ef1a031751feebdd7b453bcd80bd90f212cfad921fa777013a10d"
+  },
+  {
+    "section_id": "leadership",
+    "title": "5 Przywództwo",
+    "description": "Połącz decyzje kierownictwa, politykę i odpowiedzialność za wykonanie pracy. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_leadership_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 40–58; HTML 5.1–5.3 z paczki 11.11.2026. Koordynacja nie zastępuje odpowiedzialności kierownictwa.",
+    "source_sha256": "a89009c4c015b9cf92bca0752e508e31f161c59ec147312d8b370c5fa8e913c3"
+  },
+  {
+    "section_id": "5-1",
+    "title": "5.1 Przywództwo i zaangażowanie",
+    "description": "Pokaż zaangażowanie kierownictwa w decyzjach, zasobach i codziennych procesach. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_5-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 40–44; HTML 5.1 z paczki 11.11.2026. Rejestr ENESA jest metodą zebrania dowodów.",
+    "source_sha256": "844ceedb8548dde060377c872551871b655e16f5783c42f894ef3736e19eb537"
+  },
+  {
+    "section_id": "5-2",
+    "title": "5.2 Polityka energetyczna",
+    "description": "Przygotuj politykę energetyczną, która wyznacza kierunek i jest stosowana w organizacji. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_5-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 45–49; HTML 5.2 z paczki 11.11.2026. Polityka jest udokumentowaną informacją.",
+    "source_sha256": "43e973deb05c835aee257c5f673189eb10b16df1fe2567f9d0abacedffb550ba"
+  },
+  {
+    "section_id": "5-3",
+    "title": "5.3 Role, odpowiedzialności i uprawnienia",
+    "description": "Przypisz odpowiedzialności i uprawnienia tak, aby każde zadanie miało wykonawcę. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_5-3_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 49–58; HTML 5.3 z paczki 11.11.2026. Forma matrycy ról jest rozwiązaniem metodycznym.",
+    "source_sha256": "4668e80831e0a782d654063b3d31b216433279c04ae9761ca9d8249475038f31"
+  },
+  {
+    "section_id": "planning",
+    "title": "6 Planowanie",
+    "description": "Zbuduj spójną podstawę do wyboru działań i późniejszego wykazania ich skutku. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_planning_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 60–95; HTML 6.1–6.6 z paczki 11.11.2026. Kolejność pracy wynika z zależności danych.",
+    "source_sha256": "dde4bf2e4a3611aeb40308c1c75d601bb21231079045a35a8e1fb20a6f811277"
+  },
+  {
+    "section_id": "6-1",
+    "title": "6.1 Ryzyka i szanse",
+    "description": "Rozpoznaj ryzyka i szanse, zaplanuj reakcje i sprawdź ich skuteczność. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_6-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 60–66; HTML 6.1 z paczki 11.11.2026. Macierz i progi oceny są metodą organizacji.",
+    "source_sha256": "20f274de3f895d7661559a8a91a2d327fa5fe1c6cb79651402ac256af85af68b"
+  },
+  {
+    "section_id": "6-2",
+    "title": "6.2 Cele, zadania energetyczne i plany działania",
+    "description": "Przełóż kierunek poprawy na cele, zadania energetyczne i plany działań. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_6-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 78–82; HTML 6.2 z paczki 11.11.2026. Szczegółowy układ formularza jest metodyką ENESA.",
+    "source_sha256": "d5aafcc6735ee17e20b049371fa73c12fc8b776ba34c9d5dd38d3aeee7f19db3"
+  },
+  {
+    "section_id": "6-3",
+    "title": "6.3 Przegląd energetyczny",
+    "description": "Ustal, gdzie i jak organizacja używa energii oraz gdzie może poprawić wynik. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_6-3_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 68–76; HTML 6.3 z paczki 11.11.2026. Progi liczbowe prototypu są metodyką, nie normą.",
+    "source_sha256": "e7cd6af8522931527e2405a29a206d2d21e1cfb7f9747b91dc04c2626a7a49ff"
+  },
+  {
+    "section_id": "6-4",
+    "title": "6.4 Wskaźniki wyniku energetycznego",
+    "description": "Dobierz wskaźniki, które pozwolą ocenić wynik energetyczny i wykazać jego zmianę. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_6-4_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 82–85; HTML 6.4 z paczki 11.11.2026. Dobór i jakość modelu ocenia człowiek.",
+    "source_sha256": "af91777299ea2318516ef7e7da5988cead9844e9b086d278ada56ba1a3f67cd1"
+  },
+  {
+    "section_id": "6-5",
+    "title": "6.5 Energetyczna linia bazowa",
+    "description": "Ustal wiarygodny punkt odniesienia i zachowaj historię jego zmian. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_6-5_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 86–88; HTML 6.5 z paczki 11.11.2026. Rewizja i korekta danych wymagają rozróżnienia.",
+    "source_sha256": "364e29c848c740700753232a7546adb856cb0016944ee799b578da2a9c014cb5"
+  },
+  {
+    "section_id": "6-6",
+    "title": "6.6 Planowanie zbierania danych energetycznych",
+    "description": "Zaplanuj zbieranie danych, które rzeczywiście umożliwią pomiar i ocenę wyników. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_6-6_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 89–95; HTML 6.6 z paczki 11.11.2026. Plan i rzeczywista realizacja to różne informacje.",
+    "source_sha256": "ac4f667de7631a7d6e740508c42865ae8663edeef43a5394391c171143c61c8c"
+  },
+  {
+    "section_id": "support",
+    "title": "7 Wsparcie",
+    "description": "Zapewnij warunki, w których ludzie potrafią wykonać zadania systemu. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_support_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 97–113; HTML 7.1–7.5 z paczki 11.11.2026. Warunki pracy sprawdzaj w praktyce.",
+    "source_sha256": "76cb88f8fc62f79ba3e591d434b513de90ecfc4f8026056bab0ccd2e43be7889"
+  },
+  {
+    "section_id": "7-1",
+    "title": "7.1 Zasoby",
+    "description": "Zapewnij ludzi, czas, środki i narzędzia potrzebne do działania systemu. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_7-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 97–100; HTML 7.1 z paczki 11.11.2026. Rejestr zasobów i progi obciążenia są metodyką ENESA.",
+    "source_sha256": "e90bd760d1a890f27edc048c9eabe28b923dafa58ceef63afb992b45c2887666"
+  },
+  {
+    "section_id": "7-2",
+    "title": "7.2 Kompetencje",
+    "description": "Zapewnij kompetencje do wykonania pracy i zachowaj dowody ich potwierdzenia. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_7-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 100–103; HTML 7.2 z paczki 11.11.2026. Skala matrycy jest narzędziem, nie progiem normy.",
+    "source_sha256": "90b9c189e4ef8f3e81d854f26e035f2d08b14517a6e67a3c9a6153828092692b"
+  },
+  {
+    "section_id": "7-3",
+    "title": "7.3 Świadomość",
+    "description": "Sprawdź, czy ludzie rozumieją wpływ swojej pracy na energię i sens ustalonych zasad. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_7-3_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 103–105; HTML 7.3 z paczki 11.11.2026. O świadomości świadczy rozmowa i praktyka.",
+    "source_sha256": "1b7ec6235254e5bb8785d3568887cd9819027396f44186b48ab57f0d55096176"
+  },
+  {
+    "section_id": "7-4",
+    "title": "7.4 Komunikacja",
+    "description": "Zapewnij wiarygodną komunikację i działającą drogę zgłaszania uwag oraz propozycji. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_7-4_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 105–108; HTML 7.4 z paczki 11.11.2026. Szczegółowy rejestr odpowiedzi jest metodą ENESA.",
+    "source_sha256": "a2c778eb3f7e04b8a6c32e3bbcf222e28250ec2a6d209ff5526a1a2b2d5d59c3"
+  },
+  {
+    "section_id": "7-5",
+    "title": "7.5 Udokumentowane informacje",
+    "description": "Zapewnij właściwą informację w miejscu pracy i zachowaj wiarygodne zapisy wykonania. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_7-5_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 108–113; HTML 7.5 z paczki 11.11.2026. Sam wykaz jest narzędziem nadzoru.",
+    "source_sha256": "4c9f4161958cd25836df70c4bc0abfab27915fe1b32e1e50ffb2ced448ae627e"
+  },
+  {
+    "section_id": "operation",
+    "title": "8 Działania operacyjne",
+    "description": "Przenieś ustalenia energetyczne do pracy urządzeń, projektów i zakupów. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_operation_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 114–130; HTML 8.1–8.3 z paczki 11.11.2026. Parametry techniczne ustala się dla danego zastosowania.",
+    "source_sha256": "88d833baa042e582533dbf237196ff7e3ae3a7e4f802d009c24686399ff345d1"
+  },
+  {
+    "section_id": "8-1",
+    "title": "8.1 Planowanie i nadzór operacyjny",
+    "description": "Ustal i stosuj kryteria pracy oraz utrzymania procesów mających wpływ na energię. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_8-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 114–117; HTML 8.1 z paczki 11.11.2026. Konkretne nastawy ustala się dla danego procesu.",
+    "source_sha256": "5a9cc75044ec3c68c00e2689b2f94624d0f15c12366812b7ee75e2c54deb7a6f"
+  },
+  {
+    "section_id": "8-2",
+    "title": "8.2 Projektowanie",
+    "description": "Uwzględnij energię na etapie projektu, kiedy można jeszcze zmienić rozwiązanie. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_8-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 118–121; HTML 8.2 z paczki 11.11.2026. Próg kwotowy prototypu nie jest progiem normy.",
+    "source_sha256": "d8cf06f4a62bd15818fbdc9d8f2e2999ac892816b0d66c7488042c14273d4833"
+  },
+  {
+    "section_id": "8-3",
+    "title": "8.3 Zakupy",
+    "description": "Oceniaj energetyczne skutki zakupów w przewidywanym okresie użytkowania. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_8-3_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 122–130; HTML 8.3 z paczki 11.11.2026. Pełne LCC jest metodą, nie jedyną dopuszczalną formą oceny.",
+    "source_sha256": "680748df542c23254c8c22c3bc7a97d7e20bcfb88647cd8e9eeb649ff294106a"
+  },
+  {
+    "section_id": "performance",
+    "title": "9 Ocena efektów działania",
+    "description": "Sprawdź wynik, zgodność i działanie systemu, a następnie podejmij decyzje. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_performance_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 132–154. Materiał 9.1 obejmuje monitoring i zgodność; zachowano też slajdy dla 9.1.1/9.1.2.",
+    "source_sha256": "608fbec27fd886a39ae0abd8cc00ebbfdc704043d1fba76fcf2a31770a395f09"
+  },
+  {
+    "section_id": "9-1",
+    "title": "9.1 Monitorowanie, pomiary, analiza i ocena",
+    "description": "Połącz ocenę wyniku energetycznego, skuteczności systemu i spełnienia zobowiązań. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_9-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 132–142; HTML 9.1 z paczki 11.11.2026. Omówienie monitorowania wyniku oraz oceny zgodności.",
+    "source_sha256": "59f323f8fba95b65f675f03c15ebeafc6d61e22de14034bdb8ed4d6c3482bc38"
+  },
+  {
+    "section_id": "9-1-1",
+    "title": "9.1.1 Monitorowanie wyniku i skuteczności systemu",
+    "description": "Zamień pomiary w ocenę wyniku energetycznego i skuteczności systemu. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_9-1-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 132–136; część monitorowania HTML 9.1. Przykład liczbowy jest dydaktyczny, nie danymi klienta.",
+    "source_sha256": "64abbedf1310f8a1f61ecf75adfd349425f36d82ba01e23dc893b42625951ca4"
+  },
+  {
+    "section_id": "9-1-2",
+    "title": "9.1.2 Ocena zgodności",
+    "description": "Sprawdź spełnienie mających zastosowanie wymagań prawnych i innych zobowiązań. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_9-1-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 137–142; część zgodności HTML 9.1. Aktualne obowiązki ustala się indywidualnie w rejestrze 4.2.",
+    "source_sha256": "868f91ac46dd864ad80f77574c924fba349767f4605bc3ff0f4a9a2b0b3e6df6"
+  },
+  {
+    "section_id": "9-2",
+    "title": "9.2 Audyt wewnętrzny",
+    "description": "Przeprowadź bezstronną ocenę opartą na dowodach i wykorzystaj ustalenia do poprawy. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_9-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 143–146; HTML 9.2 z paczki 11.11.2026. Terminy 14 dni w prototypie są zaleceniem metodyki.",
+    "source_sha256": "c39df3d6d0083838a32591df3be77b9303f7bc28b3738ec1c8414083f600a8f5"
+  },
+  {
+    "section_id": "9-3",
+    "title": "9.3 Przegląd zarządzania",
+    "description": "Przygotuj dane do przeglądu, który kończy się decyzjami najwyższego kierownictwa. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_9-3_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 147–154; HTML 9.3 z paczki 11.11.2026. Rytm przeglądów ustala organizacja.",
+    "source_sha256": "895a956e0e4decc74f5a87b9057b015c1b06ee87bf1606c91179bb91d874477f"
+  },
+  {
+    "section_id": "improvement",
+    "title": "10 Doskonalenie",
+    "description": "Wykorzystaj problemy i możliwości do trwałej poprawy systemu oraz wyniku. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_improvement_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 156–162; HTML 10.1–10.2 z paczki 11.11.2026. Plan oraz wykonanie nie zastępują dowodu efektu.",
+    "source_sha256": "59272cb9c2283cc7bf2115a9efbf5520e4f93e324e14fa3a847a56d4749ed0f1"
+  },
+  {
+    "section_id": "10-1",
+    "title": "10.1 Niezgodności i działania korygujące",
+    "description": "Usuń przyczynę niezgodności i potwierdź skuteczność podjętej reakcji. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_10-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 156–159; HTML 10.1 z paczki 11.11.2026. „5 × Dlaczego” jest narzędziem, nie obowiązkową metodą.",
+    "source_sha256": "68f0b3782e3d71d33642717c7d0898a7a40320ff815abea6e2b927baefa3f8c2"
+  },
+  {
+    "section_id": "10-2",
+    "title": "10.2 Ciągłe doskonalenie",
+    "description": "Doskonal sposób działania systemu i wykazuj poprawę wyniku energetycznego. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_10-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 159–162; HTML 10.2 z paczki 11.11.2026. Plan doskonalenia jest narzędziem metodycznym.",
+    "source_sha256": "197559596a6a65c96aade92033aee0bc1a3f0c631c341b815c2dff413071be1d"
+  },
+  {
+    "section_id": "certification",
+    "title": "11 Certyfikacja i utrzymanie systemu",
+    "description": "Przygotuj zewnętrzną ocenę i utrzymuj system także po uzyskaniu certyfikatu. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_certification_presentation_2026-11-14.html",
+    "slide_count": 5,
+    "source": "Tom 2, s. 166–173. Rozdział 11 jest etapem platformy, a nie dodatkowym rozdziałem wymagań ISO 50001.",
+    "source_sha256": "1729bfb729938c79592ed0affdaf565884b2094db1737f63f9d0b3f44cbc97ac"
+  },
+  {
+    "section_id": "11-1",
+    "title": "11.1 Ocena gotowości",
+    "description": "Oceń gotowość działającego systemu do zewnętrznej oceny. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_11-1_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 168–171. Punkt 11.1 jest etapem platformy; szczegóły oceny uzgadnia się z jednostką.",
+    "source_sha256": "d35b59028fdf422f4403c010effc9bea8a91e01b670de5d28d65e495dea5888a"
+  },
+  {
+    "section_id": "11-2",
+    "title": "11.2 Wybór jednostki certyfikującej",
+    "description": "Wybierz jednostkę na podstawie zakresu oceny, kompetencji i przejrzystej oferty. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_11-2_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 167–170, 173. Aktualny status jednostki i wymagania umowy trzeba zweryfikować przy wyborze.",
+    "source_sha256": "474ca221b5050d87e522d373824b4d30999b3537783f466d5f673f06530669a4"
+  },
+  {
+    "section_id": "11-3",
+    "title": "11.3 Audyt certyfikacyjny",
+    "description": "Przygotuj organizację do oceny, pokaż rzeczywiste dowody i obsłuż ustalenia. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_11-3_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 167–172. Formę etapów, czas i terminy reakcji potwierdza jednostka certyfikująca.",
+    "source_sha256": "9837682839f2220af4bd07c758e4c3c474849872003e95f93b3ba40e48f27ab0"
+  },
+  {
+    "section_id": "11-4",
+    "title": "11.4 Audyty nadzoru i recertyfikacja",
+    "description": "Utrzymuj działający system między audytami i przygotowuj kolejne oceny na bieżąco. Cel, powiązania, praktyka i pytania kontrolne. Materiał na podstawie książki Bronisława Pytla „Energia pod kontrolą”.",
+    "original_filename": "ENESA_ISO50001_11-4_presentation_2026-11-14.html",
+    "slide_count": 8,
+    "source": "Tom 2, s. 167–173. Harmonogram nadzoru i recertyfikacji należy potwierdzić z właściwą jednostką.",
+    "source_sha256": "e98e273523f42b8c6f258ecdaa6b48aa6b302f56ac64c46f7cfa7db5866139ba"
+  }
+]

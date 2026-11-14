@@ -1,0 +1,149 @@
+{
+  "prepared_on": "2026-11-14",
+  "files": [
+    {
+      "filename": "Energia_pod_kontrola_Tom1_wersja_testowa_2026-10.pdf",
+      "sha256": "9f0a365e22621b4a6e50378d03028b1413b985b31474230bf17a9f54b1ddfea5"
+    },
+    {
+      "filename": "Energia_pod_kontrola_Tom2_wersja_testowa_2026-10_v2.pdf",
+      "sha256": "d4c777b2a04e2ef7d3df629dc6d809e02b877f050158e4e2cf9a617696a45ed1"
+    },
+    {
+      "filename": "20261111 ENESA_HTML_4_1-10_2_2026-11-11.zip",
+      "sha256": "5beb043cb591a8271e21dc2dcfdacf9fa9caf4aa7bffa0d5c1da433297f622e9"
+    }
+  ],
+  "prototype_files": {
+    "4-1": {
+      "file": "HTML/ENESA_4.1_Kontekst_platforma-12.html",
+      "sha256": "3c7fede35b451a071789b9db8a81c2c9b2cbd381cc3338bad6e068bd8a2c2680",
+      "date": "2026-10-29"
+    },
+    "4-2": {
+      "file": "HTML/ENESA_4.2_Strony_zainteresowane_platforma-6.html",
+      "sha256": "b3a52171e121855408e37f8154e62da89cc72416b27bdc9a40b9988c19a802e8",
+      "date": "2026-10-29"
+    },
+    "4-3": {
+      "file": "HTML/ENESA_4.3_Zakres_systemu_platforma-4.html",
+      "sha256": "913ae42c79447ad1a4c1a3f180683ca920dc171bd9dd999bb6bb4c1a31a9291a",
+      "date": "2026-10-29"
+    },
+    "4-4": {
+      "file": "HTML/ENESA_4.4_System_zarzadzania_energia_platforma-5.html",
+      "sha256": "142bc257ba6cc55f880079d97ecad3dcd52903d24b181ab6a59e93aff4cf4d69",
+      "date": "2026-10-29"
+    },
+    "5-1": {
+      "file": "HTML/ENESA_5.1_Przywodztwo_i_zaangazowanie_platforma.html",
+      "sha256": "de51e655226492827c917ce99117a70167c64300cf7dffcb5fb05ae0d0ba6ce9",
+      "date": "2026-10-26"
+    },
+    "5-2": {
+      "file": "HTML/ENESA_5.2_Polityka_energetyczna_platforma-kopia.html",
+      "sha256": "4e6456483fe0c99f67a7bb46f20db8742bf5ca3ba9c460e38f3f0a2604fb9e17",
+      "date": "2026-10-26"
+    },
+    "5-3": {
+      "file": "HTML/ENESA_5.3_Role_i_uprawnienia_platforma-kopia.html",
+      "sha256": "b494a83d04cd2cae0242837dcc7014d2851eaf8094be6716f11554de278f13e2",
+      "date": "2026-10-26"
+    },
+    "6-1": {
+      "file": "HTML/ENESA_6.1_Ryzyka_i_szanse_platforma-kopia(1).html",
+      "sha256": "42268d055426d554fe165172df0f25cb01344721a453399bbcf686ae00d2045f",
+      "date": "2026-10-26"
+    },
+    "6-2": {
+      "file": "HTML/ENESA_6.2_Cele_i_plany_dzialan_platforma-kopia(1).html",
+      "sha256": "ce44e03838b80ab465f8fc94de24fe845be85db40277dc4ab324a09d0da09520",
+      "date": "2026-10-27"
+    },
+    "6-3": {
+      "file": "HTML/ENESA_6.3_Przeglad_energetyczny_platforma-kopia(1).html",
+      "sha256": "29a6f62bfd24a790debd6ba63bfd01e7e393270141bf27c4d35e31c21a5a0f84",
+      "date": "2026-10-26"
+    },
+    "6-4": {
+      "file": "HTML/ENESA_6.4_Wskazniki_EnPI_platforma-kopia 2(1).html",
+      "sha256": "50bb2dce3790583ad4285ea9da2c708b0f199a178e158b05950b27e7b4c5d260",
+      "date": "2026-10-27"
+    },
+    "6-5": {
+      "file": "HTML/ENESA_6.5_Linia_bazowa_platforma-kopia(1).html",
+      "sha256": "2f91e5e0b76aaa0837cd4a5b136ca49ee763ea76693e803563e1068fc327522b",
+      "date": "2026-10-27"
+    },
+    "6-6": {
+      "file": "HTML/ENESA_6.6_Plan_zbierania_danych_platforma-kopia(1).html",
+      "sha256": "b94a012fa0a57759e8d93789d88631cfef2621b5d7e7665b406c4a98047ff54c",
+      "date": "2026-10-27"
+    },
+    "7-1": {
+      "file": "HTML/ENESA_7.1_Zasoby_platforma-2.html",
+      "sha256": "8030cc909bd86e98e2bd60fdd1068c0fd70b4928f0396a1978b80c2a7af42a9a",
+      "date": "2026-10-27"
+    },
+    "7-2": {
+      "file": "HTML/ENESA_7.2_Kompetencje_platforma-kopia.html",
+      "sha256": "a1f17671f76f665758f21d6b47e7251fbc5f1f78e3875a528b278723e5a122e9",
+      "date": "2026-10-27"
+    },
+    "7-3": {
+      "file": "HTML/ENESA_7.3_Swiadomosc_platforma-kopia.html",
+      "sha256": "dec76064aa490c96ffa203487881115e40dd8a2deb16bd09027c1a52b681ad48",
+      "date": "2026-10-27"
+    },
+    "7-4": {
+      "file": "HTML/ENESA_7.4_Komunikacja_platforma-kopia.html",
+      "sha256": "d7482d5b878c4ed770b255d798e4f18fe14e3b26563a00346908590ef5c6e1fa",
+      "date": "2026-10-27"
+    },
+    "7-5": {
+      "file": "HTML/ENESA_7.5_Udokumentowane_informacje_platforma-2.html",
+      "sha256": "31e6648a44d0694a8f501e00f276919bc41d2cd97902bf11cb8aafbf986187ca",
+      "date": "2026-10-28"
+    },
+    "8-1": {
+      "file": "HTML/ENESA_8.1_Nadzor_operacyjny_platforma.html",
+      "sha256": "7c6134d320342ee2eb5a6f3a8ceee7454721203141c4345442a01157920bf580",
+      "date": "2026-10-27"
+    },
+    "8-2": {
+      "file": "HTML/ENESA_8.2_Projektowanie_platforma.html",
+      "sha256": "8475807e8caeeed06b46c4e3468a450bef86355df3abce475906b5612268b774",
+      "date": "2026-10-27"
+    },
+    "8-3": {
+      "file": "HTML/ENESA_8.3_Zakupy_platforma.html",
+      "sha256": "19e6ff1f0b634969f7ef5ad693f0146aba93ce5fa8a84dbc7df511743fee27b8",
+      "date": "2026-10-27"
+    },
+    "9-1": {
+      "file": "HTML/ENESA_9.1_Monitorowanie_platforma.html",
+      "sha256": "2b1eea60e1b3001cbafed2104fa6fcc5c0742f76692d0675942895473ad5953d",
+      "date": "2026-10-28"
+    },
+    "9-2": {
+      "file": "HTML/ENESA_9.2_Audyt_wewnetrzny_platforma.html",
+      "sha256": "01ed81ae12cb6c35a76d0b04062d512bafd99c0f8924a6a6a12723504bcf1ae7",
+      "date": "2026-10-28"
+    },
+    "9-3": {
+      "file": "HTML/ENESA_9.3_Przeglad_zarzadzania_platforma.html",
+      "sha256": "03d4f6a7d874b5924c9cf6d8eb3f2070c79eecb6d036168a840c1790d0e5d407",
+      "date": "2026-10-28"
+    },
+    "10-1": {
+      "file": "HTML/ENESA_10.1_Niezgodnosci_platforma.html",
+      "sha256": "1fd18c2620870a62f3bd66bf3572b2f76b69a1d404ca29df7ba851e7ff1eaa46",
+      "date": "2026-10-28"
+    },
+    "10-2": {
+      "file": "HTML/ENESA_10.2_Ciagle_doskonalenie_platforma.html",
+      "sha256": "1fb871106a20aaba964a6761e2b0fc5f6ef026e6648f0664ea7564937c17fe79",
+      "date": "2026-10-28"
+    }
+  }
+}

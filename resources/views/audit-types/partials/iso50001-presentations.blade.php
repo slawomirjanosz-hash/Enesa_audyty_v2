@@ -3,7 +3,7 @@
     $presentationManage = ($canManageTraining ?? false) && isset($auditType);
 @endphp
 <section class="iso-presentations" aria-label="Prezentacje szkoleniowe">
-    <header><div><h3><i class="ti ti-presentation"></i> Prezentacje szkoleniowe</h3><p>Slajdy do punktu {{str_replace('-', '.', $sectionId)}}. Oglądaj w małym lub dużym oknie.</p></div></header>
+    <header><div><h3><i class="ti ti-presentation"></i> Prezentacje szkoleniowe</h3><p>Slajdy do sekcji {{$sectionLabel ?? str_replace('-', '.', $sectionId)}}. Oglądaj w małym lub dużym oknie.</p></div></header>
     @if($presentationManage)
         <details class="iso-presentation-edit"><summary>+ Dodaj prezentację PowerPoint</summary>
             <form method="POST" enctype="multipart/form-data" action="{{route('audit-types.presentations.store', $auditType)}}" data-presentation-upload>
