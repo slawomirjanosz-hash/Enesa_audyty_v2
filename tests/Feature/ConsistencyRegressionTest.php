@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\DocumentVersionService;
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -73,6 +74,8 @@ test('document version counter never reuses a reserved version', function () {
 });
 
 test('overdue reminders exclude removed projects and revoked access', function () {
+    // This test covers access, not the real calendar: reminders skip weekends.
+    $this->travelTo(Carbon::parse('2026-11-16 08:01', 'Europe/Warsaw'));
     config(['mail.default' => 'smtp', 'mail.from.address' => 'reminders@test.invalid']);
     Mail::fake();
     $user = consistencyUser(['projects.view', 'projects.schedule.view']);
@@ -86,6 +89,8 @@ test('overdue reminders exclude removed projects and revoked access', function (
     Mail::assertSent(TaskOverdue::class, 1);
     Mail::fake();
     $project->delete();
+    // Avoid the daily delivery claim masking the deleted-project check.
+    $this->travelTo(Carbon::parse('2026-11-17 08:01', 'Europe/Warsaw'));
     $this->artisan('tasks:send-overdue-reminders')->assertSuccessful();
     Mail::assertNothingSent();
 });
