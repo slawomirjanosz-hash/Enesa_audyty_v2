@@ -535,18 +535,17 @@
 
 @if($canViewDocuments)
 <section id="pane-documents" class="pane">
-    @include('documents.external-links',['owner'=>$project,'canManageLinks'=>$canEdit])
+    @include('documents.external-links',['owner'=>$project,'canManageLinks'=>$canEdit,'compactHelp'=>true])
     @include('documents.quota')
     @if($canEdit)
     <div class="card">
-        <h2>Katalogi i udostępnianie</h2>
+        <x-document-help heading="Katalogi i udostępnianie"><p>Dla katalogu możesz utworzyć bezpieczny link dla osoby, która nie ma konta w systemie.</p></x-document-help>
         <form method="POST" action="{{route('projects.document-folders.store',$project)}}" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap">@csrf
             <div class="field" style="min-width:260px"><label>Nazwa nowego katalogu</label><input name="name" maxlength="120" required placeholder="np. Dokumentacja od projektantów"></div>
             <button class="btn"><i class="ti ti-folder-plus"></i> Dodaj katalog</button>
         </form>
-        <small style="display:block;margin-top:9px;color:#66736b">Dla katalogu możesz utworzyć bezpieczny link dla osoby, która nie ma konta w systemie.</small>
     </div>
-    <div class="card"><h2>Dodaj dokumenty projektu</h2><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap"><div class="field"><label>Pliki</label><input type="file" name="files[]" multiple required></div><div class="field"><label>Katalog</label><select name="project_document_folder_id"><option value="">Dokumenty bez katalogu</option>@foreach($project->documentFolders as $folder)<option value="{{$folder->id}}">{{$folder->name}}</option>@endforeach</select></div><button class="btn">Wgraj dokumenty</button></div><small>Jednorazowo do 20 plików. PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB na plik.</small></form></div>
+    <div class="card"><x-document-help heading="Dodaj dokumenty projektu"><p>Jednorazowo do 20 plików. PDF, Word, Excel, obrazy lub ZIP, maks. 20 MB na plik.</p></x-document-help><form method="POST" enctype="multipart/form-data" action="{{route('projects.documents.store',$project)}}">@csrf<div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap"><div class="field"><label>Pliki</label><input type="file" name="files[]" multiple required></div><div class="field"><label>Katalog</label><select name="project_document_folder_id"><option value="">Dokumenty bez katalogu</option>@foreach($project->documentFolders as $folder)<option value="{{$folder->id}}">{{$folder->name}}</option>@endforeach</select></div><button class="btn">Wgraj dokumenty</button></div></form></div>
     @endif
 
     @foreach($project->documentFolders as $folder)

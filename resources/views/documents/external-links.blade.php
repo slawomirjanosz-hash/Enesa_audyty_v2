@@ -16,9 +16,17 @@
 </style>
 @endonce
 <div class="aw-card card workspace-links {{$isCompanyLink ? 'card-section' : ''}}">
+@if($compactHelp ?? false)
+<x-document-help>
+    <x-slot:heading><i class="ti ti-link" aria-hidden="true"></i> Dyski zewnętrzne</x-slot:heading>
+    <p>Pliki pozostają na zewnętrznym dysku. Kliknij nazwę lub adres, aby otworzyć dysk w nowej karcie. Nie wpisuj tu haseł ani kluczy dostępu.</p>
+    @if($canManageLinks)<p>Link będzie widoczny dla osób mających dostęp do dokumentów tego projektu.</p>@endif
+</x-document-help>
+@else
 <h2><i class="ti ti-link"></i> {{$isCompanyLink ? 'Ważne linki firmy' : 'Dyski zewnętrzne'}}</h2>
 <p class="workspace-help">{{$isCompanyLink ? 'Dyski zewnętrzne, dokumenty Office i strony internetowe. Kliknij nazwę lub adres, aby otworzyć link w nowej karcie.' : 'Pliki pozostają na zewnętrznym dysku. Kliknij nazwę lub adres, aby otworzyć dysk w nowej karcie.'}} Nie wpisuj tu haseł ani kluczy dostępu.</p>
 @if($canManageLinks)<p class="workspace-help">{{$isCompanyLink ? 'Linki są widoczne dla użytkowników mających dostęp do karty tej firmy.' : 'Link będzie widoczny dla osób mających dostęp do dokumentów tego '.($linkPrefix === 'audits' ? 'audytu, również klienta' : 'projektu').'.'}}</p>@endif
+@endif
 @if($canManageLinks)
 <form class="workspace-link-form" method="POST" action="{{route($linkPrefix.'.document-links.store',$owner)}}">@csrf
 <label>{{$isCompanyLink ? 'Nazwa linku' : 'Nazwa dysku / folderu'}}<input name="name" maxlength="160" placeholder="{{$isCompanyLink ? 'np. Cennik – Excel, dysk firmy, strona WWW' : 'np. Dokumentacja klienta – OneDrive'}}" required></label>
