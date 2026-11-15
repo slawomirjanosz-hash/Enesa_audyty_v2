@@ -9,8 +9,8 @@
                 @foreach($methods as $value => $label)<option value="{{ $value }}">{{ $label }}</option>@endforeach
                 <option value="returned">Zastrzeżenia</option>
             </select>
-            <button class="exp-btn primary" type="submit">Wykonaj</button>
-            <dialog class="exp-card exp-note-dialog" aria-label="Zastrzeżenia">
+            <button class="exp-btn primary" type="submit"><i class="ti ti-check" aria-hidden="true"></i> Wykonaj</button>
+            <dialog class="exp-card exp-note-dialog" data-action-icons="false" aria-label="Zastrzeżenia">
                 <label class="exp-field">Co wymaga poprawy?<textarea name="note" rows="4" maxlength="1000" disabled></textarea></label>
                 <div class="exp-actions">
                     <button class="exp-btn" type="button" data-expense-cancel>Anuluj</button>
@@ -24,7 +24,7 @@
             @isset($tab)<input type="hidden" name="from_list" value="1"><input type="hidden" name="tab" value="{{ $tab }}">@endisset
             <input type="hidden" name="action" value="closed">
             <input type="hidden" name="revision" value="{{$invoice->revision}}">
-            <button class="exp-btn primary" type="submit" data-action-icons="false"><i class="ti ti-circle-check" aria-hidden="true"></i> Potwierdź rozliczenie</button>
+            <button class="exp-btn primary" type="submit" data-action-icons="false"><i class="ti ti-check" aria-hidden="true"></i> Potwierdź rozliczenie</button>
         </form>
         <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false" data-action-icons="false">
             @csrf

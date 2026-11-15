@@ -20,7 +20,7 @@
         <input type="hidden" name="revision" value="{{ $invoice->revision }}">
         <input type="hidden" name="from_list" value="1">
         <input type="hidden" name="tab" value="{{ $tab }}">
-        <button class="exp-btn" type="submit">Oznacz jako odczytaną</button>
+        <button class="exp-btn" type="submit"><i class="ti ti-check" aria-hidden="true"></i> Oznacz jako odczytaną</button>
     </form>
 @elseif(($accounting && $invoice->owner_id && $invoice->owner_id !== auth()->id() && (in_array($invoice->workflow_status, ['read', 'disputed'], true) || ($invoice->workflow_status === null && !$invoice->settled_at))) || ($invoice->owner_id === auth()->id() && in_array($invoice->workflow_status, ['settled', 'returned'], true)))
     @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
