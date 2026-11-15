@@ -57,15 +57,14 @@ test('invoice workflow signals accounting and requires the owner to confirm sett
     $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('Odczytana');
     $this->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
     $invoice->update(['payment_status' => 'unpaid', 'paid_by' => null]);
-    $refund = ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'refund'];
-    $this->from(route('expenses.edit', $invoice))->post(route('expenses.workflow', $invoice), $refund)
-        ->assertRedirect(route('expenses.edit', $invoice))->assertSessionHasErrors('settlement_method');
-    expect($invoice->fresh()->workflow_status)->toBe('read');
-
-    $invoice->update(['payment_status' => 'paid']);
-    $this->post(route('expenses.workflow', $invoice), $refund)->assertSessionHasNoErrors();
-    expect($invoice->fresh()->workflow_status)->toBe('settled');
-    expect($invoice->fresh()->settlement_amount)->toBe('123.00');
+    $this->post(route('expenses.workflow', $invoice), [
+        'action' => 'settled',
+        'revision' => $invoice->fresh()->revision,
+        'settlement_method' => 'none',
+    ])->assertSessionHasNoErrors();
+    expect($invoice->fresh()->workflow_status)->toBe('settled')
+        ->and($invoice->fresh()->settlement_amount)->toBe('0.00')
+        ->and($invoice->fresh()->payment_status)->toBe('unpaid');
     $this->actingAs($other)->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
     $this->post(route('expenses.workflow', $invoice), ['action' => 'closed', 'revision' => $invoice->fresh()->revision])->assertForbidden();
     $this->actingAs($owner)->getJson(route('expenses.pending'))->assertJsonPath('count', 1);

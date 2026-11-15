@@ -389,11 +389,9 @@ class ExpenseInvoiceController extends Controller
             abort_unless($allowed, 409, 'Ta czynność jest niedostępna w bieżącym statusie.');
 
             if ($action === 'settled') {
-                if ($current->gross_amount === null || $current->payment_status !== 'paid') {
+                if ($data['settlement_method'] !== 'none' && $current->gross_amount === null) {
                     throw ValidationException::withMessages([
-                        'settlement_method' => $current->payment_status !== 'paid'
-                            ? 'Przed rozliczeniem oznacz fakturę jako opłaconą.'
-                            : 'W danych faktury brakuje kwoty brutto.',
+                        'settlement_method' => 'W danych faktury brakuje kwoty brutto.',
                     ]);
                 }
                 $current->forceFill(['settled_at' => now(), 'settled_by' => $user->id, 'settlement_method' => $data['settlement_method'], 'settlement_amount' => $data['settlement_method'] === 'none' ? '0.00' : $current->gross_amount]);
