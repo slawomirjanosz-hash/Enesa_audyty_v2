@@ -12,7 +12,7 @@ class ExpenseInvoice extends Model
 
     public const WORKFLOW = ['new' => 'Nowa', 'read' => 'Odczytana', 'returned' => 'Do uzupełnienia', 'settled' => 'Rozliczona', 'disputed' => 'Rozbieżność', 'closed' => 'Zakończono'];
 
-    public const SETTLEMENT_METHODS = ['refund' => 'Zwrot pracownikowi', 'advance' => 'Potrącenie z zaliczki', 'none' => 'Bez zwrotu'];
+    public const SETTLEMENT_METHODS = ['refund' => 'Zwrot pracownikowi', 'advance' => 'Zwrot zaliczki', 'none' => 'Rozliczono'];
 
     public static function pendingWorkflowCount(User $user, bool $accounting): int
     {

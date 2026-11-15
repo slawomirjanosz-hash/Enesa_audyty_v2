@@ -371,7 +371,6 @@ class ExpenseInvoiceController extends Controller
             'revision' => ['required', 'integer'],
             'note' => ['nullable', 'string', 'max:1000', 'required_if:action,returned,disputed'],
             'settlement_method' => ['required_if:action,settled', Rule::in(array_keys(ExpenseInvoice::SETTLEMENT_METHODS))],
-            'settlement_amount' => ['nullable', 'numeric', 'decimal:0,2', 'min:0', 'max:999999999999.99', 'required_if:action,settled'],
         ]);
         $action = $data['action'];
         $forAccounting = in_array($action, ['read', 'settled', 'returned'], true);
@@ -395,11 +394,7 @@ class ExpenseInvoiceController extends Controller
                         'settlement_method' => 'Przed rozliczeniem uzupełnij kwotę brutto i oznacz fakturę jako opłaconą.',
                     ]);
                 }
-                $amount = (float) $data['settlement_amount'];
-                if ($data['settlement_method'] === 'none' ? $amount !== 0.0 : $amount <= 0 || $amount > (float) $current->gross_amount) {
-                    throw ValidationException::withMessages(['settlement_amount' => 'Podaj kwotę rozliczenia do wysokości brutto albo 0 przy rozliczeniu bez zwrotu.']);
-                }
-                $current->forceFill(['settled_at' => now(), 'settled_by' => $user->id, 'settlement_method' => $data['settlement_method'], 'settlement_amount' => $data['settlement_amount']]);
+                $current->forceFill(['settled_at' => now(), 'settled_by' => $user->id, 'settlement_method' => $data['settlement_method'], 'settlement_amount' => $data['settlement_method'] === 'none' ? '0.00' : $current->gross_amount]);
             } elseif ($action === 'returned') {
                 $current->forceFill(['settled_at' => null, 'settled_by' => null, 'settlement_amount' => null, 'settlement_method' => null]);
             }

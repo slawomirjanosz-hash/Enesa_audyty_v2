@@ -57,7 +57,7 @@ test('invoice workflow signals accounting and requires the owner to confirm sett
     $this->get(route('expenses.edit', $invoice))->assertOk()->assertSee('Odczytana');
     $this->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
     $invoice->update(['payment_status' => 'unpaid', 'paid_by' => null]);
-    $refund = ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'refund', 'settlement_amount' => '123'];
+    $refund = ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'refund'];
     $this->from(route('expenses.edit', $invoice))->post(route('expenses.workflow', $invoice), $refund)
         ->assertRedirect(route('expenses.edit', $invoice))->assertSessionHasErrors('settlement_method');
     expect($invoice->fresh()->workflow_status)->toBe('read');
@@ -65,6 +65,7 @@ test('invoice workflow signals accounting and requires the owner to confirm sett
     $invoice->update(['payment_status' => 'paid']);
     $this->post(route('expenses.workflow', $invoice), $refund)->assertSessionHasNoErrors();
     expect($invoice->fresh()->workflow_status)->toBe('settled');
+    expect($invoice->fresh()->settlement_amount)->toBe('123.00');
     $this->actingAs($other)->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
     $this->post(route('expenses.workflow', $invoice), ['action' => 'closed', 'revision' => $invoice->fresh()->revision])->assertForbidden();
     $this->actingAs($owner)->getJson(route('expenses.pending'))->assertJsonPath('count', 1);
@@ -411,7 +412,7 @@ test('accounting can mark a new invoice as read from the list', function () {
     $this->actingAs($accountant)->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertSee('Oznacz jako odczytaną');
     $this->post(route('expenses.workflow', $invoice), $action)->assertRedirect(route('expenses.index', ['tab' => 'all']));
     expect($invoice->fresh()->workflow_status)->toBe('read');
-    $this->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertSee('data-gross="123.45"', false);
+    $this->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertSee('data-expense-operation', false)->assertSee('Zastrzeżenia')->assertDontSee('name="settlement_amount"', false);
 });
 
 test('accounting entry is explicit and an accountant who claims acts as the employee', function () {
@@ -435,7 +436,7 @@ test('accounting entry is explicit and an accountant who claims acts as the empl
     $pool = ExpenseInvoice::where('is_unassigned', true)->sole();
     expect($pool->payment_status)->toBe('unknown')->and($pool->paid_by)->toBeNull();
     $this->post(route('expenses.claim', $pool), ['confirm' => 1])->assertRedirect(route('expenses.edit', $pool));
-    $this->get(route('expenses.edit', $pool))->assertOk()->assertDontSee('Rozlicz fakturę')->assertDontSee('name="owner_mode"', false);
+    $this->get(route('expenses.edit', $pool))->assertOk()->assertDontSee('data-expense-operation', false)->assertDontSee('name="owner_mode"', false);
     expect($pool->fresh()->workflow_status)->toBe('new');
 
     $pool->forceFill(['workflow_status' => 'read'])->save();

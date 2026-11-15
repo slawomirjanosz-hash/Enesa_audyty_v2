@@ -1,23 +1,23 @@
     @if($accounting && $invoice->owner_id && $invoice->owner_id !== auth()->id() && (in_array($workflow,['read','disputed'],true) || ($workflow === null && !$invoice->settled_at)))
-        <form method="POST" action="{{route('expenses.workflow',$invoice)}}" data-form-draft="false" class="exp-workflow-fields">
+        <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false" class="exp-operation">
             @csrf
             @isset($tab)<input type="hidden" name="from_list" value="1"><input type="hidden" name="tab" value="{{ $tab }}">@endisset
             <input type="hidden" name="action" value="settled">
-            <input type="hidden" name="revision" value="{{$invoice->revision}}">
-            <label>Działanie <select name="settlement_method" required data-settlement-method data-gross="{{ $invoice->gross_amount }}"><option value="">Wybierz</option>@foreach($methods as $value=>$label)<option value="{{$value}}">{{$label}}</option>@endforeach</select></label>
-            <label>Kwota rozliczenia (zł) <input name="settlement_amount" type="number" min="0" step="0.01" required></label>
-            <button class="exp-btn primary">Wykonaj</button>
+            <input type="hidden" name="revision" value="{{ $invoice->revision }}">
+            <select name="settlement_method" required aria-label="Wybierz działanie" data-expense-operation>
+                <option value="">Wybierz działanie</option>
+                @foreach($methods as $value => $label)<option value="{{ $value }}">{{ $label }}</option>@endforeach
+                <option value="returned">Zastrzeżenia</option>
+            </select>
+            <button class="exp-btn primary" type="submit">Wykonaj</button>
+            <dialog class="exp-card exp-note-dialog" aria-label="Zastrzeżenia">
+                <label class="exp-field">Co wymaga poprawy?<textarea name="note" rows="4" maxlength="1000" disabled></textarea></label>
+                <div class="exp-actions">
+                    <button class="exp-btn" type="button" data-expense-cancel>Anuluj</button>
+                    <button class="exp-btn primary" type="submit">Odeślij do uzupełnienia</button>
+                </div>
+            </dialog>
         </form>
-        <details><summary>Odeślij do uzupełnienia</summary>
-            <form method="POST" action="{{route('expenses.workflow',$invoice)}}" data-form-draft="false" class="exp-workflow-fields">
-                @csrf
-            @isset($tab)<input type="hidden" name="from_list" value="1"><input type="hidden" name="tab" value="{{ $tab }}">@endisset
-                <input type="hidden" name="action" value="returned">
-                <input type="hidden" name="revision" value="{{$invoice->revision}}">
-                <label>Co uzupełnić? <textarea name="note" required maxlength="1000"></textarea></label>
-                <button class="exp-btn">Wykonaj</button>
-            </form>
-        </details>
     @elseif($workflow === 'settled' && $invoice->owner_id === auth()->id())
         <form method="POST" action="{{route('expenses.workflow',$invoice)}}" data-form-draft="false">
             @csrf

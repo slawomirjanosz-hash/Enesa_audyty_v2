@@ -16,5 +16,12 @@
 .exp-workflow-fields input,.exp-workflow-fields select,.exp-workflow-fields textarea{width:100%;min-width:0;font:inherit}
 .exp-workflow-fields button{justify-self:start}
 .exp-list-workflow summary{cursor:pointer}.exp-table .exp-workflow-fields>*{min-width:0}.exp-workflow-fields input,.exp-workflow-fields select,.exp-workflow-fields textarea{box-sizing:border-box}
+.exp-row-actions,.exp-operation{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.exp-operation{flex:0 1 auto;min-width:0}
+.exp-operation select{min-width:0;max-width:100%;padding:5px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:inherit;font:inherit}
+.exp-note-dialog{inset:0;margin:auto;width:min(28rem,calc(100% - 24px));color:inherit}
+.exp-note-dialog::backdrop{background:rgba(15,23,42,.45)}
+.exp-note-dialog .exp-actions{justify-content:flex-end;margin:12px 0 0}
+.exp-note-dialog .exp-btn{font-size:inherit}
 </style>
-<script src="{{ asset('js/expense-workflow.js') }}" defer></script>
+<script src="{{ asset('js/expense-workflow.js') }}?v=2" defer></script>
