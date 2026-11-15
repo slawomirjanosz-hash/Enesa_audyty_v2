@@ -16,6 +16,7 @@
 .exp-workflow-fields input,.exp-workflow-fields select,.exp-workflow-fields textarea{width:100%;min-width:0;font:inherit}
 .exp-workflow-fields button{justify-self:start}
 .exp-list-workflow summary{cursor:pointer}.exp-table .exp-workflow-fields>*{min-width:0}.exp-workflow-fields input,.exp-workflow-fields select,.exp-workflow-fields textarea{box-sizing:border-box}
+.exp-badge.exp-badge-success{background:#ecfdf5;color:#166534}
 .exp-row-actions,.exp-operation{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .exp-operation{flex:0 1 auto;min-width:0}
 .exp-operation select{min-width:0;max-width:100%;padding:5px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:inherit;font:inherit}

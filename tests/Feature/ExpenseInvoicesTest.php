@@ -76,6 +76,8 @@ test('invoice workflow signals accounting and requires the owner to confirm sett
     $this->actingAs($accountant)->get(route('expenses.edit', $invoice))->assertOk();
     $this->post(route('expenses.workflow', $invoice), ['action' => 'settled', 'revision' => $invoice->fresh()->revision, 'settlement_method' => 'advance', 'settlement_amount' => '123'])->assertSessionHasNoErrors();
     $this->actingAs($owner)->post(route('expenses.workflow', $invoice), ['action' => 'closed', 'revision' => $invoice->fresh()->revision])->assertSessionHasNoErrors();
+    $this->actingAs($accountant)->get(route('expenses.index', ['tab' => 'all', 'workflow' => 'closed', 'table_sort' => 'workflow_status']))
+        ->assertOk()->assertSee('class="exp-badge exp-badge-success">Rozliczono</span>', false);
     expect(array_column($invoice->fresh()->workflow_history, 'status'))->toBe(['new', 'read', 'settled', 'disputed', 'returned', 'new', 'read', 'settled', 'closed']);
     $this->getJson(route('expenses.pending'))->assertJsonPath('count', 0);
 });
@@ -314,7 +316,10 @@ test('employees can delete only their own open invoices with confirmation and a 
     $pool = ExpenseInvoice::create(expenseData(['is_unassigned' => true]));
     $this->actingAs($owner)->delete(route('expenses.destroy', $invoice), ['revision' => 1])->assertSessionHasErrors('confirm');
     $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 2])->assertStatus(409);
-    foreach ([$foreign, $closed, $pool] as $forbidden) {
+    $assigned = expenseRecord($owner, ['created_by' => $other->id]);
+    $this->get(route('expenses.index'))->assertDontSee('action="'.route('expenses.destroy', $assigned).'" onsubmit=', false);
+    $this->get(route('expenses.edit', $assigned))->assertDontSee('action="'.route('expenses.destroy', $assigned).'" onsubmit=', false);
+    foreach ([$foreign, $closed, $pool, $assigned] as $forbidden) {
         $this->delete(route('expenses.destroy', $forbidden), ['confirm' => 1, 'revision' => 1])->assertForbidden();
         expect($forbidden->fresh()->deleted_at)->toBeNull();
     }

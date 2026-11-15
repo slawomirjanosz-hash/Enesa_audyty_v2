@@ -12,7 +12,7 @@
 <td>{{ $invoice->owner_name ?: 'Nieprzypisana' }}</td>
 <td>{{ $invoice->cost_center ?: '—' }}</td>
 <td>{{ $invoice->payment_label }}</td>
-<td><span class="exp-badge">{{ \App\Models\ExpenseInvoice::WORKFLOW[$invoice->workflow_status] ?? '—' }}</span></td><td><div class="exp-row-actions">
+<td><span @class(['exp-badge', 'exp-badge-success' => $accounting && $invoice->workflow_status === 'closed'])>{{ $workflowLabels[$invoice->workflow_status] ?? '—' }}</span></td><td><div class="exp-row-actions">
 @if($accounting && $invoice->owner_id !== auth()->id() && $invoice->workflow_status === 'new')
     <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false">
         @csrf

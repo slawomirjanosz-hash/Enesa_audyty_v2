@@ -20,6 +20,16 @@ class ExpenseInvoice extends Model
             ->when(! $accounting, fn ($query) => $query->where('owner_id', $user->id))->count();
     }
 
+    public function canBeDeletedBy(User $user, bool $accounting): bool
+    {
+        return $accounting || (
+            (int) $this->created_by === $user->id
+            && $this->owner_id === $user->id
+            && ! $this->is_unassigned
+            && ! $this->settled_at
+        );
+    }
+
     public function recordWorkflow(string $status, User $actor, ?string $note = null): void
     {
         $this->forceFill([

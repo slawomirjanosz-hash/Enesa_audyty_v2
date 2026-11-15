@@ -68,13 +68,17 @@ class ExpenseInvoiceController extends Controller
                 }
             });
         }
+        $workflowLabels = ExpenseInvoice::WORKFLOW;
+        if ($accounting) {
+            $workflowLabels['closed'] = 'Rozliczono';
+        }
         $sorts = ['id', 'purchase_date', 'invoice_number', 'ksef_number', 'wz_number', 'supplier_name', 'net_amount', 'gross_amount', 'owner_name', 'payment_method', 'payment_source', 'payment_status', 'workflow_status', 'paid_by', 'cost_center', 'description', 'payment_label'];
         $sort = in_array($request->input('table_sort'), $sorts, true) ? $request->input('table_sort') : 'purchase_date';
         $direction = $request->input('table_direction') === 'asc' ? 'asc' : 'desc';
         if ($request->input('table_sort') === 'status') {
             $query->orderByRaw("CASE WHEN settled_at IS NOT NULL THEN 'Rozliczona' WHEN is_unassigned = true THEN 'Do przypisania' ELSE 'Do rozliczenia' END ".$direction);
         } else {
-            $labels = ['payment_method' => ExpenseInvoice::METHODS, 'payment_source' => ExpenseInvoice::SOURCES, 'payment_status' => ExpenseInvoice::PAYMENTS, 'workflow_status' => ExpenseInvoice::WORKFLOW];
+            $labels = ['payment_method' => ExpenseInvoice::METHODS, 'payment_source' => ExpenseInvoice::SOURCES, 'payment_status' => ExpenseInvoice::PAYMENTS, 'workflow_status' => $workflowLabels];
             if (isset($labels[$sort])) {
                 $expression = $sort === 'payment_status' ? "CASE WHEN settled_at IS NOT NULL THEN 'Rozliczona — zamknięta' ELSE CASE ".$sort : 'CASE '.$sort;
                 $bindings = [];
@@ -91,12 +95,12 @@ class ExpenseInvoiceController extends Controller
         $invoices = $query->orderBy('id', $direction)->paginate(30)->withQueryString();
 
         if ($request->header('X-Expense-Results') === '1') {
-            return view('expenses.results', compact('invoices', 'accounting', 'tab'));
+            return view('expenses.results', compact('invoices', 'accounting', 'tab', 'workflowLabels'));
         }
 
         $poolCount = ExpenseInvoice::where('is_unassigned', true)->whereNull('owner_id')->count();
 
-        return view('expenses.index', compact('invoices', 'accounting', 'tab', 'poolCount'));
+        return view('expenses.index', compact('invoices', 'accounting', 'tab', 'workflowLabels', 'poolCount'));
     }
 
     public function create(Request $request)
@@ -420,7 +424,7 @@ class ExpenseInvoiceController extends Controller
         $request->validate(['confirm' => ['required', 'accepted'], 'revision' => ['required', 'integer', 'min:1']]);
         DB::transaction(function () use ($request, $invoice): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
-            abort_unless($this->accounting($request->user()) || ($current->owner_id === $request->user()->id && ! $current->is_unassigned && ! $current->settled_at), 403);
+            abort_unless($current->canBeDeletedBy($request->user(), $this->accounting($request->user())), 403);
             abort_unless($current->revision === (int) $request->input('revision'), 409, 'Faktura została zmieniona. Odśwież stronę przed usunięciem.');
             $current->forceFill(['deleted_by' => $request->user()->id, 'revision' => $current->revision + 1])->save();
             $current->delete();
