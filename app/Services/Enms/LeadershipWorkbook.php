@@ -127,8 +127,8 @@ final class LeadershipWorkbook extends IsoQuestionnaireWorkbook
                 }
                 $service = app(LeadershipWorkflow::class);
                 foreach ($data as $id => $p) {
-                    $p['evidence_ids'] = array_keys(array_filter($w->records('evidence'), fn ($e) => in_array($id, $e['payload']['requirements'] ?? [], true)));
-                    $service->saveDeclaration($w, $w->revision(), $stamp['source'], $id, $p);
+                    // Evidence links are informative in this workbook and must not be implicitly adopted or removed.
+                    $service->saveDeclaration($w, $w->revision(), $stamp['source'], $id, $p, syncEvidence: false);
                 }
             });
         } finally {

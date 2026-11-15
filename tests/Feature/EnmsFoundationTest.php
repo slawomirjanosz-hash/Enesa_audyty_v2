@@ -103,12 +103,15 @@ test('enms workspace denies foreign company and foreign record identifiers', fun
     $first = Workspace::for($staff, $audit, $profile, false);
     $second = Workspace::for($otherClient, $otherAudit, $otherProfile, true);
     $record = $first->append(0, 'evidence', null, 'DOW-1', ['title' => 'Private'], '2026-11-15', 'scope-1');
-    expect($second->records())->toBe([]);
+    // Both tenants must have persisted workspaces; an empty workspace returns before the scoped query.
+    $otherRecord = $second->append(0, 'evidence', null, 'DOW-1', ['title' => 'Other private'], '2026-11-15', 'scope-1');
+    expect(array_keys($second->records()))->toBe([$otherRecord['id']])
+        ->and(array_keys($first->records()))->toBe([$record['id']]);
     expect(fn () => $second->record($record['id']))->toThrow(HttpException::class);
-    expect(fn () => $second->append(0, 'evidence', $record['id'], 'DOW-1', [], '2026-11-15', 'scope-1'))->toThrow(HttpException::class);
+    expect(fn () => $second->append(1, 'evidence', $record['id'], 'DOW-1', [], '2026-11-15', 'scope-1'))->toThrow(HttpException::class);
     expect(fn () => Workspace::for($otherClient, $audit, $profile, true))->toThrow(ModelNotFoundException::class);
     expect(fn () => Workspace::for($staff, $audit, $otherProfile, false))->toThrow(HttpException::class);
-    expect(DB::table('enms_workspaces')->count())->toBe(1);
+    expect(DB::table('enms_workspaces')->count())->toBe(2);
 });
 
 test('enms rolls back the entire mutation when journal persistence fails', function () {

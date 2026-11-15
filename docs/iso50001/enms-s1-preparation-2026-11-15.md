@@ -1,6 +1,6 @@
 # EnMS S-1 i referencyjne 5.1 — stan integracji
 
-Stan: kandydat lokalny, bez wdrożenia. Nie jest to potwierdzenie zamknięcia wszystkich kryteriów odbioru S-1.
+Stan: kandydat na gałęzi `codex/enms-s1-native-51`, bez wdrożenia produkcyjnego. Nie jest to potwierdzenie zamknięcia wszystkich kryteriów odbioru S-1.
 
 ## Materiały i zakres
 
@@ -21,6 +21,18 @@ S-1 obejmuje wspólny zapis, dowody, upoważnienia, dokumenty, zadania, terminy 
 - Osobne PDF-y: ankieta, raport, szczegółowy załącznik i Karta. Brak automatycznego procentu zgodności.
 - Excel: podpisany kontekst firmy/audytu/zakładu/rewizji i stałe mapowanie. Atomowy import odrzuca obcy lub nieaktualny plik i formuły; nie zatwierdza danych. Arkusz dowodów jest informacyjny; dowody i powiązania edytuje się na platformie.
 - Podgląd bez klienta, powiadomienia obu stron, oznaczenie zmienionych pozycji i licznik nowego 5.1 w dashboardzie po rozpoczęciu wypełniania.
+- Dowód dodany przez konsultanta po przekazaniu (także powiązany z ocenianym obowiązkiem, jak referencyjny DOW-18) nie unieważnia zatwierdzenia klienta. Zmiana dowodu wybranego w odpowiedzi klienta nadal je unieważnia. Jawny wybór zapisano osobno od ogólnych powiązań dowodu. Excel zachowuje oba rodzaje powiązań i nie przepisuje wersji dowodów podczas importu odpowiedzi.
+- Adapter przyjmuje źródłowy priorytet „średni”, zachowując klucz platformy `sredni` i polską etykietę.
+- Generator pobiera logo i nazwę wystawcy bezpośrednio z ustawień platformy. Nie polega na atrybucie żądania ustawianym dopiero przez composer widoku; samodzielne żądanie POST również zachowuje logo w migawce.
+
+## Decyzje techniczne zgodne z obecną platformą
+
+- D-1 / D-2: wspólna baza; firma, audyt i zakład wymuszane przez Workspace oraz istniejący dostęp audytora/klienta. Test izolacji używa dwóch organizacji mających własne zapisane rekordy.
+- D-3: istniejąca dokumentacja punktu i niezmienne bajty wydania w bazie z SHA-256. Dowód może wskazywać istniejący załącznik albo miejsce przechowywania u organizacji. Nie zmieniono retencji produkcyjnej.
+- D-4: istniejące konta platformy; reguła domenowa na serwerze, rzeczywisty użytkownik, dowód upoważnienia i zastępstwo. Bez dodawania SSO w tym etapie.
+- D-5: osobne niezmienne wersje rekordów, wskaźnik aktualnej wersji i dziennik w tej samej transakcji. Odczyt historii z tabel wersji, bez odtwarzania zdarzeń.
+- D-6: współistnienie modeli. Kontrolowana migracja wymaga osobnego mapowania; nie wykonano automatycznego przeniesienia.
+- D-7: wywołania usług w istniejącym procesie Laravel, jawna wersja biblioteki i generatora. Moduły obliczeniowe pozostają poza tym etapem.
 
 ## Istniejące dane
 
@@ -32,15 +44,18 @@ Nowe 5.1 rozpoczyna osobny obieg. Wcześniejsze odpowiedzi pozostają dostępne.
 
 - Oryginalne testy referencji, bez zmian: test_51.py — 567 zaliczonych; test_51_dokumenty.py — 147 zaliczonych. Są testami prototypu, nie dowodem pełnej równoważności Laravel.
 - Sondy źródłowe: 51/51 modelu i 34/34 dokumentów wykryły celowy błąd; łącznie 85/85, bez przerwanych prób. Zakończony raport modelu: tmp/enms-probes-report.json. Skrypt i asercje źródłowe niezmienione, próby na osobnych kopiach.
-- Laravel: izolacja firm i dokumentów, odmowy, rollback dziennika, rewizje/historia, zachowanie starego obiegu, uprawnienia, wielostopniowe zgody i cofnięcie wcześniejszej zgody, niezależność/nadzór, wspólne zadanie 5.1/6.2, niezmienne PDF, Excel, prywatność podglądu, pełny obieg do raportu. Sprawdzono także zachowanie grafu UUID po przenumerowaniu symboli. Wynik: 52 testy, 409 asercji. Osobny przypadek odtwarza wszystkie 13 ocen z referencyjnego grafu 18 dowodów, 52 pokryć i 31 zamknięć; fixture nie zawiera danych osób ani opisów organizacji.
+- Laravel: izolacja firm i dokumentów, odmowy, rollback dziennika, rewizje/historia, zachowanie starego obiegu, uprawnienia, wielostopniowe zgody i cofnięcie wcześniejszej zgody, niezależność/nadzór, wspólne zadanie 5.1/6.2, niezmienne PDF, Excel, prywatność podglądu, pełny obieg do raportu. Sprawdzono także zachowanie grafu UUID po przenumerowaniu symboli. Wynik: 53 testy, 439 asercji. Przebieg referencyjny obejmuje 15 deklaracji, 5 jawnych luk, przekazanie klienta, 18 dowodów, 52 pokrycia, 9 ustaleń, 31 zamknięć, wszystkie 13 ocen oraz raport i załącznik. Fixture zachowuje strukturę, stany, wybory i powiązania, zastępuje dane osób i opisowe dane organizacji treścią testową.
+- Sondy natywnego kodu: `php tools/enms-mutation-probes.php` — 13/13 wykrytych mutacji, bazowo 47 testów ENMS. Testy uruchamiają zmienione kopie klas w osobnych procesach i izolowanej bazie. Błędy składni lub uruchomienia nie są zaliczane jako wykrycie mutacji. Sonda izolacji ujawniła i pozwoliła poprawić lukę w pierwotnym teście, który używał pustego drugiego workspace.
 - Chromium na izolowanej bazie: 11 zakładek, pola warunkowe, zapis/ponowne otwarcie, dowód, sortowanie w obie strony, szerokość 390 px bez przepełnienia i brak błędów JavaScript.
+- W natywnych formularzach przeprowadzono także cały powyższy scenariusz dowodowy: 17 dowodów klienta, 15 deklaracji, zatwierdzenie i blokada edycji klienta, dowód konsultanta, 18 weryfikacji, 52 pokrycia, 9 ustaleń, 31 zamknięć, 13 ocen i zakończenie oceny. Raport i załącznik wygenerowano i pobrano osobno z interfejsu. Log końcowego etapu: tmp/enms-browser-reference-assessment.log. Poprawki selektorów w pomocniczym skrypcie QA nie zmieniały testów źródłowych ani danych produkcyjnych.
 - PDF: render Poppler i kontrola tekstu czterech rezultatów; brak technicznych zakładek, danych obcych scenariuszy i identyfikatorów pól. Sprawdzono układ i wszystkie strony załącznika.
+- Dodatkowo sprawdzono raport z wypełnionego scenariusza (5 stron) i szczegółowy załącznik (25 stron), z logo pobranym z ustawień platformy; wszystkie strony wyrenderowano i sprawdzono układ.
 
 ## Otwarte przed odbiorem i wdrożeniem
 
 1. **PRZ-00 / PRZ-14:** źródłowe polaWidoczne ukrywa szczegóły przy „jeszcze tego nie ma”, natomiast brakiFormalne wymaga ukrytych szczegółów dla każdej odpowiedzianej pozycji metodycznej. Zapytano użytkownika o zasadę: szczegóły przy „jest”, plan i termin przy „częściowo” / „jeszcze tego nie ma”. Lokalny kod realizuje tę propozycję, lecz korekta źródła nie została zatwierdzona.
-2. **S1-12:** test grafu po przenumerowaniu nie jest pełnym testem migracji starych zapisów 0.3 → 0.4. Automatycznego przenoszenia znaczeń nie przygotowano. Nie deklarować S1-12 jako zaliczonego. Współistnienie chroni wcześniejsze dane.
-3. **S1-1 / S1-2:** zielone testy źródła i osobne testy integracji nie oznaczają, że cały scenariusz referencyjny został odwzorowany w natywnej przeglądarce. Odtworzono graf dowodowy i wszystkie 13 ocen scenariusza BULTEN w usługach Laravel. Pozostają pełne przejście tego scenariusza przez natywny interfejs oraz sondy samej warstwy wspólnej.
+2. **S1-12:** test grafu po przenumerowaniu nie jest pełnym testem migracji starych zapisów 0.3 → 0.4. W referencyjnym `51_model.js` jest wyłącznie hak do „Zadania F” i trzy zakazy migracji, bez pełnego mapowania. Zapytano o lokalizację tej specyfikacji. Automatycznego przenoszenia znaczeń nie przygotowano. Nie deklarować S1-12 jako zaliczonego. Współistnienie chroni wcześniejsze dane.
+3. **S1-1:** zielone testy źródła i osobne testy integracji nie oznaczają pełnej równoważności wszystkich scenariuszy prototypu i platformy. Scenariusz dowodowy odtworzono wraz z przekazaniem klienta i generowaniem dokumentów; macierz upoważnień, zadania, postanowienia i cykl Karty są sprawdzane osobnymi testami platformy. Nie deklarować automatycznej migracji ani odbioru całego S-1. Sondy natywnej warstwy wspólnej są już wykonane.
 4. **Lista sposobów weryfikacji:** scenariusz źródłowy używa dodatkowo „wgląd w zapisy”, „wgląd w zapis w systemie” i „wgląd w pozycję budżetu”, których nie ma w źródłowym select. Zapytano użytkownika o dodanie tych trzech wartości bez usuwania pięciu dotychczasowych. Lokalny kandydat zawiera tę propozycję; wymaga rozstrzygnięcia przed publikacją.
 5. Retencja oraz operacyjny test odtworzenia kopii produkcji nie zostały tym zadaniem uzgodnione ani potwierdzone.
 

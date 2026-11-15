@@ -78,6 +78,10 @@ final class LeadershipWorkflow
     public function save(Workspace $w, int $revision, string $hash, string $kind, ?string $id, array $input): array
     {
         abort_unless(isset(Registers::TITLES[$kind]), 404);
+        // The reference uses the Polish label as its value; keep the platform's stable stored key.
+        if ($kind === 'finding' && ($input['priorytet'] ?? null) === 'średni') {
+            $input['priorytet'] = 'sredni';
+        }
         abort_if($w->client && ! in_array($kind, ['evidence', 'task', 'deadline', 'rule']), 403);
         if ($kind === 'rule') {
             abort_unless($w->writable, 403);
@@ -338,7 +342,7 @@ final class LeadershipWorkflow
         throw ValidationException::withMessages(['enms' => $message]);
     }
 
-    public function saveDeclaration(Workspace $w, int $revision, string $hash, string $requirementId, array $input): void
+    public function saveDeclaration(Workspace $w, int $revision, string $hash, string $requirementId, array $input, bool $syncEvidence = true): void
     {
         $this->assertEditing($w);
         $requirement = $this->library->requirement($requirementId);
@@ -359,13 +363,15 @@ final class LeadershipWorkflow
             }
         }
         $data = Validator::make($input, $rules)->validate();
-        DB::transaction(function () use ($w, $revision, $hash, $requirementId, $requirement, $data) {
+        DB::transaction(function () use ($w, $revision, $hash, $requirementId, $requirement, $data, $syncEvidence) {
             Audit::whereKey($w->audit->id)->lockForUpdate()->firstOrFail();
             $source = $this->sources($w);
             abort_unless($w->revision() === $revision && $source['hash'] === $hash, 409, 'Dane lub źródła zmieniły się.');
             $existing = $this->one($w, 'declaration', 'requirement_id', $requirementId);
             $payload = array_replace_recursive($existing['payload'] ?? [], $data);
-            unset($payload['evidence_ids']);
+            // This is the organization's explicit selection, distinct from evidence added later by the consultant.
+            // Replace the list; recursive merging would preserve removed selections by numeric array index.
+            $payload['evidence_ids'] = array_values(($syncEvidence ? $data['evidence_ids'] ?? [] : $existing['payload']['evidence_ids'] ?? []));
             $payload['requirement_id'] = $requirementId;
             $payload['citations'] = [];
             foreach ($requirement['pola'] as $field) {
@@ -374,6 +380,9 @@ final class LeadershipWorkflow
                 }
             }
             $w->append($revision++, 'declaration', $existing['id'] ?? null, $requirement['kod'], $payload, config('enms.library'), $source['scope_version']);
+            if (! $syncEvidence) {
+                return;
+            }
             foreach ($w->records('evidence') as $id => $evidence) {
                 $refs = $evidence['payload']['requirements'] ?? [];
                 $has = in_array($requirementId, $refs, true);
@@ -389,11 +398,11 @@ final class LeadershipWorkflow
 
     public function clientHash(Workspace $w): string
     {
-        $answeredRequirements = [];
+        $selectedEvidence = [];
         foreach ($w->records('declaration') as $r) {
-            $answeredRequirements[] = $r['payload']['requirement_id'];
+            $selectedEvidence = [...$selectedEvidence, ...($r['payload']['evidence_ids'] ?? [])];
         }
-        $records = array_values(array_filter($w->records(), fn ($r) => in_array($r['kind'], ['declaration', 'explanation', 'answer']) || ($r['kind'] === 'evidence' && (($r['payload']['created_by_client'] ?? false) || array_intersect($r['payload']['requirements'] ?? [], $answeredRequirements)))));
+        $records = array_values(array_filter($w->records(), fn ($r) => in_array($r['kind'], ['declaration', 'explanation', 'answer']) || ($r['kind'] === 'evidence' && (($r['payload']['created_by_client'] ?? false) || in_array($r['id'], $selectedEvidence, true)))));
 
         return hash('sha256', json_encode([$records, $this->sources($w)['hash']], JSON_THROW_ON_ERROR));
     }
