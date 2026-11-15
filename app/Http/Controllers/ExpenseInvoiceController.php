@@ -124,11 +124,12 @@ class ExpenseInvoiceController extends Controller
         $this->access($request->user());
         abort_unless($this->visible($request->user())->whereKey($invoice->id)->exists(), 404);
 
-        if ($request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && $invoice->owner_id !== $request->user()->id && ! $request->session()->has('support_user_preview')
+        $accountingView = $request->input('tab') === 'all';
+        if ($request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && ($accountingView || $invoice->owner_id !== $request->user()->id) && ! $request->session()->has('support_user_preview')
             && ! str_contains($request->header('Sec-Purpose', '').$request->header('Purpose', ''), 'prefetch')) {
-            DB::transaction(function () use ($request, &$invoice): void {
+            DB::transaction(function () use ($request, &$invoice, $accountingView): void {
                 $invoice = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
-                if ($invoice->workflow_status === 'new' && $invoice->owner_id !== $request->user()->id) {
+                if ($invoice->workflow_status === 'new' && ($accountingView || $invoice->owner_id !== $request->user()->id)) {
                     $invoice->recordWorkflow('read', $request->user());
                     $invoice->revision++;
                     $invoice->save();
@@ -377,12 +378,13 @@ class ExpenseInvoiceController extends Controller
             'settlement_method' => ['required_if:action,settled', Rule::in(array_keys(ExpenseInvoice::SETTLEMENT_METHODS))],
         ]);
         $action = $data['action'];
+        $accountingView = $request->input('tab') === 'all';
         $forAccounting = in_array($action, ['read', 'settled', 'returned'], true);
         abort_unless($forAccounting ? $this->accounting($user) : $invoice->owner_id === $user->id, 403);
 
-        DB::transaction(function () use ($invoice, $user, $action, $forAccounting, $data): void {
+        DB::transaction(function () use ($invoice, $user, $action, $forAccounting, $data, $accountingView): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
-            abort_unless($forAccounting ? $current->owner_id !== $user->id : $current->owner_id === $user->id, 403);
+            abort_unless($forAccounting ? ($accountingView || $current->owner_id !== $user->id) : $current->owner_id === $user->id, 403);
             abort_unless($current->revision === (int) $data['revision'], 409, 'Faktura została zmieniona. Odśwież stronę.');
             abort_unless($action === 'read' || ($current->owner_id && ! $current->is_unassigned), 409, 'Najpierw przypisz fakturę do pracownika.');
             $allowed = match ($action) {
@@ -415,7 +417,7 @@ class ExpenseInvoiceController extends Controller
             return redirect()->route('expenses.index', ['tab' => $tab])->with('success', 'Status: '.ExpenseInvoice::WORKFLOW[$action].'.');
         }
 
-        return redirect()->route('expenses.edit', $invoice)->with('success', 'Status: '.ExpenseInvoice::WORKFLOW[$action].'.');
+        return redirect()->route('expenses.edit', ['invoice' => $invoice] + ($request->input('tab') === 'all' && $this->accounting($user) ? ['tab' => 'all'] : []))->with('success', 'Status: '.ExpenseInvoice::WORKFLOW[$action].'.');
     }
 
     public function destroy(Request $request, ExpenseInvoice $invoice)
@@ -424,7 +426,7 @@ class ExpenseInvoiceController extends Controller
         $request->validate(['confirm' => ['required', 'accepted'], 'revision' => ['required', 'integer', 'min:1']]);
         DB::transaction(function () use ($request, $invoice): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
-            abort_unless($current->canBeDeletedBy($request->user(), $this->accounting($request->user())), 403);
+            abort_unless($current->canBeDeletedBy($request->user(), ($this->accounting($request->user()) && ($request->input('tab') === 'all' || $current->owner_id !== $request->user()->id))), 403);
             abort_unless($current->revision === (int) $request->input('revision'), 409, 'Faktura została zmieniona. Odśwież stronę przed usunięciem.');
             $current->forceFill(['deleted_by' => $request->user()->id, 'revision' => $current->revision + 1])->save();
             $current->delete();

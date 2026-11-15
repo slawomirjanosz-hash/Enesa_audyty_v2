@@ -474,3 +474,22 @@ test('invoice list sorts the combined payment label and keeps old fields in deta
         ->assertOk()->assertSeeInOrder(['PAY-PERSONAL', 'PAY-UNPAID']);
     $this->get(route('expenses.edit', $personal))->assertOk()->assertSee('Dane ze starszego formularza')->assertSee('WZ-HISTORY');
 });
+
+test('an accountant processes their own invoice as accounting and confirms it as employee', function () {
+    $finance = expenseUser(true);
+    $invoice = expenseRecord($finance, ['workflow_status' => 'new', 'revision' => 1, 'gross_amount' => '123.45']);
+    $this->actingAs($finance)->get(route('expenses.index'))->assertOk()->assertDontSee('Oznacz jako odczytaną');
+    $this->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertSee('Oznacz jako odczytaną');
+    $workflow = route('expenses.workflow', $invoice);
+    $this->post($workflow, ['action' => 'read', 'revision' => 1])->assertForbidden();
+    $this->post($workflow, ['action' => 'read', 'revision' => 1, 'tab' => 'all', 'from_list' => 1])
+        ->assertRedirect(route('expenses.index', ['tab' => 'all']));
+    $this->get(route('expenses.edit', $invoice))->assertOk()->assertDontSee('Wybierz działanie');
+    $this->get(route('expenses.edit', ['invoice' => $invoice, 'tab' => 'all']))->assertOk()->assertSee('Wybierz działanie');
+    $this->post($workflow, ['action' => 'settled', 'revision' => 2, 'tab' => 'all', 'settlement_method' => 'refund'])
+        ->assertSessionHasNoErrors();
+    $this->get(route('expenses.index'))->assertOk()->assertSee('Potwierdź rozliczenie');
+    $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 3])->assertForbidden();
+    $this->post($workflow, ['action' => 'closed', 'revision' => 3])->assertSessionHasNoErrors();
+    expect($invoice->fresh()->workflow_status)->toBe('closed');
+});
