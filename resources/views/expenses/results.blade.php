@@ -1,7 +1,10 @@
 <div class="exp-card exp-table-wrap">
-<table class="exp-table" data-server-sort="purchase_date,invoice_number,gross_amount,owner_name,cost_center,payment_label,workflow_status,">
+<table class="exp-table" data-action-icons="false" data-server-sort="purchase_date,invoice_number,gross_amount,owner_name,cost_center,payment_label,workflow_status,">
 <thead><tr>
-<th>Data zakupu</th><th>Faktura</th><th>Brutto</th><th>Kupujący</th><th>Projekt / miejsce kosztu</th><th>Jak zapłacono</th><th>Status</th><th data-sortable="false">Działania</th>
+@foreach(['Data zakupu', 'Faktura', 'Brutto', 'Kupujący', 'Projekt / miejsce kosztu', 'Jak zapłacono', 'Status'] as $heading)
+    <th><span class="app-table-sort">{{ $heading }} <span class="app-table-sort-marker" aria-hidden="true">↕</span></span></th>
+@endforeach
+<th data-sortable="false">Działania</th>
 </tr></thead>
 <tbody>
 @forelse($invoices as $invoice)
@@ -25,6 +28,14 @@
 @elseif(($accounting && $invoice->owner_id && $invoice->owner_id !== auth()->id() && (in_array($invoice->workflow_status, ['read', 'disputed'], true) || ($invoice->workflow_status === null && !$invoice->settled_at))) || ($invoice->owner_id === auth()->id() && in_array($invoice->workflow_status, ['settled', 'returned'], true)))
     @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
 @endif
-<a class="exp-btn" href="{{route('expenses.edit',$invoice)}}">{{$invoice->settled_at || (!$accounting && $invoice->owner_id!==auth()->id()) ? 'Podgląd' : 'Edytuj'}}</a>@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)@include('expenses.claim')@endif @include('expenses.delete')</div></td>
+@php($preview = $invoice->settled_at || (!$accounting && $invoice->owner_id !== auth()->id()))
+<a class="exp-btn exp-icon-btn" href="{{ route('expenses.edit', $invoice) }}" aria-label="{{ $preview ? 'Podgląd' : 'Edytuj' }}" title="{{ $preview ? 'Podgląd' : 'Edytuj' }}">
+    <i @class(['ti', 'ti-eye' => $preview, 'ti-pencil' => !$preview]) aria-hidden="true"></i>
+</a>
+@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)
+    @include('expenses.claim')
+@endif
+@include('expenses.delete', ['iconOnly' => true])
+</div></td>
 </tr>@empty<tr><td colspan="8">Brak faktur spełniających wybrane kryteria.</td></tr>@endforelse
 </tbody></table></div>{{$invoices->links()}}

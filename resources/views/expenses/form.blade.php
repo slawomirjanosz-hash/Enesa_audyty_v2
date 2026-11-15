@@ -1,8 +1,7 @@
 @extends('layouts.app')
 @section('page-title','Rozliczenia faktur — dane zakupu')
-@section('content')
 @include('expenses.style')
-<style>#expense-form [hidden]{display:none!important}#expense-form .exp-grid{grid-template-columns:minmax(0,1fr);max-width:36rem}#expense-form .exp-field>label{display:flex;flex-direction:column;gap:6px}</style>
+@section('content')
 <div class="exp-head"><h1>{{$invoice->exists ? 'Faktura / zakup #'.$invoice->id : ($accountingEntry ? 'Dodaj fakturę jako księgowość' : 'Dodaj zakup / fakturę')}}</h1><a class="exp-btn" href="{{route('expenses.index')}}">Wróć do rejestru</a></div>
 @if(session('success'))<div class="exp-message">{{session('success')}}</div>@endif
 @if($errors->any())<div class="exp-message error" role="alert">@foreach($errors->all() as $error)<p>{{$error}}</p>@endforeach</div>@endif
