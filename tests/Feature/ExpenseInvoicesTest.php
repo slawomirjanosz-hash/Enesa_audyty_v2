@@ -391,8 +391,8 @@ test('only the owner can confirm a settled invoice from their list', function ()
     $owner = expenseUser();
     $accountant = expenseUser(true);
     $invoice = expenseRecord($owner, ['workflow_status' => 'settled', 'settled_at' => now(), 'revision' => 1]);
-    $this->actingAs($accountant)->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertDontSee('Potwierdzam rozliczenie');
-    $this->actingAs($owner)->get(route('expenses.index'))->assertOk()->assertSee('Potwierdzam rozliczenie');
+    $this->actingAs($accountant)->get(route('expenses.index', ['tab' => 'all']))->assertOk()->assertDontSee('Potwierdź rozliczenie');
+    $this->actingAs($owner)->get(route('expenses.index'))->assertOk()->assertSee('Potwierdź rozliczenie')->assertSee('Zgłoś problem')->assertSee('aria-haspopup="dialog"', false);
     $this->post(route('expenses.workflow', $invoice), [
         'revision' => $invoice->revision,
         'action' => 'closed',

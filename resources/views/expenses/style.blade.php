@@ -24,4 +24,4 @@
 .exp-note-dialog .exp-actions{justify-content:flex-end;margin:12px 0 0}
 .exp-note-dialog .exp-btn{font-size:inherit}
 </style>
-<script src="{{ asset('js/expense-workflow.js') }}?v=2" defer></script>
+<script src="{{ asset('js/expense-workflow.js') }}?v=3" defer></script>

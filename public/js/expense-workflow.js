@@ -19,6 +19,7 @@ document.addEventListener('change', event => {
 });
 
 document.addEventListener('click', event => {
+    event.target.closest('[data-expense-open]')?.form.querySelector('dialog').showModal();
     event.target.closest('[data-expense-cancel]')?.closest('dialog').close();
 });
 

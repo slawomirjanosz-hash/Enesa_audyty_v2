@@ -23,14 +23,7 @@
         <button class="exp-btn" type="submit">Oznacz jako odczytaną</button>
     </form>
 @elseif(($accounting && $invoice->owner_id && $invoice->owner_id !== auth()->id() && (in_array($invoice->workflow_status, ['read', 'disputed'], true) || ($invoice->workflow_status === null && !$invoice->settled_at))) || ($invoice->owner_id === auth()->id() && in_array($invoice->workflow_status, ['settled', 'returned'], true)))
-    @if($accounting && $invoice->owner_id !== auth()->id())
-        @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
-    @else
-    <details class="exp-list-workflow">
-        <summary>{{ $invoice->workflow_status === 'returned' ? 'Uzupełnij' : 'Rozliczenie' }}</summary>
-        @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
-    </details>
-    @endif
+    @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
 @endif
 <a class="exp-btn" href="{{route('expenses.edit',$invoice)}}">{{$invoice->settled_at || (!$accounting && $invoice->owner_id!==auth()->id()) ? 'Podgląd' : 'Edytuj'}}</a>@if($invoice->is_unassigned && !$invoice->owner_id && !$invoice->settled_at)@include('expenses.claim')@endif @include('expenses.delete')</div></td>
 </tr>@empty<tr><td colspan="8">Brak faktur spełniających wybrane kryteria.</td></tr>@endforelse
