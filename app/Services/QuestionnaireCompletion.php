@@ -9,6 +9,7 @@ use App\Models\IsoImplementationResponse;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoStakeholderReview;
 use App\Models\IsoSystemReview;
+use App\Services\Enms\LeadershipProgress;
 use Illuminate\Support\Collection;
 
 class QuestionnaireCompletion
@@ -21,6 +22,7 @@ class QuestionnaireCompletion
         }
         $audits->loadMissing(['manager', 'surveys.auditType']);
         $ids = $audits->modelKeys();
+        $enmsProgress = app(LeadershipProgress::class)->forAudits($ids);
         $profiles = IsoPlantProfile::whereIn('audit_id', $ids)->latestPerSite()->get(['id', 'audit_id', 'site_id', 'definition', 'answers', 'status', 'lock_version', 'client_approval', 'auditor_approval'])->groupBy('audit_id');
         $factorReviews = IsoFactorReview::whereIn('audit_id', $ids)->get(['id', 'audit_id', 'site_id', 'answers', 'basis', 'status', 'client_approval', 'source_hash', 'lock_version'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id);
         $stakeholderReviews = IsoStakeholderReview::whereIn('audit_id', $ids)->get(['audit_id', 'site_id', 'answers', 'basis', 'consultant'])->keyBy(fn ($row) => $row->audit_id.':'.$row->site_id);
@@ -42,6 +44,11 @@ class QuestionnaireCompletion
                     $parties = $stakeholders->parties($profile, $review);
                     $parts[] = $stakeholders->progress($stakeholders->currentAnswers($partyReview?->answers ?? [], $partyReview?->basis ?? [], $parties), $parties, $partyReview?->consultant ?? []);
                     foreach (array_keys(IsoSystemReview::TITLES) as $systemSection) {
+                        if ($systemSection === '5-1' && isset($enmsProgress[$audit->id.':'.$profile->site_id])) {
+                            $parts[] = $enmsProgress[$audit->id.':'.$profile->site_id];
+
+                            continue;
+                        }
                         $systemReview = $systemReviews->get($audit->id.':'.$profile->site_id.':'.$systemSection);
                         $parts[] = app(IsoSystemQuestionnaire::class)->progress($systemSection, $systemReview?->answers ?? [], $systemReview?->source_snapshot ?? ['facts' => $facts]);
                     }

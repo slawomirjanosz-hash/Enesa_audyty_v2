@@ -7,6 +7,7 @@
 </style></head><body class="preview-all">
 <header class="plant-header"><div><h1>{{ $title }}</h1><span>Podgląd ankiety · widok klienta</span></div><a href="{{ route('audit-types.show', [$auditType, 'section'=>$section]) }}">← Wróć do ISO 50001</a></header>
 <main class="plant-main">
+@if($section==='5-1')<p><a class="plant-button" href="{{ request()->fullUrlWithQuery(['new_model'=>1]) }}">Podgląd nowego modelu 5.1 — wydanie 15.11.2026</a></p>@endif
 <div class="plant-notice"><strong>Podgląd bez danych klienta.</strong> Możesz sprawdzać pola i listy wyboru. Odpowiedzi nie są zapisywane, nie ma autozapisu ani rzeczywistych zatwierdzeń. Dane z wcześniejszych punktów pozostają puste; pokazujemy także warianty warunkowe, które u klienta zależą od jego odpowiedzi.</div>
 <section class="plant-card preview-tools"><label>Punkt ankiety<select id="preview-section">@foreach($titles as $key=>$label)<option value="{{ route('audit-types.questionnaire-preview', [$auditType,$key]) }}" @selected($section===$key)>{{ $label }}</option>@endforeach</select></label><label class="plant-check"><input id="preview-conditions" type="checkbox" checked>Pokaż także pola warunkowe</label><button type="button" id="preview-reset">Wyczyść podgląd</button></section>
 @if(in_array($section,['4-1','4-2','4-3','4-4']))@include('audits.partials.iso-chapter-four-tabs',['clauseSection'=>$section,'client'=>false])@else<nav class="plant-nav" aria-label="Działy ankiety" id="preview-nav"></nav>@endif

@@ -82,6 +82,7 @@ require __DIR__.'/iso-plant-profile.php';
 require __DIR__.'/iso-factors.php';
 require __DIR__.'/iso-stakeholders.php';
 require __DIR__.'/iso-system.php';
+require __DIR__.'/enms.php';
 require __DIR__.'/warehouse.php';
 require __DIR__.'/expenses.php';
 require __DIR__.'/financial-plans.php';
