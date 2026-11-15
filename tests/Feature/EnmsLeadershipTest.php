@@ -45,6 +45,27 @@ function enmsTask(Workspace $w): array
     return enmsSave($w, 'task', ['przedmiot' => 'Kampania pomiarowa', 'owner_id' => $w->actor->id, 'requirements' => [app(LeadershipWorkflow::class)->library->id('requirement', 'a')], 'istotnosc' => 'proste', 'risk' => 'niskie', 'action_type' => 'operation', 'result_action_type' => 'reporting', 'stan' => 'zaplanowane']);
 }
 
+/** An opt-in copy for browser QA, containing factory data only. */
+function enmsBrowserExport(string $name, array $fixture): void
+{
+    [$audit, $client, $staff, $profile] = $fixture;
+    $path = base_path('tmp/'.$name.'-'.time().'.sqlite');
+    $target = new PDO('sqlite:'.$path);
+    $target->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $target->beginTransaction();
+    foreach (DB::select("select name, sql from sqlite_master where type='table' and name not like 'sqlite_%'") as $table) {
+        $target->exec($table->sql);
+        foreach (DB::table($table->name)->get() as $row) {
+            $row = (array) $row;
+            $columns = implode(',', array_map(fn ($k) => '"'.str_replace('"', '""', $k).'"', array_keys($row)));
+            $stmt = $target->prepare('insert into "'.$table->name.'" ('.$columns.') values ('.implode(',', array_fill(0, count($row), '?')).')');
+            $stmt->execute(array_values($row));
+        }
+    }
+    $target->commit();
+    file_put_contents(base_path('tmp/'.$name.'.json'), json_encode(['database' => $path, 'staff' => $staff->email, 'client' => $client->email, 'audit' => $audit->id, 'profile' => $profile->id], JSON_THROW_ON_ERROR));
+}
+
 test('enms native tabs render source questions without technical tabs and without creating records', function () {
     [$audit,$client,$staff,$profile,$w,$s] = enmsFixture();
     foreach (['pytania', 'obowiazki', 'dowody', 'spojnosc', 'weryfikacja', 'ocena', 'ustalenia', 'zadania', 'raport', 'karta', 'historia'] as $tab) {
@@ -62,21 +83,7 @@ test('enms native tabs render source questions without technical tabs and withou
     expect($w->revision())->toBe(0)->and(DB::table('enms_records')->count())->toBe(0);
     $this->actingAs($client)->get(route('client.audits.enms.show', [$audit, $profile]))->assertOk()->assertDontSee('Ocena · 5.')->assertDontSee('Ocena · 6.');
     if (getenv('ENMS_BROWSER_QA')) {
-        $path = base_path('tmp/enms-browser-'.time().'.sqlite');
-        $target = new PDO('sqlite:'.$path);
-        $target->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $target->beginTransaction();
-        foreach (DB::select("select name, sql from sqlite_master where type='table' and name not like 'sqlite_%'") as $table) {
-            $target->exec($table->sql);
-            foreach (DB::table($table->name)->get() as $row) {
-                $row = (array) $row;
-                $columns = implode(',', array_map(fn ($k) => '"'.str_replace('"', '""', $k).'"', array_keys($row)));
-                $stmt = $target->prepare('insert into "'.$table->name.'" ('.$columns.') values ('.implode(',', array_fill(0, count($row), '?')).')');
-                $stmt->execute(array_values($row));
-            }
-        }
-        $target->commit();
-        file_put_contents(base_path('tmp/enms-browser.json'), json_encode(['database' => $path, 'staff' => $staff->email, 'client' => $client->email, 'audit' => $audit->id, 'profile' => $profile->id], JSON_THROW_ON_ERROR));
+        enmsBrowserExport('enms-browser', [$audit, $client, $staff, $profile]);
     }
 });
 
@@ -151,6 +158,10 @@ test('enms task is one record shared by the clause adapter and completion is vis
 test('enms workbook round trips question mappings preserves evidence links and rejects foreign stale or formula input', function () {
     [$audit,$client,$staff,$profile,$w,$s] = enmsFixture();
     $proof = enmsEvidence($w);
+    $selected = enmsEvidence($w);
+    $requirementId = $s->library->id('requirement', 'b');
+    $s->saveDeclaration($w, $w->revision(), $s->sources($w)['hash'], $requirementId, ['stan' => 'niema', 'evidence_ids' => [$selected['id']]]);
+    $proofBeforeImport = $w->record($proof['id']);
     $excel = app(LeadershipWorkbook::class);
     $book = $excel->build($w);
     $sheet = $book->getSheetByName('Odpowiedzi');
@@ -171,6 +182,9 @@ test('enms workbook round trips question mappings preserves evidence links and r
         (new Xlsx($book))->setPreCalculateFormulas(false)->save($path);
         $excel->import($w, $path);
         expect($s->readiness($w)['missing'])->toBe([])->and($w->record($proof['id'])['payload']['requirements'])->toBe([$s->library->id('requirement', 'a')]);
+        expect($w->record($proof['id']))->toBe($proofBeforeImport)
+            ->and($s->one($w, 'declaration', 'requirement_id', $requirementId)['payload']['evidence_ids'])->toBe([$selected['id']])
+            ->and($s->one($w, 'declaration', 'requirement_id', $s->library->id('requirement', 'a'))['payload']['evidence_ids'])->toBe([]);
         expect(fn () => $excel->import($w, $path))->toThrow(ValidationException::class);
         [$otherAudit,$otherClient,$otherStaff,$otherProfile,$otherW] = enmsFixture();
         expect(fn () => $excel->import($otherW, $path))->toThrow(ValidationException::class);
@@ -256,6 +270,8 @@ test('enms consultant evidence does not invalidate client submission but changes
     expect($s->clientHash($w))->toBe($before);
     $s->saveDeclaration($w, $w->revision(), $s->sources($w)['hash'], $s->library->id('requirement', 'a'), ['stan' => 'jest', 'evidence_ids' => [$e['id']]]);
     $linked = $s->clientHash($w);
+    enmsSave($w, 'evidence', ['rodzaj' => 'ZAP', 'tytul' => 'Protokół dodany przez konsultanta po odpowiedzi', 'requirements' => [$s->library->id('requirement', 'a')]]);
+    expect($s->clientHash($w))->toBe($linked);
     enmsSave($w, 'evidence', array_replace($e['payload'], ['tytul' => 'Zmieniona podstawa odpowiedzi']), $e['id']);
     expect($s->clientHash($w))->not->toBe($linked);
 });
@@ -389,4 +405,63 @@ test('enms reproduces all thirteen reference assessments from its exact evidence
         expect($assessment['payload']['stan'])->toBe($row['state']);
     }
     expect($w->records('evidence'))->toHaveCount(18)->and($w->records('coverage'))->toHaveCount(52)->and($w->records('closure'))->toHaveCount(31)->and($w->records('assessment'))->toHaveCount(13);
+});
+
+test('enms reference declarations pass from client through consultant assessment to diagnostic documents', function () {
+    $fixture = enmsFixture();
+    [$audit, $client, $staff, $profile, $w, $s] = $fixture;
+    foreach (['6-2' => 'CELE', '5-3' => 'ROLE'] as $section => $key) {
+        IsoSystemReview::create(['audit_id' => $audit->id, 'site_id' => $profile->site_id, 'source_profile_id' => $profile->id, 'section' => $section, 'source_hash' => 'test-source', 'status' => 'editing', 'lock_version' => 1, 'answers' => [$key => [['opis' => 'Dane źródłowe organizacji testowej']]]]);
+    }
+    if (getenv('ENMS_REFERENCE_BROWSER_QA')) {
+        enmsBrowserExport('enms-browser-reference', $fixture);
+    }
+    $reference = json_decode(file_get_contents(base_path('tests/Fixtures/enms-leadership-reference.json')), true, 512, JSON_THROW_ON_ERROR);
+    $cw = Workspace::for($client, $audit, $profile, true);
+    $proofs = [];
+    $addProof = fn (Workspace $context, array $row) => enmsSave($context, 'evidence', ['rodzaj' => $row['kind'], 'tytul' => 'Dowód referencyjny '.$row['id'], 'identyfikator' => $row['id'], 'data' => '2026-11-15', 'wydal' => 'Organizacja testowa', 'uczestnicy' => 'Uczestnik testowy', 'gdzie' => 'Rejestr testowy', 'requirements' => array_map(fn ($code) => $s->library->id('requirement', $code), $row['requirements'])])['id'];
+    foreach ($reference['evidence'] as $row) {
+        if ($row['added_by'] === 'klient') {
+            $proofs[$row['id']] = $addProof($cw, $row);
+        }
+    }
+    foreach ($reference['declarations'] as $code => $row) {
+        $s->saveDeclaration($cw, $cw->revision(), $s->sources($cw)['hash'], $s->library->id('requirement', $code), $row + ['evidence_ids' => array_map(fn ($id) => $proofs[$id], $row['evidence'])]);
+    }
+    expect($s->readiness($cw)['missing'])->toBe([]);
+    expect($s->readiness($cw)['gaps'])->toHaveCount(5);
+    $this->actingAs($client)->post(route('client.audits.enms.update', [$audit, $profile]), ['revision' => $cw->revision(), 'source_hash' => $s->sources($cw)['hash'], 'operation' => 'submission'])->assertSessionHasNoErrors()->assertRedirect();
+    expect($s->status($cw)['submitted'])->toBeTrue();
+    foreach ($reference['evidence'] as $row) {
+        if ($row['added_by'] !== 'klient') {
+            $proofs[$row['id']] = $addProof($w, $row);
+        }
+    }
+    expect($s->status($cw)['submitted'])->toBeTrue();
+    foreach ($reference['evidence'] as $row) {
+        enmsSave($w, 'verification', $row['verification'] + ['evidence_id' => $proofs[$row['id']], 'zakresInformacji' => 'Zakres informacji z dowodu referencyjnego', 'uwaga' => 'Ograniczenie z referencji']);
+    }
+    $coverage = [];
+    foreach ($reference['coverage'] as $row) {
+        $coverage[$row['evidence'].'/'.$row['criterion']] = enmsSave($w, 'coverage', ['evidence_id' => $proofs[$row['evidence']], 'criterion_id' => $s->library->id('criterion', $row['criterion']), 'zakres' => $row['extent'], 'coPotwierdza' => 'Pokrycie zgodne ze scenariuszem', 'czegoBrakuje' => 'Ograniczenie ze scenariusza'])['id'];
+    }
+    foreach ($reference['findings'] as $row) {
+        enmsSave($w, 'finding', ['requirement_id' => $s->library->id('requirement', $row['requirement']), 'criterion_id' => $s->library->id('criterion', $row['criterion']), 'typ' => $row['type'], 'priorytet' => $row['priority'], 'opis' => 'Ustalenie testowe', 'ryzyko' => 'Ryzyko testowe']);
+    }
+    foreach ($reference['closures'] as $code => $row) {
+        enmsSave($w, 'closure', ['criterion_id' => $s->library->id('criterion', $code), 'stan' => $row['state'], 'uzasadnienie' => 'Rozstrzygnięcie konsultanta']);
+    }
+    foreach ($reference['assessments'] as $code => $row) {
+        enmsSave($w, 'assessment', ['requirement_id' => $s->library->id('requirement', $code), 'stan' => $row['state'], 'uzasadnienie' => 'Ocena konsultanta', 'mode' => 'ciagla', 'coverage_ids' => array_map(fn ($id) => $coverage[$id], $row['sources'])]);
+    }
+    $this->actingAs($staff)->post(route('audits.enms.update', [$audit, $profile]), ['revision' => $w->revision(), 'source_hash' => $s->sources($w)['hash'], 'operation' => 'completion', 'payload' => ['text' => 'Zakończenie diagnostyki na podstawie scenariusza referencyjnego']])->assertSessionHasNoErrors()->assertRedirect();
+    expect($s->status($w)['assessed'])->toBeTrue();
+    foreach (['raport', 'zalacznik'] as $type) {
+        $this->post(route('audits.enms.draft', [$audit, $profile]), ['revision' => $w->revision(), 'source_hash' => $s->sources($w)['hash'], 'type' => $type, 'version' => '1.0', 'reason' => 'Odbiór referencyjny'])->assertSessionHasNoErrors()->assertRedirect();
+        $draft = collect($w->records('document_draft'))->first(fn ($r) => $r['payload']['type'] === $type);
+        expect($draft['payload']['snapshot']['issuer']['logo'])->toStartWith('data:image/');
+        $this->get(route('audits.enms.document', [$audit, $profile, $draft['id']]))->assertOk()->assertHeader('Content-Type', 'application/pdf');
+        expect($draft['payload']['snapshot']['status']['assessed'])->toBeTrue();
+    }
+    expect($w->records('declaration'))->toHaveCount(15)->and($w->records('finding'))->toHaveCount(9);
 });

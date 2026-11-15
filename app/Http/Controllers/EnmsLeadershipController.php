@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audit;
+use App\Models\CompanySettings;
 use App\Models\IsoPlantProfile;
 use App\Services\Enms\AuthorizedActions;
 use App\Services\Enms\LeadershipDocuments;
@@ -96,8 +97,9 @@ final class EnmsLeadershipController extends Controller
     {
         $w = $this->workspace($request, $audit, $profile);
         $data = $request->validate(['revision' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64']);
-        $brand = $request->attributes->get('app_brand');
-        app(LeadershipDocuments::class)->draft($w, $data['revision'], $data['source_hash'], $request->all(), ['name' => $brand?->name, 'logo' => $brand?->logoDataUri()]);
+        // View composers have not run on this POST; resolve branding just as the existing ISO generators do.
+        $brand = CompanySettings::first() ?? new CompanySettings(['name' => 'ENESA']);
+        app(LeadershipDocuments::class)->draft($w, $data['revision'], $data['source_hash'], $request->all(), ['name' => $brand->name, 'logo' => $brand->logoDataUri()]);
 
         return redirect()->route('audits.enms.show', [$audit, $profile, 'tab' => $request->input('type') === 'karta' ? 'karta' : 'raport'])->with('success', 'Przygotowano projekt. Wydanie i zatwierdzenie są osobnymi czynnościami.');
     }

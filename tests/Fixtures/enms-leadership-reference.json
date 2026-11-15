@@ -12,7 +12,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-2",
@@ -26,7 +27,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-3",
@@ -39,7 +41,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-4",
@@ -52,7 +55,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-5",
@@ -64,7 +68,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w zapisy"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-6",
@@ -76,7 +81,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-7",
@@ -88,7 +94,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w pozycję budżetu"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-8",
@@ -101,7 +108,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-9",
@@ -113,7 +121,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-10",
@@ -129,7 +138,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w zapis w systemie"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-11",
@@ -145,7 +155,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w zapisy"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-12",
@@ -158,7 +169,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w dokument"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-13",
@@ -171,7 +183,8 @@
         "dostepnosc": "nieokazany",
         "wiarygodnosc": "",
         "sposob": ""
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-14",
@@ -184,7 +197,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w zapisy"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-15",
@@ -196,7 +210,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "watpliwa",
         "sposob": "wgląd w zapis w systemie"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-16",
@@ -209,7 +224,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w zapisy"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-17",
@@ -221,7 +237,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": "wgląd w zapisy"
-      }
+      },
+      "added_by": "klient"
     },
     {
       "id": "DOW-18",
@@ -233,7 +250,8 @@
         "dostepnosc": "okazany",
         "wiarygodnosc": "potwierdzona",
         "sposob": ""
-      }
+      },
+      "added_by": "konsultant"
     }
   ],
   "coverage": [
@@ -733,5 +751,349 @@
         "DOW-11/KRY-m3"
       ]
     }
-  }
+  },
+  "declarations": {
+    "PRZ-00": {
+      "stan": "jest",
+      "pola": {
+        "podmiot": "Opis testowy podmiot",
+        "rola": "Osoba testowa",
+        "kompetencje": "Opis testowy kompetencje",
+        "limity": "Opis testowy limity",
+        "ponadLimit": "Osoba testowa"
+      },
+      "evidence": [
+        "DOW-2"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "PRZ-14": {
+      "stan": "jest",
+      "pola": {
+        "forum": "Opis testowy forum",
+        "czestotliwosc": "Opis testowy czestotliwosc",
+        "uczestnicy": "Osoba testowa",
+        "dataOstatnia": "2026-06-18",
+        "zapis": "Opis testowy zapis",
+        "dzialania": "Opis testowy dzialania"
+      },
+      "evidence": [
+        "DOW-10",
+        "DOW-11"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "a": {
+      "stan": "jest",
+      "pola": {
+        "granice": "Opis testowy granice",
+        "dataPrzyjecia": "2026-02-20",
+        "zatwierdzil": "Osoba testowa",
+        "zmiany": ""
+      },
+      "evidence": [
+        "DOW-1",
+        "DOW-2"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "b": {
+      "stan": "jest",
+      "pola": {
+        "politykaId": "Opis testowy politykaId",
+        "politykaPrzyjal": "Osoba testowa",
+        "celeKosztowe": "Opis testowy celeKosztowe",
+        "powiazanieStrategia": "Opis testowy powiazanieStrategia"
+      },
+      "evidence": [
+        "DOW-3",
+        "DOW-4"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "c": {
+      "stan": "czesciowo",
+      "pola": {
+        "procesyCzynne": "Opis testowy procesyCzynne",
+        "wlasciciele": "Osoba testowa",
+        "kryterium": "Opis testowy kryterium",
+        "przykladDecyzji": "Opis testowy przykladDecyzji"
+      },
+      "evidence": [
+        "DOW-8",
+        "DOW-9",
+        "DOW-10"
+      ],
+      "plan": {
+        "opis": "Plan testowy",
+        "termin": "2026-12-31",
+        "kto": "Osoba testowa"
+      }
+    },
+    "d": {
+      "stan": "jest",
+      "pola": {
+        "planId": "Opis testowy planId",
+        "zatwierdzil": "Osoba testowa",
+        "dataZatwierdzenia": "2026-02-12",
+        "srodki": "1000 PLN",
+        "postep": "Opis testowy postep",
+        "opoznienia": ""
+      },
+      "evidence": [
+        "DOW-4",
+        "DOW-5"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "e": {
+      "stan": "jest",
+      "pola": {
+        "zapotrzebowanie": "Opis testowy zapotrzebowanie",
+        "budzetKwota": "1000 PLN",
+        "budzetStan": "zatwierdzony",
+        "ludzieCzas": "Opis testowy ludzieCzas",
+        "narzedziaDane": "Opis testowy narzedziaDane",
+        "braki": "Opis testowy braki"
+      },
+      "evidence": [
+        "DOW-6",
+        "DOW-7"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "f": {
+      "stan": "jest",
+      "pola": {
+        "kto": "Osoba testowa",
+        "doKogo": "Opis testowy doKogo",
+        "co": "Opis testowy co",
+        "kiedy": "2026-02-12",
+        "kanal": "spotkanie załogi",
+        "reakcja": ""
+      },
+      "evidence": [
+        "DOW-3",
+        "DOW-10",
+        "DOW-14"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "g": {
+      "stan": "czesciowo",
+      "pola": {
+        "wynikOczekiwany": "Opis testowy wynikOczekiwany",
+        "okresy": "Opis testowy okresy",
+        "czynniki": "Opis testowy czynniki",
+        "odchylenia": "Opis testowy odchylenia"
+      },
+      "evidence": [
+        "DOW-10",
+        "DOW-11",
+        "DOW-12",
+        "DOW-13"
+      ],
+      "plan": {
+        "opis": "Plan testowy",
+        "termin": "2026-12-31",
+        "kto": "Osoba testowa"
+      }
+    },
+    "h": {
+      "stan": "jest",
+      "pola": {
+        "inicjatywy": "Opis testowy inicjatywy",
+        "etap": "w realizacji",
+        "efekt": "Opis testowy efekt",
+        "udzialKierownictwa": "Opis testowy udzialKierownictwa"
+      },
+      "evidence": [
+        "DOW-8",
+        "DOW-11"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "i": {
+      "stan": "jest",
+      "pola": {
+        "aktPowolania": "Opis testowy aktPowolania",
+        "jednaOsoba": "zespół wieloosobowy",
+        "wsparcieZewn": "",
+        "zadania": "Opis testowy zadania",
+        "nadzor": "Opis testowy nadzor"
+      },
+      "evidence": [
+        "DOW-2",
+        "DOW-10"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "j": {
+      "stan": "czesciowo",
+      "pola": {
+        "przykladBariery": "",
+        "przykladPomyslu": "",
+        "przydzialCzasu": "Opis testowy przydzialCzasu",
+        "efekt": "Opis testowy efekt"
+      },
+      "evidence": [
+        "DOW-14",
+        "DOW-15",
+        "DOW-16"
+      ],
+      "plan": {
+        "opis": "Plan testowy",
+        "termin": "2026-12-31",
+        "kto": "Osoba testowa"
+      }
+    },
+    "k": {
+      "stan": "jest",
+      "pola": {
+        "roleKierownicze": "Osoba testowa",
+        "uprawnienia": "Opis testowy uprawnienia",
+        "przykladPoparcia": "Opis testowy przykladPoparcia",
+        "konflikt": "Opis testowy konflikt"
+      },
+      "evidence": [
+        "DOW-11",
+        "DOW-16"
+      ],
+      "plan": {
+        "opis": "",
+        "termin": "",
+        "kto": ""
+      }
+    },
+    "l": {
+      "stan": "czesciowo",
+      "pola": {
+        "metoda": "Opis testowy metoda",
+        "jakoscDanych": "szacunek",
+        "zmienne": "Opis testowy zmienne",
+        "przeglad": ""
+      },
+      "evidence": [
+        "DOW-12",
+        "DOW-13"
+      ],
+      "plan": {
+        "opis": "Plan testowy",
+        "termin": "2026-12-31",
+        "kto": "Osoba testowa"
+      }
+    },
+    "m": {
+      "stan": "czesciowo",
+      "pola": {
+        "wyzwalacze": "Opis testowy wyzwalacze",
+        "wlasciciel": "Osoba testowa",
+        "ocenaWplywu": "Opis testowy ocenaWplywu",
+        "kiedyOcena": "po zmianie",
+        "ostatniaZmiana": "Opis testowy ostatniaZmiana",
+        "efekt": "Opis testowy efekt"
+      },
+      "evidence": [
+        "DOW-11",
+        "DOW-17"
+      ],
+      "plan": {
+        "opis": "Plan testowy",
+        "termin": "2026-12-31",
+        "kto": "Osoba testowa"
+      }
+    }
+  },
+  "findings": [
+    {
+      "requirement": "c",
+      "criterion": "KRY-c2",
+      "type": "zgloszona",
+      "priority": "wysoki"
+    },
+    {
+      "requirement": "e",
+      "criterion": "KRY-e3",
+      "type": "potwierdzona",
+      "priority": "wysoki"
+    },
+    {
+      "requirement": "f",
+      "criterion": "KRY-f2",
+      "type": "brakdowodu",
+      "priority": "średni"
+    },
+    {
+      "requirement": "g",
+      "criterion": "KRY-g2",
+      "type": "brakdowodu",
+      "priority": "średni"
+    },
+    {
+      "requirement": "i",
+      "criterion": "KRY-i2",
+      "type": "potwierdzona",
+      "priority": "średni"
+    },
+    {
+      "requirement": "j",
+      "criterion": "KRY-j1",
+      "type": "brakdowodu",
+      "priority": "średni"
+    },
+    {
+      "requirement": "l",
+      "criterion": "KRY-l3",
+      "type": "potwierdzona",
+      "priority": "wysoki"
+    },
+    {
+      "requirement": "l",
+      "criterion": "KRY-l5",
+      "type": "brakdowodu",
+      "priority": "niski"
+    },
+    {
+      "requirement": "m",
+      "criterion": "KRY-m1",
+      "type": "zgloszona",
+      "priority": "wysoki"
+    }
+  ]
 }
