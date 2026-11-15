@@ -1,6 +1,7 @@
 @php
     $statusLabels = ['draft'=>'Przygotowywany','in_progress'=>'W trakcie','done'=>'Zakończony','cancelled'=>'Anulowany'];
     $auditProgress = app(\App\Services\QuestionnaireCompletion::class)->auditCards($audits);
+    $enmsActions = app(\App\Services\QuestionnairePendingActions::class)->enmsForClient($audits);
     $auditBrandColor = $appBrand?->primaryColor() ?: '#1A4D3A';
     $auditChannels = array_map(function ($offset) use ($auditBrandColor) {
         $value = hexdec(substr(ltrim($auditBrandColor, '#'), $offset, 2)) / 255;
@@ -33,6 +34,7 @@
         </div>
     </div><span class="client-audit-status">{{$statusLabels[$audit->status]??'Nie określono'}}</span></div>
     @if($audit->description)<p style="font-size:13px;color:#58665e;line-height:1.55">{{$audit->description}}</p>@endif
+    @foreach($enmsActions[$audit->id]??[] as $action)<p><a href="{{ $action['url'] }}">{{ $action['label'] }}</a></p>@endforeach
     <div class="client-audit-stats">
         <div style="flex:1;min-width:180px" title="Wypełnienie dostępnych ankiet audytu, niezależnie od ich zatwierdzenia">
             <strong>Wypełnienie audytu: {{$auditProgress[$audit->id]['percent']}}%</strong>

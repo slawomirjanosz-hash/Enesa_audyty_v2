@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\AuditType;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSystemReview;
+use App\Services\Enms\LeadershipLibrary;
+use App\Services\Enms\Registers;
 use App\Services\IsoFactorQuestionnaire;
 use App\Services\IsoPlantQuestionnaire;
 use App\Services\IsoPlatformRelease;
@@ -21,6 +23,9 @@ class IsoQuestionnairePreviewController extends Controller
         uksort($titles, 'strnatcmp');
         $titles = ['intro' => $titles['intro']] + $titles;
         abort_unless($auditType->slug === 'iso50001' && isset($titles[$section]), 404);
+        if ($section === '5-1' && $request->boolean('new_model')) {
+            return view('audits.enms.preview', ['auditType' => $auditType, 'library' => app(LeadershipLibrary::class), 'registers' => app(Registers::class)]);
+        }
 
         // Never load a customer's audit or persist preview answers.
         $plant = app(IsoPlantQuestionnaire::class);

@@ -1,0 +1,9 @@
+@php($d=$one('declaration','requirement_id',$requirement['id'])['payload']??[])
+@php($assessment=$one('assessment','requirement_id',$requirement['id'])['payload']??[])
+<div class="item"><h3>{{ $requirement['iso']??$requirement['kod'] }} · {{ $requirement['title'] }}</h3><p>{{ $requirement['question'] }}</p><p><strong>Deklaracja organizacji:</strong> {{ $declarationStates[$d['stan']??'']??'Nie udzielono odpowiedzi' }}</p>
+@if(!empty($d['opis']))<p>{{ $d['opis'] }}</p>@endif
+@foreach($requirement['pola'] as $f)@if($f['typ']==='odwolanie')@php($citation=$d['citations'][$f['klucz']]??null)<p><strong>{{ $f['etykieta'] }}:</strong> {{ $citation && filled($citation['value']) ? implode('; ',array_filter(\Illuminate\Support\Arr::flatten((array)$citation['value']),fn($v)=>is_scalar($v))) : 'Brak danych źródłowych' }}. Punkt {{ $f['zrodlo']['punkt'] }}, wersja {{ $citation['source_version']??'niepotwierdzona' }}; {{ ($citation['approved']??false)?'dokument źródłowy zatwierdzony':'brak aktualnego zatwierdzonego dokumentu źródłowego' }}.</p>@elseif(filled($d['pola'][$f['klucz']]??null))<p><strong>{{ $f['etykieta'] }}:</strong> {{ $d['pola'][$f['klucz']] }}</p>@endif @endforeach
+@if(!empty($d['plan']['opis']))<p><strong>Plan:</strong> {{ $d['plan']['opis'] }} · {{ $d['plan']['termin']??'bez terminu' }} · {{ $d['plan']['kto']??'' }}</p>@endif
+@if($document['type']!=='ankieta')<p><strong>Ocena konsultanta:</strong> {{ $assessmentStates[$assessment['stan']??'']??'Nie wystawiono oceny' }}</p><p>{{ $assessment['uzasadnienie']??'' }}</p>@endif
+<p><strong>Dowody:</strong> {{ implode('; ',array_map(fn($r)=>$r['symbol'].' · '.($r['payload']['tytul']??'bez tytułu'),array_filter($rows('evidence'),fn($e)=>in_array($requirement['id'],$e['payload']['requirements']??[],true))))?:'Nie wskazano' }}</p>
+</div>

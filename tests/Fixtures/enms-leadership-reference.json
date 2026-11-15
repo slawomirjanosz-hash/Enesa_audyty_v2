@@ -1,0 +1,737 @@
+{
+  "source": "2026.11.15 ENESA_5.1_wydanie_referencyjne.zip / wczytajDemo04",
+  "note": "Graf dowodowy scenariusza referencyjnego. Usunięto opisy organizacji i dane osób; zachowano kody, stany, relacje i metody weryfikacji.",
+  "evidence": [
+    {
+      "id": "DOW-1",
+      "kind": "DOK",
+      "requirements": [
+        "a"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-2",
+      "kind": "DOK",
+      "requirements": [
+        "PRZ-00",
+        "a",
+        "i"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-3",
+      "kind": "DOK",
+      "requirements": [
+        "b",
+        "f"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-4",
+      "kind": "DOK",
+      "requirements": [
+        "b",
+        "d"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-5",
+      "kind": "ZAP",
+      "requirements": [
+        "d"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w zapisy"
+      }
+    },
+    {
+      "id": "DOW-6",
+      "kind": "DOK",
+      "requirements": [
+        "e"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-7",
+      "kind": "UMO",
+      "requirements": [
+        "e"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w pozycję budżetu"
+      }
+    },
+    {
+      "id": "DOW-8",
+      "kind": "DOK",
+      "requirements": [
+        "c",
+        "h"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-9",
+      "kind": "DOK",
+      "requirements": [
+        "c"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-10",
+      "kind": "SYS",
+      "requirements": [
+        "PRZ-14",
+        "c",
+        "f",
+        "g",
+        "i"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w zapis w systemie"
+      }
+    },
+    {
+      "id": "DOW-11",
+      "kind": "ZAP",
+      "requirements": [
+        "PRZ-14",
+        "g",
+        "h",
+        "k",
+        "m"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w zapisy"
+      }
+    },
+    {
+      "id": "DOW-12",
+      "kind": "DOK",
+      "requirements": [
+        "g",
+        "l"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w dokument"
+      }
+    },
+    {
+      "id": "DOW-13",
+      "kind": "SYS",
+      "requirements": [
+        "g",
+        "l"
+      ],
+      "verification": {
+        "dostepnosc": "nieokazany",
+        "wiarygodnosc": "",
+        "sposob": ""
+      }
+    },
+    {
+      "id": "DOW-14",
+      "kind": "ZAP",
+      "requirements": [
+        "f",
+        "j"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w zapisy"
+      }
+    },
+    {
+      "id": "DOW-15",
+      "kind": "SYS",
+      "requirements": [
+        "j"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "watpliwa",
+        "sposob": "wgląd w zapis w systemie"
+      }
+    },
+    {
+      "id": "DOW-16",
+      "kind": "ZAP",
+      "requirements": [
+        "j",
+        "k"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w zapisy"
+      }
+    },
+    {
+      "id": "DOW-17",
+      "kind": "ZAP",
+      "requirements": [
+        "m"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": "wgląd w zapisy"
+      }
+    },
+    {
+      "id": "DOW-18",
+      "kind": "ZAP",
+      "requirements": [
+        "PRZ-00"
+      ],
+      "verification": {
+        "dostepnosc": "okazany",
+        "wiarygodnosc": "potwierdzona",
+        "sposob": ""
+      }
+    }
+  ],
+  "coverage": [
+    {
+      "evidence": "DOW-1",
+      "criterion": "KRY-a1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-1",
+      "criterion": "KRY-a3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-2",
+      "criterion": "KRY-a2",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-2",
+      "criterion": "KRY-p0a",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-2",
+      "criterion": "KRY-p0b",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-2",
+      "criterion": "KRY-i1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-2",
+      "criterion": "KRY-i2",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-10",
+      "criterion": "KRY-p14a",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-10",
+      "criterion": "KRY-c2",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-10",
+      "criterion": "KRY-f2",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-10",
+      "criterion": "KRY-g1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-10",
+      "criterion": "KRY-i3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-11",
+      "criterion": "KRY-p14a",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-11",
+      "criterion": "KRY-p14b",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-11",
+      "criterion": "KRY-g4",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-11",
+      "criterion": "KRY-h2",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-11",
+      "criterion": "KRY-h3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-11",
+      "criterion": "KRY-k2",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-11",
+      "criterion": "KRY-m3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-3",
+      "criterion": "KRY-b1",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-4",
+      "criterion": "KRY-b1",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-4",
+      "criterion": "KRY-b2",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-4",
+      "criterion": "KRY-b3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-4",
+      "criterion": "KRY-b4",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-4",
+      "criterion": "KRY-d1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-5",
+      "criterion": "KRY-d2",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-5",
+      "criterion": "KRY-d3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-6",
+      "criterion": "KRY-e1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-6",
+      "criterion": "KRY-e3",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-7",
+      "criterion": "KRY-e2",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-9",
+      "criterion": "KRY-c1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-9",
+      "criterion": "KRY-c3",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-9",
+      "criterion": "KRY-c4",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-8",
+      "criterion": "KRY-c1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-8",
+      "criterion": "KRY-c2",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-8",
+      "criterion": "KRY-h1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-8",
+      "criterion": "KRY-h3",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-12",
+      "criterion": "KRY-l1",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-12",
+      "criterion": "KRY-l2",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-12",
+      "criterion": "KRY-l4",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-14",
+      "criterion": "KRY-f2",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-14",
+      "criterion": "KRY-j3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-16",
+      "criterion": "KRY-j1",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-16",
+      "criterion": "KRY-j2",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-16",
+      "criterion": "KRY-k1",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-16",
+      "criterion": "KRY-k3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-17",
+      "criterion": "KRY-m1",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-17",
+      "criterion": "KRY-m4",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-13",
+      "criterion": "KRY-g2",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-13",
+      "criterion": "KRY-g3",
+      "extent": "czesciowe"
+    },
+    {
+      "evidence": "DOW-13",
+      "criterion": "KRY-l3",
+      "extent": "pelne"
+    },
+    {
+      "evidence": "DOW-15",
+      "criterion": "KRY-j1",
+      "extent": "zadne"
+    }
+  ],
+  "closures": {
+    "KRY-a1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-a2": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-a3": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-b1": {
+      "state": "zamkniete",
+      "partial_only": true
+    },
+    "KRY-b2": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-b3": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-b4": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-c1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-d1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-d2": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-d3": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-e1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-e2": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-g1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-g4": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-h1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-h2": {
+      "state": "zamkniete",
+      "partial_only": true
+    },
+    "KRY-h3": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-p0a": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-p0b": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-p14a": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-p14b": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-i1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-i3": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-j2": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-j3": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-k1": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-k2": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-k3": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-l4": {
+      "state": "zamkniete",
+      "partial_only": false
+    },
+    "KRY-m3": {
+      "state": "zamkniete",
+      "partial_only": false
+    }
+  },
+  "assessments": {
+    "a": {
+      "state": "wykazane",
+      "sources": [
+        "DOW-1/KRY-a1",
+        "DOW-1/KRY-a3",
+        "DOW-2/KRY-a2"
+      ]
+    },
+    "b": {
+      "state": "wykazane",
+      "sources": [
+        "DOW-3/KRY-b1",
+        "DOW-4/KRY-b1",
+        "DOW-4/KRY-b2",
+        "DOW-4/KRY-b3",
+        "DOW-4/KRY-b4"
+      ]
+    },
+    "c": {
+      "state": "niewykazane",
+      "sources": [
+        "DOW-8/KRY-c1",
+        "DOW-8/KRY-c2",
+        "DOW-9/KRY-c1",
+        "DOW-9/KRY-c3",
+        "DOW-9/KRY-c4",
+        "DOW-10/KRY-c2"
+      ]
+    },
+    "d": {
+      "state": "wykazane",
+      "sources": [
+        "DOW-4/KRY-d1",
+        "DOW-5/KRY-d2",
+        "DOW-5/KRY-d3"
+      ]
+    },
+    "e": {
+      "state": "niewykazane",
+      "sources": [
+        "DOW-6/KRY-e1",
+        "DOW-6/KRY-e3",
+        "DOW-7/KRY-e2"
+      ]
+    },
+    "f": {
+      "state": "niewykazane",
+      "sources": [
+        "DOW-14/KRY-f2",
+        "DOW-10/KRY-f2"
+      ]
+    },
+    "g": {
+      "state": "wtoku",
+      "sources": [
+        "DOW-10/KRY-g1",
+        "DOW-11/KRY-g4"
+      ]
+    },
+    "h": {
+      "state": "wykazane",
+      "sources": [
+        "DOW-8/KRY-h1",
+        "DOW-8/KRY-h3",
+        "DOW-11/KRY-h2",
+        "DOW-11/KRY-h3"
+      ]
+    },
+    "i": {
+      "state": "wykazane",
+      "sources": [
+        "DOW-2/KRY-i1",
+        "DOW-2/KRY-i2",
+        "DOW-10/KRY-i3"
+      ]
+    },
+    "j": {
+      "state": "niewykazane",
+      "sources": [
+        "DOW-16/KRY-j1",
+        "DOW-16/KRY-j2",
+        "DOW-14/KRY-j3"
+      ]
+    },
+    "k": {
+      "state": "wykazane",
+      "sources": [
+        "DOW-16/KRY-k1",
+        "DOW-16/KRY-k3",
+        "DOW-11/KRY-k2"
+      ]
+    },
+    "l": {
+      "state": "niewykazane",
+      "sources": [
+        "DOW-12/KRY-l1",
+        "DOW-12/KRY-l2",
+        "DOW-12/KRY-l4"
+      ]
+    },
+    "m": {
+      "state": "niewykazane",
+      "sources": [
+        "DOW-17/KRY-m1",
+        "DOW-17/KRY-m4",
+        "DOW-11/KRY-m3"
+      ]
+    }
+  }
+}

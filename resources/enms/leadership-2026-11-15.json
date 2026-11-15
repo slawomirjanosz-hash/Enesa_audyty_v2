@@ -1,0 +1,1889 @@
+{
+  "version": "2026-11-15",
+  "section": "5-1",
+  "source_sha256": "b33c573cce58e76f428a3b5a3cfc9764e91b93ef6fff8c58dae9c20bf22c8fe8",
+  "PYTANIA_4": [
+    {
+      "id": "P1",
+      "nazwa": "1. Czy wiemy, dokąd idziemy?",
+      "opis": "Zakres i granice systemu są ustalone. Polityka, cele i zadania energetyczne pasują do strategii firmy. Wskaźniki uczciwie pokazują wynik.",
+      "dowod": "zatwierdzony zakres i polityka, cele w planie firmy, decyzja o wskaźnikach"
+    },
+    {
+      "id": "P2",
+      "nazwa": "2. Czy energia jest w naszych decyzjach?",
+      "opis": "Wymagania systemu są wbudowane w procesy firmy. Plany działań są zatwierdzane i realizowane. Są zasoby. Jest zespół ds. zarządzania energią.",
+      "dowod": "energia w procedurze inwestycyjnej i zakupowej, zatwierdzone plany, przydział ludzi, czasu i pieniędzy, skład zespołu"
+    },
+    {
+      "id": "P3",
+      "nazwa": "3. Czy ludzie wiedzą, że to ważne?",
+      "opis": "Kierownictwo mówi o znaczeniu zarządzania energią i przestrzegania zasad systemu. Kieruje ludźmi i ich wspiera. Wspiera też innych kierowników w ich obszarach.",
+      "dowod": "komunikaty, spotkania, energia w celach kierowników, rozstrzygnięte spory o priorytety"
+    },
+    {
+      "id": "P4",
+      "nazwa": "4. Czy widzimy wyniki — i zmiany, zanim nas zaskoczą?",
+      "opis": "System osiąga zamierzone wyniki. Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu. Zmiany — nowa linia, nowy klient, nowa umowa na energię — trafiają do zespołu przed decyzją, nie po.",
+      "dowod": "przegląd zarządzania z decyzjami, reakcje na odchylenia, zmiany zgłoszone zawczasu"
+    }
+  ],
+  "ZOBOWIAZANIA": [
+    {
+      "kod": "PRZ-00",
+      "pytanie": "P1",
+      "podstawa": "M",
+      "tresc": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+      "pomoc": "Chodzi o najwyższe kierownictwo właściwe dla zakresu Waszego systemu — zarząd spółki, dyrektor zakładu albo osoba przez nich upoważniona. Bez tego ustalenia pozostałe pozycje nie mają adresata.",
+      "dowod": "np. Zarząd spółki; w jego imieniu Dyrektor Zakładu Marek Wilczyński — upoważnienie z 20.02.2026"
+    },
+    {
+      "kod": "PRZ-01",
+      "pytanie": "P1",
+      "podstawa": "N",
+      "klauzula": "4.3",
+      "tresc": "Ustalono zakres i granice systemu",
+      "pomoc": "Wynik punktu 4.3. Tutaj pytamy, czy kierownictwo je zatwierdziło.",
+      "dowod": "np. D-EnMS-ZAK-01 wersja 1.0, zatwierdzony uchwałą Zarządu z 20.02.2026"
+    },
+    {
+      "kod": "PRZ-02",
+      "pytanie": "P1",
+      "podstawa": "N",
+      "klauzula": "5.2, 6.2",
+      "tresc": "Ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+      "pomoc": "„Zgodne z kierunkiem strategicznym” znaczy, że cele energetyczne nie stoją obok planu firmy, tylko są jego częścią.",
+      "dowod": "np. Polityka energetyczna wersja 1.0 (uchwała Zarządu 3/2026); cele Z1.1 i Z1.2 w planie operacyjnym na 2026/2027"
+    },
+    {
+      "kod": "PRZ-03",
+      "pytanie": "P1",
+      "podstawa": "N",
+      "klauzula": "6.4",
+      "tresc": "Wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+      "pomoc": "Kierownictwo nie musi liczyć wskaźników, ale musi zatwierdzić, że mierzą to, co trzeba. Wskaźnik, który nie reaguje na zmiany w zakładzie, jest bezużyteczny.",
+      "dowod": "np. decyzja o zestawie EnPI z przeglądu zarządzania 18.06.2026, z uzasadnieniem doboru"
+    },
+    {
+      "kod": "PRZ-04",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "8.1–8.3",
+      "tresc": "Wymagania systemu włączono do procesów biznesowych",
+      "pomoc": "Inwestycje, zakupy, planowanie produkcji. Szczegóły wypełniacie przy procesach firmy — tutaj wpisujecie dowód zbiorczy.",
+      "profil": "FAKT_ZAKUPY_KRYTERIA",
+      "profilUwaga": "Jeśli przy zakupach decyduje cena nabycia, integracja z tym procesem jeszcze nie działa.",
+      "dowod": "np. Procedura zakupowa P-ZAK-02 pkt 4.3 (kryteria energetyczne) i Procedura inwestycyjna P-INW-01 pkt 5.2, obie od 01.04.2026"
+    },
+    {
+      "kod": "PRZ-05",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "6.2",
+      "tresc": "Plany działań są zatwierdzane i realizowane",
+      "pomoc": "Dwa warunki naraz: zatwierdzenie i realizacja. Zatwierdzony plan, którego nikt nie wykonuje, nie spełnia tej pozycji.",
+      "dowod": "np. Plan działań 2026 zatwierdzony 20.03.2026; stan realizacji na 30.09.2026: 4 z 6 działań zakończone"
+    },
+    {
+      "kod": "PRZ-06",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "7.1",
+      "tresc": "Potrzebne zasoby są dostępne — ludzie, czas, budżet, narzędzia, dane",
+      "pomoc": "Szczegóły wypełniacie przy zasobach. Norma nie każe tworzyć osobnego etatu ani osobnej pozycji w budżecie — pyta, czy zasobów wystarcza.",
+      "dowod": "np. 0,3 etatu Energy Managera, 40 tys. zł w budżecie utrzymania ruchu na 2026, dostęp do danych z liczników głównych"
+    },
+    {
+      "kod": "PRZ-07",
+      "pytanie": "P2",
+      "podstawa": "N",
+      "klauzula": "5.3",
+      "tresc": "Powołano zespół ds. zarządzania energią",
+      "pomoc": "Norma wymaga skutku: ktoś imiennie prowadzi system i ma na to czas. Zespół jest sposobem, który proponuje metoda ENESA — rozwiązanie równoważne jest dopuszczalne, jeśli zostanie opisane. Szczegóły uzupełniacie przy zespole.",
+      "profil": "FAKT_ENERGY_MANAGER",
+      "dowod": "np. Decyzja Zarządu nr 7/2026 z 20.02.2026 o powołaniu Zespołu ds. Zarządzania Energią — 5 osób",
+      "profilUwaga": "Profil zakładu opisuje prowadzenie tematu energii jako nieformalne. Sprawdźcie, czy zespół ma zapisane zadania i czas, czy działa na dobrą wolę kilku osób."
+    },
+    {
+      "kod": "PRZ-08",
+      "pytanie": "P3",
+      "podstawa": "N",
+      "klauzula": "7.4",
+      "tresc": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+      "pomoc": "Nie chodzi o jedno przemówienie przy podpisywaniu polityki, tylko o regularność. Krótko, ale stale.",
+      "dowod": "np. stały punkt „energia” na poniedziałkowej odprawie kierowników od 03.2026; komunikat Prezesa z 15.03.2026 na tablicach"
+    },
+    {
+      "kod": "PRZ-09",
+      "pytanie": "P3",
+      "podstawa": "N",
+      "klauzula": "7.2, 7.3",
+      "tresc": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+      "pomoc": "Najmocniejszy dowód: sytuacja, w której zespół trafił na opór, a kierownictwo rozstrzygnęło spór, zamiast powiedzieć „dogadajcie się”.",
+      "dowod": "np. rozstrzygnięcie sporu o postój lakierni na rzecz przeglądu szczelności — decyzja Dyrektora z 12.05.2026"
+    },
+    {
+      "kod": "PRZ-10",
+      "pytanie": "P3",
+      "podstawa": "N",
+      "tresc": "Kierownictwo wspiera inne role kierownicze w ich obszarach odpowiedzialności",
+      "pomoc": "Przywództwo w punkcie 5.1 nie kończy się na zarządzie. Kierownik produkcji też ma w swoim obszarze pokazywać, że energia ma znaczenie — i potrzebuje do tego wsparcia z góry.",
+      "dowod": "np. wskaźniki energetyczne w rocznych celach kierowników produkcji i utrzymania ruchu od 2026 r."
+    },
+    {
+      "kod": "PRZ-11",
+      "pytanie": "P4",
+      "podstawa": "N",
+      "klauzula": "9.3",
+      "tresc": "System osiąga zamierzone wyniki",
+      "pomoc": "Dowodem są decyzje z przeglądu zarządzania — nie sam fakt, że przegląd się odbył.",
+      "dowod": "np. protokół przeglądu zarządzania 1/2026 z 18.06.2026: trzy decyzje, w tym przesunięcie środków na sterowanie sprężarek"
+    },
+    {
+      "kod": "PRZ-12",
+      "pytanie": "P4",
+      "podstawa": "N",
+      "klauzula": "10.2",
+      "tresc": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+      "pomoc": "Obu naraz: wyniku i systemu. Usprawnianie procedur bez poprawy wyniku to połowa wymagania.",
+      "dowod": "np. porównanie „rok temu — dziś — plan” omówione na przeglądzie; docenienie wyniku sprężarkowni na odprawie 22.06.2026"
+    },
+    {
+      "kod": "PRZ-13",
+      "pytanie": "P4",
+      "podstawa": "N",
+      "klauzula": "6.1",
+      "tresc": "Istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+      "pomoc": "Nowa linia, nowy klient, nowa umowa na energię — zmiana ma trafić do zespołu przed decyzją, nie po niej.",
+      "profilUwaga": "Planowane inwestycje to pierwszy test tego procesu: czy zespół dowiaduje się o nich na etapie założeń, czy po podpisaniu umowy?",
+      "dowod": "np. zapis w procedurze inwestycyjnej: opinia Energy Managera przed decyzją o zakupie urządzenia powyżej 50 kW"
+    },
+    {
+      "kod": "PRZ-14",
+      "pytanie": "P4",
+      "podstawa": "M",
+      "tresc": "Zaplanowano „punkty styku” kierownictwa z systemem — przegląd, raporty, komunikaty",
+      "pomoc": "Pozycja metodyczna. Zaangażowanie łatwiej utrzymać, gdy ma stały rytm, a nie zależy od pamięci koordynatora. Szczegóły wypełniacie przy punktach styku.",
+      "dowod": "np. przegląd zarządzania 2 razy w roku, raport miesięczny do Dyrektora, kwartalny komunikat na tablicach"
+    }
+  ],
+  "WYMAGANIA": [
+    {
+      "kod": "a",
+      "iso": "5.1 a)",
+      "obszar": "Zakres i granice EnMS",
+      "wymaganie": "Zapewnienie ustanowienia właściwego zakresu i granic systemu zarządzania energią",
+      "kodWiodacy": "PRZ-01",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "4.3",
+        "4.4"
+      ],
+      "wyzwalaczNadzoru": "Przy zmianie zakresu albo lokalizacji",
+      "pytanie": "Czy wiadomo, co wchodzi do systemu zarządzania energią, a co nie — i kto to przyjął?",
+      "pytaniaPomocnicze": "Zakres określony? Co wchodzi, co jest wyłączone i dlaczego? Kto zatwierdził? Czy zmiany objęto oceną?",
+      "pola": [
+        {
+          "klucz": "zakresOrg",
+          "etykieta": "Zakres organizacyjny i lokalizacje",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "4.3",
+            "obiekt": "ZAKRES"
+          }
+        },
+        {
+          "klucz": "granice",
+          "etykieta": "Co jest wyłączone i dlaczego",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "dataPrzyjecia",
+          "etykieta": "Data przyjęcia zakresu",
+          "typ": "data",
+          "wymagane": true
+        },
+        {
+          "klucz": "zatwierdzil",
+          "etykieta": "Kto zatwierdził zakres",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "zmiany",
+          "etykieta": "Istotne zmiany zakresu od przyjęcia",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-a1",
+          "nazwa": "Spójność granic z punktem 4.3",
+          "opis": "Granice podane w 5.1 zgadzają się z zakresem ustalonym w 4.3 — te same lokalizacje, te same wyłączenia, to samo uzasadnienie.",
+          "zrodla": "Zatwierdzony opis zakresu EnMS; powiązanie z obiektami i licznikami",
+          "sposob": "porównanie z punktem",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-a2",
+          "nazwa": "Umocowanie tego, kto zakres przyjął",
+          "opis": "Osoba albo organ, który zakres przyjął, miał do tego uprawnienia wynikające z PRZ-00. Przyjęcie zakresu przez kogoś bez umocowania nie wykazuje, że zrobiło to najwyższe kierownictwo.",
+          "zrodla": "Decyzja kierownictwa, uchwała, upoważnienie, regulamin organu, protokół, w którym zakres przyjęto",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-a3",
+          "nazwa": "Aktualność wobec zmian",
+          "opis": "Jeżeli od przyjęcia zakresu zmieniły się lokalizacje, działalność albo granice, Konsultant sprawdza, czy zmiana została objęta oceną. Brak zmian nie jest luką.",
+          "zrodla": "Rejestr zmian, aneksy do decyzji, protokół przeglądu zakresu, rozmowa",
+          "sposob": "rozmowa",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Aktualność jest warunkiem oceny, nie odrębnym obowiązkiem — proces reagowania na zmiany jest przedmiotem obowiązku m)."
+        }
+      ]
+    },
+    {
+      "kod": "b",
+      "iso": "5.1 b)",
+      "obszar": "Polityka, cele i kierunek strategiczny",
+      "wymaganie": "Zapewnienie spójności polityki, celów i zadań energetycznych z kierunkiem strategicznym organizacji",
+      "kodWiodacy": "PRZ-02",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "5.2",
+        "6.2"
+      ],
+      "wyzwalaczNadzoru": "Przy zmianie strategii lub polityki i w cyklu celów",
+      "pytanie": "Czy firma ma politykę energetyczną i cele, które mówią o zużyciu energii, a nie tylko o kosztach?",
+      "pytaniaPomocnicze": "Kto przyjął politykę i cele? Który cel wyraża wynik energetyczny? Jak powiązano je ze strategią?",
+      "pola": [
+        {
+          "klucz": "politykaId",
+          "etykieta": "Polityka energetyczna — symbol i wersja",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "politykaPrzyjal",
+          "etykieta": "Kto przyjął politykę",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "celeEnergetyczne",
+          "etykieta": "Cele wyrażające wynik energetyczny",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "6.2",
+            "obiekt": "CELE"
+          }
+        },
+        {
+          "klucz": "celeKosztowe",
+          "etykieta": "Cele kosztowe — osobno",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "powiazanieStrategia",
+          "etykieta": "Jak cele powiązano z kierunkiem strategicznym",
+          "typ": "tekst",
+          "wymagane": true
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-b1",
+          "nazwa": "Polityka oraz cele i zadania energetyczne są ustanowione",
+          "opis": "Polityka energetyczna oraz cele i zadania energetyczne zostały ustanowione i przyjęte przez organ do tego uprawniony, w sposób dający się odtworzyć.",
+          "zrodla": "Zatwierdzona polityka, rejestr celów i zadań, decyzja kierownictwa, protokół przyjęcia",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-b2",
+          "nazwa": "Cele albo zadania energetyczne odnoszą się do wyniku energetycznego",
+          "opis": "W zestawie celów i zadań energetycznych da się wskazać co najmniej jedną pozycję odnoszącą się do wyniku energetycznego — zużycia, wskaźnika EnPI, efektywności albo wyniku pojedynczego obszaru istotnego zużycia. Postać jest dowolna. Cel kosztowy obok celu energetycznego jest w porządku; cel kosztowy ZAMIAST niego nie wykazuje tego obowiązku, bo nie mówi nic o wyniku energetycznym.",
+          "zrodla": "Rejestr celów i zadań energetycznych, karta celu, plan działań (6.2), decyzja o przyjęciu celów",
+          "sposob": "analiza danych",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie wymagało „co najmniej jednego celu” i nie obejmowało zadań energetycznych, w których wynik energetyczny bywa wyrażony. Zastrzeżenie ENESA o niewymaganiu określonej postaci: dopisano dopuszczalne postaci i wprost dopuszczono cel kosztowy jako współistniejący."
+        },
+        {
+          "id": "KRY-b3",
+          "nazwa": "Powiązanie z kierunkiem strategicznym da się odtworzyć",
+          "opis": "Związek celów energetycznych z kierunkiem strategicznym jest możliwy do wskazania w tym, czym organizacja planuje — w strategii, planie gospodarczym, decyzji właściciela, budżecie albo protokole przyjęcia planu. Forma nie jest narzucona; sama deklaracja w rozmowie, bez żadnego śladu w planowaniu, nie wykazuje tego obowiązku.",
+          "zrodla": "Strategia, plan operacyjny, karta celów, budżet, protokół przyjęcia planu, uchwała właściciela",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie żądało wskazania „w dokumencie strategii albo planu”, co narzucało typ dokumentu — zastrzeżenie piąte ENESA."
+        },
+        {
+          "id": "KRY-b4",
+          "nazwa": "Cele kosztowe wyodrębnione od energetycznych",
+          "opis": "Jeżeli organizacja prowadzi cele kosztowe, Konsultant sprawdza, czy są odróżnione od celów wyniku energetycznego i czy nie są przedstawiane w ich miejsce. Sam brak celów kosztowych nie jest luką.",
+          "zrodla": "Rejestr celów, budżet, plan oszczędności",
+          "sposob": "analiza danych",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "To warunek czytania celów przy ocenie KRY-b2, nie odrębny obowiązek."
+        }
+      ]
+    },
+    {
+      "kod": "c",
+      "iso": "5.1 c)",
+      "obszar": "Integracja z procesami organizacji",
+      "wymaganie": "Zapewnienie wykorzystania kryteriów energetycznych w rzeczywistych procesach organizacji",
+      "kodWiodacy": "PRZ-04",
+      "pozycjeWspierajace": [
+        "INT-ZAK",
+        "INT-INW",
+        "INT-PROD",
+        "INT-UR",
+        "INT-BUD",
+        "INT-RAP",
+        "INT-ZMI",
+        "NAW-2"
+      ],
+      "powiazania": [
+        "4.4",
+        "8.1",
+        "8.2",
+        "8.3"
+      ],
+      "wyzwalaczNadzoru": "Przy istotnej decyzji albo zmianie procesu",
+      "pytanie": "Czy przy decyzjach — zakupach, inwestycjach, planowaniu — ktoś pyta o zużycie energii?",
+      "pytaniaPomocnicze": "W których procesach decyzje uwzględniają energię? Przykład ostatniej decyzji i jej wynik?",
+      "pola": [
+        {
+          "klucz": "procesyCzynne",
+          "etykieta": "Procesy występujące w organizacji",
+          "typ": "lista",
+          "wymagane": true
+        },
+        {
+          "klucz": "wlasciciele",
+          "etykieta": "Właściciel każdego procesu",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "kryterium",
+          "etykieta": "Kryterium energetyczne w procesie",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "przykladDecyzji",
+          "etykieta": "Przykład ostatniej decyzji i jej wynik",
+          "typ": "tekst",
+          "wymagane": true
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-c1",
+          "nazwa": "Gdzie w procesie siedzi kryterium energetyczne",
+          "opis": "Konsultant ustala, w którym miejscu procesu kryterium energetyczne działa: w opisie procesu, w formularzu, w regule decyzyjnej, w karcie oceny ofert albo w stałej praktyce osób prowadzących proces. Brak zapisu w procedurze nie jest sam przez się luką, jeżeli kryterium widać w sposobie prowadzenia procesu.",
+          "zrodla": "Procedury, wzory wniosków, karty oceny dostawcy, formularze, rozmowa z właścicielem procesu",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie wymagało zapisu kryterium w opisie procesu, czyli określonego typu dokumentu — zastrzeżenie piąte ENESA. Rzeczą normatywną jest integracja, nie jej zapis."
+        },
+        {
+          "id": "KRY-c2",
+          "nazwa": "Integracja widoczna w rzeczywistych decyzjach",
+          "opis": "Na sprawdzonych decyzjach z danego procesu widać, że kryterium energetyczne zostało użyte. Obecność kryterium w dokumencie bez żadnego śladu w decyzjach nie wykazuje integracji.",
+          "zrodla": "Rzeczywiste decyzje zakupowe, inwestycyjne i operacyjne; zapisy w systemie; protokoły wyboru ofert",
+          "sposob": "próbka",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-c3",
+          "nazwa": "Właściciele procesów wskazani i świadomi",
+          "opis": "Dla procesów objętych integracją jest wskazany właściciel, który wie, jakie kryterium ma stosować. Metoda ENESA: bez tego integracja zwykle nie przeżywa zmiany kadrowej.",
+          "zrodla": "Zakresy odpowiedzialności, rozmowa z właścicielem procesu",
+          "sposob": "rozmowa",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Obowiązek c) mówi o integracji wymagań w procesy, nie o wskazaniu właścicieli procesów. To praktyka ENESA i nie może blokować oceny."
+        },
+        {
+          "id": "KRY-c4",
+          "nazwa": "Zestaw procesów dopasowany do organizacji",
+          "opis": "Lista procesów odpowiada temu, czym organizacja faktycznie się zajmuje. W hotelu i w instytucji publicznej zestaw jest inny niż w zakładzie produkcyjnym; proces, którego organizacja nie prowadzi, nie jest luką.",
+          "zrodla": "Schemat organizacyjny, lista procesów, rozmowa z kierownictwem",
+          "sposob": "rozmowa",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "To warunek czytania zakresu integracji, nie odrębny obowiązek."
+        }
+      ]
+    },
+    {
+      "kod": "d",
+      "iso": "5.1 d)",
+      "obszar": "Plany działań",
+      "wymaganie": "Zapewnienie zatwierdzania i rzeczywistego wdrażania planów działań",
+      "kodWiodacy": "PRZ-05",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "6.2",
+        "9.1"
+      ],
+      "wyzwalaczNadzoru": "Według terminów planów i przeglądów",
+      "pytanie": "Czy plany działań są zatwierdzane i czy da się pokazać, że są wykonywane?",
+      "pytaniaPomocnicze": "Kto zatwierdził plany? Które działania wykonano? Co z opóźnieniami?",
+      "pola": [
+        {
+          "klucz": "planId",
+          "etykieta": "Plan — symbol i zakres",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "zatwierdzil",
+          "etykieta": "Kto zatwierdził plan",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "dataZatwierdzenia",
+          "etykieta": "Data zatwierdzenia",
+          "typ": "data",
+          "wymagane": true
+        },
+        {
+          "klucz": "srodki",
+          "etykieta": "Środki przypisane do planu",
+          "typ": "kwota",
+          "wymagane": false
+        },
+        {
+          "klucz": "postep",
+          "etykieta": "Stan realizacji na dzień",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "opoznienia",
+          "etykieta": "Działania opóźnione i przyczyna",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-d1",
+          "nazwa": "Plan zatwierdzony przez uprawniony organ",
+          "opis": "Istnieje zatwierdzenie planu działań przez organ mający do tego umocowanie, z datą. Forma zatwierdzenia jest dowolna, byle dała się odtworzyć.",
+          "zrodla": "Zatwierdzony plan działań, uchwała, decyzja kierownictwa, protokół, w którym plan przyjęto",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-d2",
+          "nazwa": "Wdrażanie wykazane niezależnie od zatwierdzenia",
+          "opis": "Wykonanie działań jest wykazane czymś innym niż sam plan. Zatwierdzony plan nie jest dowodem jego realizacji.",
+          "zrodla": "Rejestr realizacji, protokoły odbioru, zapisy w systemie, faktury, zdjęcia z montażu, rozmowa z wykonawcą",
+          "sposob": "zapis w systemie",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-d3",
+          "nazwa": "Dobór sprawdzanych działań",
+          "opis": "Konsultant dobiera sprawdzane działania sam i zapisuje, ile i z czego sprawdził. Jeżeli w planie są działania opóźnione, obejmuje je doborem — żeby ocena nie opierała się wyłącznie na przypadkach wybranych przez organizację. Brak opóźnień nie jest luką i nie wymaga szukania ich na siłę.",
+          "zrodla": "Rejestr działań z terminami i stanem; dokumenty wybranych pozycji",
+          "sposob": "próbka",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie czyniło z próbkowania wymaganie rdzeniowe i wymagało obecności działań opóźnionych. Próbkowanie jest metodą oceny, a nie obowiązkiem organizacji — zastrzeżenia drugie i piąte."
+        },
+        {
+          "id": "KRY-d4",
+          "nazwa": "Reakcja na opóźnienia",
+          "opis": "Przy działaniach opóźnionych Konsultant sprawdza, czy widać reakcję: nowy termin, zmianę zakresu, decyzję o zaniechaniu. Kryterium nie ma zastosowania, gdy opóźnień nie ma.",
+          "zrodla": "Protokoły przeglądów, korespondencja, decyzje o zmianie terminu",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Warunek oceny realizacji planów, nie odrębny obowiązek."
+        }
+      ]
+    },
+    {
+      "kod": "e",
+      "iso": "5.1 e)",
+      "obszar": "Zasoby EnMS",
+      "wymaganie": "Zapewnienie zasobów wystarczających do ustanowienia, wdrożenia, utrzymania i doskonalenia systemu",
+      "kodWiodacy": "PRZ-06",
+      "pozycjeWspierajace": [
+        "ZAS-LUD",
+        "ZAS-CZAS",
+        "ZAS-BUD",
+        "ZAS-NARZ",
+        "ZAS-DANE",
+        "ZAS-KOMP",
+        "NAW-1"
+      ],
+      "powiazania": [
+        "7.1",
+        "7.2"
+      ],
+      "wyzwalaczNadzoru": "Cykl budżetowy i zmiany kadrowe",
+      "pytanie": "Czy ludzie, czas, pieniądze i narzędzia na zarządzanie energią są przydzielone i dostępne?",
+      "pytaniaPomocnicze": "Jak ustalono potrzeby? Co przyznano? Jak rozstrzyga się odmowy i braki?",
+      "pola": [
+        {
+          "klucz": "zapotrzebowanie",
+          "etykieta": "Jak ustalono zapotrzebowanie",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "budzetKwota",
+          "etykieta": "Kwota przeznaczona na EnMS",
+          "typ": "kwota",
+          "wymagane": false
+        },
+        {
+          "klucz": "budzetStan",
+          "etykieta": "Stan budżetu",
+          "typ": "wybor",
+          "wymagane": true,
+          "opcje": [
+            "zatwierdzony",
+            "projekt",
+            "wniosek bez decyzji"
+          ]
+        },
+        {
+          "klucz": "ludzieCzas",
+          "etykieta": "Ludzie i czas — ile i czyj",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "narzedziaDane",
+          "etykieta": "Narzędzia i dostęp do danych",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "braki",
+          "etykieta": "Zasoby, których brakuje",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-e1",
+          "nazwa": "Zapotrzebowanie ustalone w sposób możliwy do odtworzenia",
+          "opis": "Widać, skąd wzięła się liczba godzin, kwota albo zestaw narzędzi. Metoda ENESA: bez tego trudno rozmawiać o zwiększeniu zasobów, gdy okażą się za małe.",
+          "zrodla": "Wniosek o zasoby, kalkulacja, protokół ustalenia potrzeb",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Obowiązek e) mówi o zapewnieniu zasobów, nie o udokumentowaniu sposobu ustalenia potrzeb. To praktyka ENESA."
+        },
+        {
+          "id": "KRY-e2",
+          "nazwa": "Zasoby przyznane decyzją, a nie zapowiedzią",
+          "opis": "Przydział zasobów ma stan rozstrzygnięty: zatwierdzony albo projekt. Pozycja z projektu budżetu nie jest budżetem zatwierdzonym i nie wolno jej tak przedstawiać.",
+          "zrodla": "Decyzja budżetowa, uchwała budżetu, przydział etatów, zamówienia, zapis w grafiku",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-e3",
+          "nazwa": "Zasoby faktycznie dostępne, nie tylko przydzielone",
+          "opis": "Przydzielony czas da się zobaczyć w grafiku, przydzielone pieniądze w wydatkach albo w dostępnym limicie, narzędzia w użyciu. Przydział bez dostępności nie wykazuje zapewnienia zasobów.",
+          "zrodla": "Grafik, rejestr wydatków, dostęp do danych i systemów, oględziny, rozmowa z osobą, której zasób dotyczy",
+          "sposob": "oględziny",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-e4",
+          "nazwa": "Tryb rozstrzygania odmów i braków",
+          "opis": "Gdy zasobu odmówiono albo go brakuje, jest wskazany sposób rozstrzygnięcia. Metoda ENESA: to, co odróżnia brak zasobu od braku decyzji o zasobie.",
+          "zrodla": "Protokoły, decyzje odmowne, rejestr wniosków",
+          "sposob": "rozmowa",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Praktyka ENESA — obowiązek e) nie wymaga trybu rozstrzygania odmów."
+        }
+      ]
+    },
+    {
+      "kod": "f",
+      "iso": "5.1 f)",
+      "obszar": "Komunikacja znaczenia EnMS",
+      "wymaganie": "Komunikowanie przez najwyższe kierownictwo wagi efektywnego zarządzania energią i wymagań systemu",
+      "kodWiodacy": "PRZ-08",
+      "pozycjeWspierajace": [
+        "NAW-3"
+      ],
+      "powiazania": [
+        "7.3",
+        "7.4"
+      ],
+      "wyzwalaczNadzoru": "Według planu komunikacji i przy istotnych zmianach",
+      "pytanie": "Czy kierownictwo mówi pracownikom, że zarządzanie energią jest ważne — i czy to do nich dociera?",
+      "pytaniaPomocnicze": "Jaki był ostatni komunikat kierownictwa? Kto go otrzymał? Jak to sprawdzono?",
+      "pola": [
+        {
+          "klucz": "kto",
+          "etykieta": "Kto komunikował",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "doKogo",
+          "etykieta": "Do jakich grup",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "co",
+          "etykieta": "Treść komunikatu",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "kiedy",
+          "etykieta": "Data",
+          "typ": "data",
+          "wymagane": true
+        },
+        {
+          "klucz": "kanal",
+          "etykieta": "Kanał",
+          "typ": "wybor",
+          "wymagane": true,
+          "opcje": [
+            "odprawa",
+            "spotkanie załogi",
+            "komunikat pisemny",
+            "intranet",
+            "tablica",
+            "szkolenie",
+            "rozmowa bezpośrednia",
+            "inny"
+          ]
+        },
+        {
+          "klucz": "reakcja",
+          "etykieta": "Jak sprawdzono dotarcie i reakcję",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-f1",
+          "nazwa": "Treść obejmuje znaczenie EnMS i wymagania systemu",
+          "opis": "Komunikat mówi o znaczeniu skutecznego zarządzania energią i o tym, że wymagania systemu trzeba spełniać — a nie wyłącznie o oszczędnościach.",
+          "zrodla": "Komunikat, program spotkania, prezentacja, notatka z odprawy, nagranie, relacja uczestników",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-f2",
+          "nazwa": "Komunikat został rzeczywiście przekazany adresatom",
+          "opis": "Konsultant ustala, czy komunikat faktycznie dotarł do grup, do których był adresowany — bo komunikowanie, które do nikogo nie dotarło, nie jest komunikowaniem. FORMA potwierdzenia nie jest narzucona: wystarczy ślad w dowolnej postaci — lista obecności, zapis w intranecie, relacja pracowników z rozmowy, pytania zadane na spotkaniu. Nie wymagamy pokwitowań ani ewidencji odbioru.",
+          "zrodla": "Lista obecności, program i notatka ze spotkania, statystyka intranetu, wywiady z pracownikami, relacja kierownika zmiany",
+          "sposob": "rozmowa",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Decyzja ENESA B-11 z 14.11.2026: przeniesione z warunku oceny na wymóg normatywny rdzeniowy, bo komunikat nieprzekazany nie wykonuje obowiązku f). Brzmienie zmienione tak, żeby nie narzucać formy potwierdzania odbioru."
+        },
+        {
+          "id": "KRY-f3",
+          "nazwa": "Komunikat pochodzi od najwyższego kierownictwa",
+          "opis": "Komunikat daje się przypisać najwyższemu kierownictwu: jako autorowi, mówcy, podpisującemu albo zlecającemu. Przekazanie treści przez inną osobę w jego imieniu jest dopuszczalne, jeżeli kierownictwo jest rozpoznawalne jako źródło. Komunikat wydany wyłącznie przez koordynatora systemu, bez śladu udziału kierownictwa, tego obowiązku nie wykazuje.",
+          "zrodla": "Komunikat z podpisem albo wskazanym nadawcą, program odprawy z prowadzącym, nagranie, polecenie przekazania treści, relacja uczestników",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie wykluczało przekazanie treści przez inną osobę („nie koordynator w jej zastępstwie”), co wykraczało poza obowiązek: norma wymaga komunikowania przez kierownictwo, nie osobistego wystąpienia przy każdej okazji."
+        },
+        {
+          "id": "KRY-f4",
+          "nazwa": "Reakcja odbiorców sprawdzona",
+          "opis": "Organizacja wie, jak komunikat został przyjęty — z rozmów, ankiety, pytań na spotkaniu. Metoda ENESA: to odróżnia komunikację od wysyłki.",
+          "zrodla": "Notatki, ankieta, zapis dyskusji, wywiady",
+          "sposob": "rozmowa",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Praktyka ENESA — obowiązek f) nie wymaga badania reakcji."
+        }
+      ]
+    },
+    {
+      "kod": "g",
+      "iso": "5.1 g)",
+      "obszar": "Zamierzone wyniki EnMS",
+      "wymaganie": "Zapewnienie osiągania zamierzonych wyników systemu i reagowania na odchylenia",
+      "kodWiodacy": "PRZ-11",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "6.2",
+        "6.4",
+        "6.5",
+        "9.1",
+        "9.3"
+      ],
+      "wyzwalaczNadzoru": "Według planu monitorowania i przeglądów",
+      "pytanie": "Czy wiadomo, jakie wyniki system miał dać, i co kierownictwo zrobiło, gdy ich nie było?",
+      "pytaniaPomocnicze": "Jakie wyniki osiągnięto i jak to sprawdzono? Co zrobiło kierownictwo przy odchyleniach?",
+      "pola": [
+        {
+          "klucz": "wynikOczekiwany",
+          "etykieta": "Wynik oczekiwany",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "enpi",
+          "etykieta": "EnPI użyte do oceny",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "6.4",
+            "obiekt": "ENPI"
+          }
+        },
+        {
+          "klucz": "enb",
+          "etykieta": "Linia bazowa — okres odniesienia",
+          "typ": "odwolanie",
+          "wymagane": false,
+          "zrodlo": {
+            "punkt": "6.5",
+            "obiekt": "ENB"
+          }
+        },
+        {
+          "klucz": "wynikiPomiarow",
+          "etykieta": "Wyniki monitorowania za porównywane okresy",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "9.1",
+            "obiekt": "WYNIKI"
+          }
+        },
+        {
+          "klucz": "okresy",
+          "etykieta": "Porównywane okresy",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "czynniki",
+          "etykieta": "Czynniki zmienne uwzględnione",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "odchylenia",
+          "etykieta": "Odchylenia i decyzje kierownictwa",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-g1",
+          "nazwa": "Wynik zamierzony jest określony",
+          "opis": "Wiadomo, co system miał osiągnąć i czym to się mierzy — zanim ocenimy, czy zostało osiągnięte.",
+          "zrodla": "Rejestr celów, plan monitorowania, karta EnPI, zapis przeglądu",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-g2",
+          "nazwa": "Wiarygodność danych o wyniku",
+          "opis": "Konsultant sprawdza, skąd pochodzą dane, czy są kompletne za porównywane okresy i czy pochodzą z pomiaru albo z udokumentowanego wyliczenia. To warunek oceny wyniku, nie odrębny obowiązek kierownictwa.",
+          "zrodla": "Dane z liczników, faktury, zapis z systemu pomiarowego, świadectwa wzorcowania",
+          "sposob": "analiza danych",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Jakość danych rozstrzyga, co z wyniku da się wykazać — ale sam obowiązek g) dotyczy osiągania wyników i reagowania."
+        },
+        {
+          "id": "KRY-g3",
+          "nazwa": "Porównywalność okresów",
+          "opis": "Przy porównaniu uwzględniono czynniki zmienne — produkcję, pogodę, obłożenie, godziny pracy — albo wyjaśniono, dlaczego nie było to potrzebne.",
+          "zrodla": "Metodologia normalizacji, dane o czynnikach, obliczenia linii bazowej",
+          "sposob": "analiza danych",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Warunek oceny wyniku; normalizacja należy metodycznie do 6.5 i 9.1."
+        },
+        {
+          "id": "KRY-g4",
+          "nazwa": "Reakcja kierownictwa na odchylenia",
+          "opis": "Gdy wynik odbiegał od zamierzonego, kierownictwo podjęło decyzję — nie tylko przyjęło informację do wiadomości. Jeżeli odchyleń nie było, kryterium nie ma zastosowania.",
+          "zrodla": "Protokoły decyzji, przegląd zarządzania, zlecenia działań",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-g5",
+          "nazwa": "Ujawnienie podstawy danych przy wyniku z szacunku",
+          "opis": "Jeżeli wynik wyliczono z szacunku, przy zmiennej bazie albo z danych częściowych, Konsultant to ujawnia w ograniczeniach oceny. Szacunek nie jest dyskwalifikujący i nie czyni wyniku nieważnym — ale sam nie wystarcza do stwierdzenia poprawy.",
+          "zrodla": "Metodologia, założenia obliczeń, analiza niepewności",
+          "sposob": "analiza danych",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie („oznaczona jako niepotwierdzona”) sugerowało, że szacunek odbiera wynikowi wartość. Zastrzeżenie drugie ENESA: dowód ocenia się w kontekście wymagania. Zamieniono na warunek ujawnienia w ograniczeniach."
+        }
+      ]
+    },
+    {
+      "kod": "h",
+      "iso": "5.1 h)",
+      "obszar": "Ciągłe doskonalenie",
+      "wymaganie": "Promowanie ciągłego doskonalenia wyniku energetycznego i skuteczności systemu",
+      "kodWiodacy": "PRZ-12",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "9.3",
+        "10.1",
+        "10.2"
+      ],
+      "wyzwalaczNadzoru": "Cykliczny przegląd i po zakończeniu działania",
+      "pytanie": "Czy kierownictwo popiera usprawnienia — i czy któreś zostało dokończone?",
+      "pytaniaPomocnicze": "Jakie inicjatywy poparto, co zakończono i co się zmieniło?",
+      "pola": [
+        {
+          "klucz": "inicjatywy",
+          "etykieta": "Inicjatywy doskonalące",
+          "typ": "lista",
+          "wymagane": true
+        },
+        {
+          "klucz": "etap",
+          "etykieta": "Etap każdej inicjatywy",
+          "typ": "wybor",
+          "wymagane": true,
+          "opcje": [
+            "proponowana",
+            "zatwierdzona",
+            "w realizacji",
+            "wykonana",
+            "zaniechana"
+          ]
+        },
+        {
+          "klucz": "efekt",
+          "etykieta": "Zmierzony efekt wykonanych",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "udzialKierownictwa",
+          "etykieta": "W czym brało udział kierownictwo",
+          "typ": "tekst",
+          "wymagane": true
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-h1",
+          "nazwa": "Odróżnienie inicjatywy od zrealizowanej poprawy",
+          "opis": "Konsultant ustala, na jakim etapie są poszczególne inicjatywy: proponowana, zatwierdzona, w realizacji, wykonana. Bez tego nie da się ocenić, co organizacja faktycznie zrobiła — ale sposób prowadzenia tej informacji jest dowolny.",
+          "zrodla": "Rejestr usprawnień, decyzje, notatki z przeglądów, rozmowa",
+          "sposob": "zapis w systemie",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Obowiązek h) mówi o promowaniu doskonalenia, nie o prowadzeniu rejestru w określonej postaci."
+        },
+        {
+          "id": "KRY-h2",
+          "nazwa": "Siła dowodowa zrealizowanej poprawy",
+          "opis": "Zakończone działanie ze zmierzonym rezultatem jest najmocniejszym dowodem promowania doskonalenia i Konsultant szuka go w pierwszej kolejności. Jego BRAK na wczesnym etapie wdrażania nie jest luką: na kilka miesięcy po ustanowieniu systemu promowanie wykazuje się decyzjami, przydziałem środków i poparciem inicjatyw. Konsultant zapisuje etap wdrożenia, na którym ocenia.",
+          "zrodla": "Pomiar rezultatu, raport po działaniu, dane przed i po, decyzje o poparciu inicjatyw, przydział środków",
+          "sposob": "analiza danych",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie wymagało co najmniej jednej zrealizowanej poprawy jako kryterium rdzeniowego. Zastrzeżenie trzecie ENESA: nie można wymagać zakończonego projektu doskonalenia w początkowym stadium wdrażania."
+        },
+        {
+          "id": "KRY-h3",
+          "nazwa": "Kierownictwo promuje doskonalenie",
+          "opis": "Widać działanie najwyższego kierownictwa: poparcie inicjatywy, przydzielenie środków, docenienie wyniku, wniosek z przeglądu, polecenie przygotowania propozycji. Promowanie dotyczy obu rzeczy naraz — wyniku energetycznego i skuteczności systemu.",
+          "zrodla": "Wnioski przeglądów, decyzje, zapisy odpraw, rozmowa z zespołem",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        }
+      ]
+    },
+    {
+      "kod": "i",
+      "iso": "5.1 i)",
+      "obszar": "Zespół ds. zarządzania energią",
+      "wymaganie": "Zapewnienie ustanowienia zespołu do spraw zarządzania energią",
+      "kodWiodacy": "PRZ-07",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "5.3",
+        "7.1"
+      ],
+      "wyzwalaczNadzoru": "Zmiany personelu i cykliczna ocena",
+      "pytanie": "Czy ktoś imiennie prowadzi system zarządzania energią?",
+      "pytaniaPomocnicze": "Kiedy powołano zespół i czym się zajmuje? Jak kierownictwo nadzoruje jego pracę?",
+      "pola": [
+        {
+          "klucz": "aktPowolania",
+          "etykieta": "Czym ustanowiono zespół — i kiedy",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "czlonkowie",
+          "etykieta": "Skład — osoby albo role organizacji",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "5.3",
+            "obiekt": "ROLE"
+          }
+        },
+        {
+          "klucz": "jednaOsoba",
+          "etykieta": "Czy funkcje zespołu pełni jedna osoba",
+          "typ": "wybor",
+          "wymagane": false,
+          "opcje": [
+            "zespół wieloosobowy",
+            "jedna upoważniona osoba"
+          ]
+        },
+        {
+          "klucz": "wsparcieZewn",
+          "etykieta": "Wsparcie zewnętrzne — osobno od składu",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "zadania",
+          "etykieta": "Zadania i uprawnienia",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "nadzor",
+          "etykieta": "Jak kierownictwo nadzoruje pracę zespołu",
+          "typ": "tekst",
+          "wymagane": true
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-i1",
+          "nazwa": "Zespół jest ustanowiony i da się to odtworzyć",
+          "opis": "Istnieje rozstrzygnięcie najwyższego kierownictwa, kto prowadzi system — z datą i wskazaniem osób albo roli. Zespół może odpowiadać wielkości organizacji: w małej organizacji jego funkcje może pełnić JEDNA upoważniona osoba i to spełnia ten obowiązek. Postać ustanowienia jest dowolna — zarządzenie, uchwała, decyzja zapisana w protokole, przypisanie odpowiedzialności w opisie stanowiska.",
+          "zrodla": "Zarządzenie, decyzja o powołaniu, protokół z ustaleniem, zakres odpowiedzialności, opis stanowiska, upoważnienie",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie („formalne powołanie”, „zespół albo rozwiązanie równoważne”) wymagało określonego typu dokumentu i sugerowało, że jedna osoba jest odstępstwem. Zastrzeżenia czwarte i piąte ENESA."
+        },
+        {
+          "id": "KRY-i2",
+          "nazwa": "Odpowiedzialność za system należy do organizacji",
+          "opis": "Wsparcie zewnętrzne — konsultant, firma doradcza — jest rozpoznawalne jako wsparcie, a nie jako zespół organizacji. Udział zewnętrzny jest dopuszczalny i bywa potrzebny; nie wolno natomiast przedstawiać go jako wypełnienia obowiązku ustanowienia zespołu. Konsultant sprawdza, czy skład wewnętrzny jest odróżnialny od wsparcia.",
+          "zrodla": "Akt ustanowienia, umowa z doradcą, lista składu, rozmowa",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie zakazywało liczenia osób zewnętrznych do składu, co przy jednoosobowej obsłudze systemu mogło wykluczyć poprawne rozwiązania. Zastrzeżenie czwarte ENESA: przeniesione na warunek rozpoznawalności, z zachowaniem sedna."
+        },
+        {
+          "id": "KRY-i3",
+          "nazwa": "Czy zespół podjął pracę",
+          "opis": "Konsultant sprawdza, czy po ustanowieniu widać jakąkolwiek pracę zespołu — spotkanie, ustalenie, wykonane zadanie. Na wczesnym etapie wdrażania brak zapisów nie jest luką; Konsultant zapisuje wtedy etap, na którym ocenia.",
+          "zrodla": "Protokoły pracy zespołu, notatki, zadania i ich wykonanie, rozmowa",
+          "sposob": "rozmowa",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie czyniło z zapisów pracy zespołu kryterium rdzeniowe, co na etapie wdrażania wymagałoby historii, której jeszcze nie ma. Zastrzeżenie trzecie ENESA."
+        },
+        {
+          "id": "KRY-i4",
+          "nazwa": "Spójność z rolami z punktu 5.3",
+          "opis": "Zadania i uprawnienia zespołu zgadzają się z rolami i odpowiedzialnościami ustalonymi w punkcie 5.3.",
+          "zrodla": "Zakresy odpowiedzialności, matryca ról z 5.3",
+          "sposob": "porównanie z punktem",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Warunek spójności między punktami, nie odrębny obowiązek 5.1."
+        }
+      ]
+    },
+    {
+      "kod": "j",
+      "iso": "5.1 j)",
+      "obszar": "Wspieranie osób",
+      "wymaganie": "Kierowanie i wspieranie wkładu pracowników w skuteczność systemu i poprawę wyniku energetycznego",
+      "kodWiodacy": "PRZ-09",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "7.2",
+        "7.3",
+        "7.4"
+      ],
+      "wyzwalaczNadzoru": "Po zgłoszeniu i w przeglądzie",
+      "pytanie": "Czy kierownictwo pomogło komuś, kto chciał poprawić zużycie energii?",
+      "pytaniaPomocnicze": "Jaka przeszkoda została usunięta? Jaką inicjatywę pracownika kierownictwo wsparło?",
+      "pola": [
+        {
+          "klucz": "przykladBariery",
+          "etykieta": "Usunięta przeszkoda — co i kiedy",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "przykladPomyslu",
+          "etykieta": "Wsparty pomysł pracownika",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "przydzialCzasu",
+          "etykieta": "Przydzielony czas albo kompetencje",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "efekt",
+          "etykieta": "Co się zmieniło po tym działaniu",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-j1",
+          "nazwa": "Da się wskazać kierowanie i wsparcie",
+          "opis": "Jest zdarzenie, w którym kierownictwo pokierowało pracownikami albo wsparło ich wkład: usunęło przeszkodę, poparło pomysł, przydzieliło czas, rozstrzygnęło spór. Z datą i okolicznościami.",
+          "zrodla": "Zgłoszenia i rozstrzygnięcia, rejestr inicjatyw, decyzje, wywiady z pracownikami",
+          "sposob": "rozmowa",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-j2",
+          "nazwa": "Czy wsparcie do czegoś doprowadziło",
+          "opis": "Konsultant sprawdza, co się stało po wsparciu — czy zadanie poszło dalej, bariera zniknęła, pomysł wszedł do realizacji. Obowiązek dotyczy wspierania wkładu, nie zagwarantowania rezultatu: brak efektu przy rzeczywistym wsparciu nie jest luką, ale wchodzi do ograniczeń oceny.",
+          "zrodla": "Zapisy realizacji, dane po zmianie, rozmowa ze zgłaszającym",
+          "sposob": "rozmowa",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Zastrzeżenie trzecie ENESA w zastosowaniu do obowiązku j): efektu nie da się wymagać na wczesnym etapie, a norma wymaga wspierania, nie skutku."
+        },
+        {
+          "id": "KRY-j3",
+          "nazwa": "Szkolenie samo nie wykazuje wsparcia wkładu",
+          "opis": "Przeprowadzone szkolenie wspiera ten obowiązek, ale samo go nie wykazuje — oceniane jest wspieranie wkładu, nie przekazanie wiedzy. Kompetencje i świadomość mają własne punkty: 7.2 i 7.3.",
+          "zrodla": "Zapis szkolenia, lista obecności, program",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Warunek czytania dowodów przy obowiązku j)."
+        }
+      ]
+    },
+    {
+      "kod": "k",
+      "iso": "5.1 k)",
+      "obszar": "Wspieranie innych kierowników",
+      "wymaganie": "Wspieranie innych ról kierowniczych w wykazywaniu przywództwa w ich obszarach odpowiedzialności",
+      "kodWiodacy": "PRZ-10",
+      "pozycjeWspierajace": [
+        "NAW-5"
+      ],
+      "powiazania": [
+        "5.3",
+        "7.1",
+        "8.1"
+      ],
+      "wyzwalaczNadzoru": "Przy konfliktach priorytetów i w cyklu ocen",
+      "pytanie": "Czy kierownictwo stanęło za kierownikiem, który podjął decyzję ze względu na energię?",
+      "pytaniaPomocnicze": "Kiedy kierownictwo wsparło kierownika obszaru w decyzji energetycznej?",
+      "pola": [
+        {
+          "klucz": "roleKierownicze",
+          "etykieta": "Role kierownicze objęte wsparciem",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "uprawnienia",
+          "etykieta": "Ich uprawnienia w sprawach energii",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "przykladPoparcia",
+          "etykieta": "Przykład udzielonego wsparcia",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "konflikt",
+          "etykieta": "Rozstrzygnięty konflikt priorytetów",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-k1",
+          "nazwa": "Da się wskazać wsparcie kierownika obszaru",
+          "opis": "Jest sytuacja, w której najwyższe kierownictwo wsparło inną rolę kierowniczą w sprawie energetycznej: stanęło za jej decyzją, przyznało zasób, wpisało wynik energetyczny do jej celów, rozstrzygnęło konflikt priorytetów.",
+          "zrodla": "Protokoły sporów, decyzje o zasobach, cele kierowników, wywiad",
+          "sposob": "rozmowa",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-k2",
+          "nazwa": "Czy wsparcie wpłynęło na proces albo decyzję",
+          "opis": "Konsultant sprawdza, czy wsparcie przełożyło się na rozstrzygnięcie. Brak widocznego skutku nie jest luką, jeżeli wsparcie było rzeczywiste — wchodzi do ograniczeń oceny.",
+          "zrodla": "Zapis decyzji, zmiana w planie, korespondencja",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Jak przy KRY-j2: norma wymaga wspierania, nie zagwarantowania skutku. Zastrzeżenie trzecie ENESA."
+        },
+        {
+          "id": "KRY-k3",
+          "nazwa": "Kanał eskalacji konfliktu priorytetów",
+          "opis": "Kierownik obszaru wie, gdzie eskalować konflikt między energią a innym priorytetem. Metoda ENESA: bez tego wsparcie zależy od dostępności jednej osoby.",
+          "zrodla": "Regulamin, opis trybu eskalacji, rozmowa z kierownikiem",
+          "sposob": "rozmowa",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Praktyka ENESA — obowiązek k) nie wymaga ustalonego kanału eskalacji."
+        }
+      ]
+    },
+    {
+      "kod": "l",
+      "iso": "5.1 l)",
+      "obszar": "Odpowiedniość EnPI",
+      "wymaganie": "Zapewnienie, że wskaźniki wyniku energetycznego odpowiednio reprezentują wynik energetyczny",
+      "kodWiodacy": "PRZ-03",
+      "pozycjeWspierajace": [],
+      "powiazania": [
+        "6.3",
+        "6.4",
+        "6.5",
+        "9.1"
+      ],
+      "wyzwalaczNadzoru": "Przegląd EnPI oraz zmiana procesu albo danych",
+      "pytanie": "Czy wskaźniki, którymi mierzycie energię, pokazują to, co się faktycznie dzieje?",
+      "pytaniaPomocnicze": "Które EnPI są stosowane? Czy obejmują obszary istotnego zużycia? Jakie ograniczenia i decyzje?",
+      "pola": [
+        {
+          "klucz": "listaEnpi",
+          "etykieta": "Lista stosowanych EnPI",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "6.4",
+            "obiekt": "ENPI"
+          }
+        },
+        {
+          "klucz": "seu",
+          "etykieta": "Obszary istotnego zużycia (SEU)",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "6.3",
+            "obiekt": "SEU"
+          }
+        },
+        {
+          "klucz": "metoda",
+          "etykieta": "Metoda wyliczenia i źródło danych",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "jakoscDanych",
+          "etykieta": "Jakość danych",
+          "typ": "wybor",
+          "wymagane": true,
+          "opcje": [
+            "pomiar",
+            "wyliczenie z pomiaru",
+            "szacunek",
+            "dane mieszane"
+          ]
+        },
+        {
+          "klucz": "zmienne",
+          "etykieta": "Czynniki zmienne",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "przeglad",
+          "etykieta": "Przegląd EnPI przez kierownictwo — data",
+          "typ": "data",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-l1",
+          "nazwa": "Wynik obszarów istotnego zużycia da się monitorować",
+          "opis": "Zestaw wskaźników pozwala monitorować wynik energetyczny obszarów istotnego zużycia ustalonych w 6.3. Osobny wskaźnik dla każdego obszaru NIE jest wymagany — jeżeli obszar nie ma własnego wskaźnika, organizacja pokazuje, czym jego wynik jest monitorowany: wskaźnikiem zbiorczym, pomiarem okresowym albo inną wiarygodną metodą. Obszar istotny, którego wyniku nie da się monitorować niczym, jest luką.",
+          "zrodla": "Karty EnPI, wykaz SEU, zapis przeglądu energetycznego, plan monitorowania (6.6)",
+          "sposob": "porównanie z punktem",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie wymagało, by EnPI „obejmowały SEU”, co czytano jako wskaźnik na każdy obszar. Zastrzeżenie piąte ENESA: nie wymagać określonej postaci, gdy istnieją inne wiarygodne sposoby wykazania."
+        },
+        {
+          "id": "KRY-l2",
+          "nazwa": "Reprezentatywność wobec wyniku energetycznego",
+          "opis": "Wskaźnik reaguje na zmianę zużycia w obszarze, który opisuje. Wskaźnik niereagujący nie reprezentuje wyniku energetycznego i to jest sedno tego obowiązku.",
+          "zrodla": "Dane szeregów czasowych, analiza wrażliwości, metoda, rozmowa o doborze wskaźników",
+          "sposob": "analiza danych",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-l3",
+          "nazwa": "Jakość danych wejściowych",
+          "opis": "Konsultant sprawdza źródło, kompletność i czynniki wpływające na dane, z których liczony jest wskaźnik. To warunek oceny reprezentatywności.",
+          "zrodla": "Dane pomiarowe, rejestr liczników, opis metody",
+          "sposob": "analiza danych",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Warunek oceny KRY-l2; jakość danych należy metodycznie do 6.6 i 9.1."
+        },
+        {
+          "id": "KRY-l4",
+          "nazwa": "Ujawnienie niepewności przy danych szacowanych",
+          "opis": "Gdy wskaźnik opiera się na szacunku, Konsultant ujawnia to w ograniczeniach oceny. Szacunek nie dyskwalifikuje wskaźnika.",
+          "zrodla": "Metoda, założenia, analiza niepewności",
+          "sposob": "analiza danych",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Jak KRY-g5 — warunek ujawnienia, nie dyskwalifikacja."
+        },
+        {
+          "id": "KRY-l5",
+          "nazwa": "Jak kierownictwo zapewnia odpowiedniość wskaźników",
+          "opis": "Konsultant ustala, CZYM kierownictwo zapewnia odpowiedniość wskaźników. Osobiste zatwierdzanie EnPI nie jest wymagane: wystarczy inny skuteczny mechanizm — delegowanie z nadzorem, stały punkt przeglądu, reguła opiniowania zmian wskaźników, rozliczanie Energy Managera z ich doboru. Ustalenie to wchodzi do oceny kryteriów KRY-l1 i KRY-l2, a nie zamyka się osobno.",
+          "zrodla": "Zapis przeglądu zarządzania, decyzja o zestawie EnPI, opis trybu nadzoru, zakres odpowiedzialności, rozmowa z kierownictwem",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Decyzja ENESA B-11 z 14.11.2026: przeniesione z wymogu normatywnego na warunek oceny. Nie wymagamy osobistego zatwierdzania EnPI przez najwyższe kierownictwo, jeżeli zapewnia ono odpowiedniość innymi skutecznymi mechanizmami."
+        }
+      ]
+    },
+    {
+      "kod": "m",
+      "iso": "5.1 m)",
+      "obszar": "Zmiany wpływające na EnMS",
+      "wymaganie": "Zapewnienie procesów identyfikowania zmian wpływających na system i wynik energetyczny oraz reagowania na nie",
+      "kodWiodacy": "PRZ-13",
+      "pozycjeWspierajace": [
+        "INT-ZMI"
+      ],
+      "powiazania": [
+        "4.1",
+        "4.2",
+        "6.1",
+        "8.1",
+        "8.2"
+      ],
+      "wyzwalaczNadzoru": "Każda istotna zmiana",
+      "pytanie": "Czy zmiany — nowa maszyna, nowy klient, nowa umowa na energię — trafiają do zespołu?",
+      "pytaniaPomocnicze": "Jaka była ostatnia istotna zmiana i jak oceniono jej wpływ?",
+      "pola": [
+        {
+          "klucz": "wyzwalacze",
+          "etykieta": "Co uruchamia ocenę zmiany",
+          "typ": "lista",
+          "wymagane": true
+        },
+        {
+          "klucz": "wlasciciel",
+          "etykieta": "Kto odpowiada za ten proces",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "ocenaWplywu",
+          "etykieta": "Jak ocenia się wpływ zmiany",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "kiedyOcena",
+          "etykieta": "Kiedy następuje ocena wpływu",
+          "typ": "wybor",
+          "wymagane": true,
+          "opcje": [
+            "przed decyzją",
+            "w trakcie",
+            "po zmianie",
+            "zależnie od rodzaju zmiany"
+          ]
+        },
+        {
+          "klucz": "ostatniaZmiana",
+          "etykieta": "Ostatnia istotna zmiana i reakcja na nią",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "efekt",
+          "etykieta": "Efekt reakcji",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-m1",
+          "nazwa": "Proces identyfikowania zmian istnieje",
+          "opis": "Wiadomo, jakie zdarzenia uruchamiają ocenę wpływu na system i kto za ten proces odpowiada. Postać procesu jest dowolna — procedura, punkt agendy przeglądu, stała praktyka opiniowania.",
+          "zrodla": "Karty zmian, procedura zarządzania zmianą, agenda przeglądu, zakres odpowiedzialności, rozmowa",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-m2",
+          "nazwa": "Dobór sprawdzanych zmian i moment oceny wpływu",
+          "opis": "Konsultant dobiera zmiany z ostatniego okresu i sprawdza, kiedy oceniono ich wpływ. Ocena przed decyzją jest najmocniejszym przypadkiem i przy zmianach planowanych — inwestycja, nowa linia, nowa umowa — tego się oczekuje. Przy zmianach, których nie da się przewidzieć (awaria, zmiana przepisów, utrata odbiorcy), ocena po zdarzeniu jest właściwa i nie jest luką. Konsultant zapisuje, ile zmian i jakiego rodzaju sprawdził.",
+          "zrodla": "Karty zmian z datami, decyzje inwestycyjne, rejestry uruchomień, protokoły, rozmowa",
+          "sposob": "próbka",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie wymagało oceny wpływu przed zmianą dla każdej zmiany i czyniło z próbkowania kryterium rdzeniowe. Zastrzeżenia drugie i piąte ENESA: moment oceny zależy od rodzaju zmiany, a próbkowanie jest metodą oceny."
+        },
+        {
+          "id": "KRY-m3",
+          "nazwa": "Reagowanie na zmianę da się odtworzyć",
+          "opis": "Po zmianie widać reakcję systemu w postaci, jakiej ta zmiana wymagała: zaktualizowany wskaźnik, nowa linia bazowa, zmieniony plan monitorowania albo zakres, zmieniona instrukcja — albo zapisane rozstrzygnięcie, że zmiana nie wymagała reakcji. Reagowanie jest obowiązkiem; jego postać nie jest narzucona, a świadome „nic nie trzeba zmieniać” jest prawidłową reakcją, jeżeli zostało rozstrzygnięte.",
+          "zrodla": "Zaktualizowane karty EnPI, zmiana planu monitorowania, protokoły, zapis rozstrzygnięcia, rozmowa",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "normatywny",
+          "waga": "rdzeniowe",
+          "zmiana": "poprawione brzmienie + nowa klasyfikacja",
+          "dlaczego": "Poprzednie brzmienie wymagało konkretnych artefaktów aktualizacji i nie przewidywało rozstrzygnięcia, że reakcja nie jest potrzebna. Zastrzeżenie piąte ENESA."
+        },
+        {
+          "id": "KRY-m4",
+          "nazwa": "Zakres szerszy niż przegląd przepisów",
+          "opis": "Konsultant sprawdza, czy proces obejmuje zmiany techniczne, organizacyjne i rynkowe, a nie tylko przegląd zmian w prawie.",
+          "zrodla": "Procedura, lista wyzwalaczy, przykłady zmian innych niż prawne",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "zmiana wagi + nowa klasyfikacja",
+          "dlaczego": "Warunek czytania zakresu procesu, nie odrębny obowiązek."
+        }
+      ]
+    }
+  ],
+  "POZYCJE_METODYCZNE": [
+    {
+      "kod": "PRZ-00",
+      "klasa": "Metodyka ENESA",
+      "cel": "Ustalenie najwyższego kierownictwa w granicach EnMS",
+      "doKarty": "Kto zatwierdza i kto podejmuje decyzje ponad limit",
+      "pola": [
+        {
+          "klucz": "podmiot",
+          "etykieta": "Podmiot albo organ",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "rola",
+          "etykieta": "Rola w organizacji",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "kompetencje",
+          "etykieta": "Rzeczywiste kompetencje decyzyjne",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "limity",
+          "etykieta": "Limity decyzyjne",
+          "typ": "tekst",
+          "wymagane": false
+        },
+        {
+          "klucz": "ponadLimit",
+          "etykieta": "Kto decyduje ponad limitem",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "powiazanie43",
+          "etykieta": "Powiązanie z zakresem 4.3",
+          "typ": "odwolanie",
+          "wymagane": true,
+          "zrodlo": {
+            "punkt": "4.3",
+            "obiekt": "ZAKRES"
+          }
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-p0a",
+          "nazwa": "Uprawnienia do polityki i zasobów",
+          "opis": "Wskazany podmiot ma uprawnienia do przyjęcia polityki i do przyznania zasobów w granicach systemu. Bez tego ustalenia nie da się ocenić, czy obowiązki a)-m) wykonało najwyższe kierownictwo.",
+          "zrodla": "Regulamin organu, upoważnienie, statut, uchwała",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-p0b",
+          "nazwa": "Decyzje ponad limitem mają adresata",
+          "opis": "Dla decyzji przekraczających limit wskazanej osoby jest określony organ wyższy. Metoda ENESA: inaczej pierwsza duża inwestycja zatrzymuje system.",
+          "zrodla": "Limity decyzyjne, regulamin, upoważnienie",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-p0c",
+          "nazwa": "Kierownik nie jest utożsamiany z zarządem automatycznie",
+          "opis": "Jeżeli zakres obejmuje spółkę, a wskazano dyrektora zakładu, istnieje upoważnienie. Bez niego to dwie różne role i ocena umocowania w kryterium KRY-a2 wypada inaczej.",
+          "zrodla": "Upoważnienie, pełnomocnictwo, zakres 4.3",
+          "sposob": "porównanie z punktem",
+          "rodzaj": "warunek",
+          "waga": "",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        }
+      ]
+    },
+    {
+      "kod": "PRZ-14",
+      "klasa": "Metodyka ENESA",
+      "cel": "Kalendarz rzeczywistych kontaktów kierownictwa z EnMS",
+      "doKarty": "Harmonogram raportów, narad i przeglądów",
+      "pola": [
+        {
+          "klucz": "forum",
+          "etykieta": "Forum albo wydarzenie",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "czestotliwosc",
+          "etykieta": "Częstotliwość",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "uczestnicy",
+          "etykieta": "Uczestnicy",
+          "typ": "rola",
+          "wymagane": true
+        },
+        {
+          "klucz": "dataOstatnia",
+          "etykieta": "Data ostatniego odbycia",
+          "typ": "data",
+          "wymagane": true
+        },
+        {
+          "klucz": "zapis",
+          "etykieta": "Gdzie jest zapis",
+          "typ": "tekst",
+          "wymagane": true
+        },
+        {
+          "klucz": "dzialania",
+          "etykieta": "Jakie działania z tego wynikły",
+          "typ": "tekst",
+          "wymagane": false
+        }
+      ],
+      "kryteria": [
+        {
+          "id": "KRY-p14a",
+          "nazwa": "Punkt styku faktycznie się odbył",
+          "opis": "Dla zaplanowanego forum jest data ostatniego odbycia. Metoda ENESA: harmonogram bez odbycia nie jest kontaktem kierownictwa z systemem. Norma nie wymaga harmonogramu — wymaga skutków, które widać w obowiązkach f), g), h) i m).",
+          "zrodla": "Protokoły, notatki, kalendarz, raporty",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-p14b",
+          "nazwa": "Skutki kontaktu widoczne",
+          "opis": "Z punktu styku wynikły ustalenia albo działania — albo zapisano, że nie było potrzeby.",
+          "zrodla": "Protokoły z ustaleniami, zadania, decyzje",
+          "sposob": "wgląd w dokument",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        },
+        {
+          "id": "KRY-p14c",
+          "nazwa": "Zaległości wskazane",
+          "opis": "Forum, które miało się odbyć i się nie odbyło, jest wykazane jako zaległość, nie pominięte.",
+          "zrodla": "Harmonogram wobec zapisów, rozmowa",
+          "sposob": "porównanie z punktem",
+          "rodzaj": "praktyka",
+          "waga": "",
+          "zmiana": "nowa klasyfikacja",
+          "dlaczego": ""
+        }
+      ]
+    }
+  ],
+  "PROCESY_BIZ": [
+    {
+      "kod": "INT-ZAK",
+      "nazwa": "Zakupy",
+      "klauzula": "8.3",
+      "pytanie": "Czy przy zakupie urządzeń i usług wpływających na zużycie energii bierzecie pod uwagę efektywność, a nie samą cenę nabycia?",
+      "profil": "FAKT_ZAKUPY_KRYTERIA",
+      "placeholder": "np. dla urządzeń powyżej 10 kW porównanie kosztu w cyklu życia; Energy Manager może wstrzymać zamówienie do 5 dni roboczych na ocenę",
+      "dopuszczaNiedotyczy": true,
+      "warunekNiedotyczy": "organizacja nie prowadzi takiego procesu (np. nie projektuje, nie inwestuje)"
+    },
+    {
+      "kod": "INT-INW",
+      "nazwa": "Inwestycje i modernizacje",
+      "klauzula": "8.2",
+      "pytanie": "Czy wniosek inwestycyjny zawiera ocenę wpływu na zużycie energii?",
+      "placeholder": "np. rubryka „wpływ na zużycie energii i koszt eksploatacji” we wniosku inwestycyjnym; opinia Energy Managera przed decyzją",
+      "dopuszczaNiedotyczy": true,
+      "warunekNiedotyczy": "organizacja nie prowadzi takiego procesu (np. nie projektuje, nie inwestuje)"
+    },
+    {
+      "kod": "INT-PROD",
+      "nazwa": "Planowanie produkcji",
+      "klauzula": "8.1",
+      "pytanie": "Czy planując produkcję, bierzecie pod uwagę zużycie energii — kolejność uruchomień, postoje, praca w weekendy?",
+      "placeholder": "np. harmonogram uruchamiania pras uwzględnia szczyt energetyczny; wyłączenie sprężarkowni na weekend ujęte w planie",
+      "dopuszczaNiedotyczy": true,
+      "warunekNiedotyczy": "organizacja nie prowadzi takiego procesu (np. nie projektuje, nie inwestuje)"
+    },
+    {
+      "kod": "INT-UR",
+      "nazwa": "Utrzymanie ruchu i remonty",
+      "klauzula": "8.1",
+      "pytanie": "Czy plan przeglądów i remontów uwzględnia stan energetyczny urządzeń?",
+      "profil": "FAKT_INSTRUKCJE_EKSPL",
+      "placeholder": "np. kwartalny przegląd szczelności sieci sprężonego powietrza w planie przeglądów od 03.2026",
+      "dopuszczaNiedotyczy": true,
+      "warunekNiedotyczy": "organizacja nie prowadzi takiego procesu (np. nie projektuje, nie inwestuje)"
+    },
+    {
+      "kod": "INT-BUD",
+      "nazwa": "Budżetowanie",
+      "klauzula": "7.1",
+      "pytanie": "Czy przy planowaniu budżetu rozmawia się o kosztach energii i o środkach na ich obniżenie?",
+      "placeholder": "np. koszt energii i lista działań z przeglądu energetycznego omawiane na budżecie wrześniowym",
+      "dopuszczaNiedotyczy": true,
+      "warunekNiedotyczy": "organizacja nie prowadzi takiego procesu (np. nie projektuje, nie inwestuje)"
+    },
+    {
+      "kod": "INT-RAP",
+      "nazwa": "Raportowanie zarządcze",
+      "klauzula": "9.1",
+      "pytanie": "Czy wskaźniki energetyczne są w zwykłych raportach firmy — tam, gdzie sprzedaż i jakość?",
+      "placeholder": "np. kWh/t i koszt energii w miesięcznym raporcie operacyjnym od 04.2026",
+      "dopuszczaNiedotyczy": true,
+      "warunekNiedotyczy": "organizacja nie prowadzi takiego procesu (np. nie projektuje, nie inwestuje)"
+    },
+    {
+      "kod": "INT-ZMI",
+      "nazwa": "Zarządzanie zmianą",
+      "klauzula": "6.1",
+      "pytanie": "Czy nowa linia, nowy klient albo nowa umowa na energię trafiają do zespołu przed decyzją?",
+      "placeholder": "np. zespół opiniuje każdą zmianę technologiczną na etapie założeń; nowa umowa na energię konsultowana przed podpisaniem",
+      "dopuszczaNiedotyczy": true,
+      "warunekNiedotyczy": "organizacja nie prowadzi takiego procesu (np. nie projektuje, nie inwestuje)"
+    }
+  ],
+  "ZASOBY": [
+    {
+      "kod": "ZAS-LUD",
+      "nazwa": "Ludzie",
+      "podstawa": "N",
+      "pomoc": "Kto realnie zajmuje się systemem. Nie musi to być osobny etat.",
+      "placeholder": "np. Energy Manager 0,3 etatu; czterech członków zespołu po ok. 8 godzin miesięcznie"
+    },
+    {
+      "kod": "ZAS-CZAS",
+      "nazwa": "Czas",
+      "podstawa": "N",
+      "pomoc": "III-13: „Zasoby, w tym czas, wystarczają zespołowi do wykonania zadań”. To najczęściej brakujący zasób — i najrzadziej zapisany.",
+      "placeholder": "np. 4 godziny miesięcznie technika UR na przeglądy szczelności, ujęte w grafiku"
+    },
+    {
+      "kod": "ZAS-BUD",
+      "nazwa": "Budżet",
+      "podstawa": "N",
+      "pomoc": "Skąd biorą się pieniądze na działania. Osobna pozycja w budżecie nie jest wymagana.",
+      "placeholder": "np. 40 tys. zł rocznie w budżecie utrzymania ruchu; większe inwestycje z wniosku inwestycyjnego"
+    },
+    {
+      "kod": "ZAS-NARZ",
+      "nazwa": "Narzędzia i opomiarowanie",
+      "podstawa": "N",
+      "pomoc": "Liczniki, analizatory, arkusze, oprogramowanie. Bez danych system nie ma z czego liczyć wskaźników.",
+      "placeholder": "np. dwa liczniki główne, analizator przenośny wypożyczany kwartalnie, arkusz EnPI"
+    },
+    {
+      "kod": "ZAS-DANE",
+      "nazwa": "Dostęp do danych",
+      "podstawa": "N",
+      "pomoc": "Zasobem jest także dostęp: do faktur, do danych produkcyjnych, do systemu nadzoru.",
+      "placeholder": "np. Energy Manager ma dostęp do faktur za energię, danych z liczników i planów produkcji"
+    },
+    {
+      "kod": "ZAS-KOMP",
+      "nazwa": "Kompetencje i szkolenia",
+      "podstawa": "M",
+      "pomoc": "Punkt 7.2 opisuje to szczegółowo. Tutaj chodzi o to, czy kierownictwo zapewniło na nie środki.",
+      "placeholder": "np. szkolenie wewnętrzne dla zespołu 05.2026; udział Energy Managera w kursie audytora wewnętrznego"
+    }
+  ],
+  "NAWYKI": [
+    {
+      "kod": "NAW-1",
+      "nazwa": "Daje zasoby, nie tylko budżet na certyfikat",
+      "opis": "Ludzi, czas, narzędzia pomiarowe, dostęp do danych. Ile? Tyle, żeby system działał.",
+      "placeholder": "np. przydział czasu technika zapisany w grafiku, nie „jak znajdzie chwilę”"
+    },
+    {
+      "kod": "NAW-2",
+      "nazwa": "Myśli energią przy każdej dużej decyzji",
+      "opis": "Zakup maszyny, inwestycja, plan produkcji — za każdym razem pada pytanie: a ile to będzie zużywać?",
+      "placeholder": "np. pytanie o zużycie przy każdym wniosku inwestycyjnym powyżej 50 tys. zł"
+    },
+    {
+      "kod": "NAW-3",
+      "nazwa": "Mówi o energii",
+      "opis": "Na odprawach, w komunikatach, przy obchodzie hali. Krótko, ale regularnie.",
+      "placeholder": "np. stałe pytanie o zużycie na poniedziałkowej odprawie"
+    },
+    {
+      "kod": "NAW-4",
+      "nazwa": "Jest widoczne",
+      "opis": "Prowadzi przegląd zarządzania, pyta o wskaźniki, docenia wyniki — ★ najlepiej publicznie.",
+      "placeholder": "np. przegląd zarządzania prowadzi Dyrektor Zakładu, nie jego zastępca"
+    },
+    {
+      "kod": "NAW-5",
+      "nazwa": "Staje za zespołem",
+      "opis": "Gdy zespół trafia na opór, kierownictwo rozstrzyga spór. Nie mówi: „dogadajcie się”.",
+      "placeholder": "np. rozstrzygnięcie konfliktu między terminem dostawy a postojem na przegląd"
+    }
+  ],
+  "LISTA_51": [
+    {
+      "tekst": "Ustalono, kto jest najwyższym kierownictwem dla systemu",
+      "podstawa": "M",
+      "auto": "zob",
+      "zob": "PRZ-00"
+    },
+    {
+      "tekst": "…ustalono zakres i granice systemu",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-01"
+    },
+    {
+      "tekst": "…ustanowiono politykę, cele i zadania energetyczne zgodne z kierunkiem strategicznym",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-02"
+    },
+    {
+      "tekst": "…wymagania systemu włączono do procesów biznesowych (np. inwestycje, zakupy, planowanie produkcji)",
+      "podstawa": "N",
+      "auto": "integracja"
+    },
+    {
+      "tekst": "…plany działań są zatwierdzane i realizowane",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-05"
+    },
+    {
+      "tekst": "…potrzebne zasoby są dostępne (ludzie, czas, budżet, narzędzia, dane)",
+      "podstawa": "N",
+      "auto": "zasoby"
+    },
+    {
+      "tekst": "Kierownictwo komunikuje znaczenie skutecznego zarządzania energią i spełniania wymagań systemu",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-08"
+    },
+    {
+      "tekst": "…system osiąga zamierzone wyniki (decyzje z przeglądu zarządzania)",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-11"
+    },
+    {
+      "tekst": "Kierownictwo promuje ciągłe doskonalenie wyniku energetycznego i systemu",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-12"
+    },
+    {
+      "tekst": "…powołano zespół ds. zarządzania energią",
+      "podstawa": "N",
+      "auto": "zespol"
+    },
+    {
+      "tekst": "Kierownictwo kieruje ludźmi i wspiera ich w przyczynianiu się do skuteczności systemu i poprawy wyniku",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-09"
+    },
+    {
+      "tekst": "Kierownictwo wspiera inne role kierownicze w ich obszarach",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-10"
+    },
+    {
+      "tekst": "…wskaźniki EnPI właściwie odzwierciedlają wynik energetyczny",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-03"
+    },
+    {
+      "tekst": "…istnieją procesy wykrywania zmian wpływających na system i wynik oraz reagowania na nie",
+      "podstawa": "N",
+      "auto": "zob",
+      "zob": "PRZ-13"
+    },
+    {
+      "tekst": "Zaplanowano „punkty styku” kierownictwa z systemem (przegląd, raporty, komunikaty)",
+      "podstawa": "M",
+      "auto": "styk"
+    },
+    {
+      "tekst": "Można wskazać decyzje z ostatnich miesięcy, w których energia miała znaczenie — z datami",
+      "podstawa": "M",
+      "auto": "decyzje"
+    }
+  ]
+}
