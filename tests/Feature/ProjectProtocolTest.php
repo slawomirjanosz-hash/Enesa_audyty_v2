@@ -185,3 +185,17 @@ test('client acceptance requires a client assigned to the project', function () 
         ->assertSessionHasErrors('reference');
     expect(ProjectProtocol::count())->toBe(0);
 });
+
+test('both protocol forms keep title and save controls inside the form card', function () {
+    foreach (['client', 'supplier'] as $direction) {
+        $response = $this->get(route('projects.protocols.create', [$this->project, 'direction' => $direction]))->assertOk();
+        $dom = new DOMDocument;
+        @$dom->loadHTML($response->getContent());
+        $xpath = new DOMXPath($dom);
+        $form = '//div[@class="protocol-card"]/form';
+        foreach (['title', 'remedy_deadline', 'receiver_name', 'supplier_representative'] as $field) {
+            expect($xpath->query($form.'/div[@class="protocol-grid"]//input[@name="'.$field.'"]')->length)->toBe(1);
+        }
+        expect($xpath->query($form.'/div[@class="protocol-actions"]/button')->length)->toBe(1);
+    }
+});
