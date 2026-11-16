@@ -104,6 +104,71 @@ test('enms thirteen honest gaps with plans can be submitted and editing invalida
     expect($s->status($cw)['submitted'])->toBeFalse()->and($profile->fresh()->getRawOriginal())->toBe($old);
 });
 
+test('enms agreed methodological rules require details only for present state and a dated plan for gaps', function (string $code, string $state) {
+    [$audit, $client, $staff, $profile, $w, $s] = enmsFixture();
+    $cw = Workspace::for($client, $audit, $profile, true);
+    foreach ($s->library->requirements() as $id => $r) {
+        if ($r['normative']) {
+            $s->saveDeclaration($cw, $cw->revision(), $s->sources($cw)['hash'], $id, ['stan' => 'niema', 'plan' => ['opis' => 'Plan wdrożenia', 'termin' => '2026-12-31']]);
+        }
+    }
+    $id = $s->library->id('requirement', $code);
+    $save = fn (array $data) => $s->saveDeclaration($cw, $cw->revision(), $s->sources($cw)['hash'], $id, $data);
+    $save(['stan' => $state]);
+    expect($s->readiness($cw)['missing'])->not->toBeEmpty();
+    expect(fn () => $s->transition($cw, $cw->revision(), $s->sources($cw)['hash'], 'submission', []))->toThrow(ValidationException::class);
+
+    if ($state === 'jest') {
+        $save(['plan' => ['opis' => 'Sam plan nie potwierdza istniejącego rozwiązania', 'termin' => '2026-12-31']]);
+        expect(collect($s->readiness($cw)['missing'])->contains(fn ($message) => str_contains($message, 'nie wypełniono')))->toBeTrue();
+        $proof = enmsEvidence($cw);
+        $fields = [];
+        foreach ($s->library->requirement($id)['pola'] as $field) {
+            if ($field['wymagane'] && $field['typ'] !== 'odwolanie') {
+                $fields[$field['klucz']] = $field['typ'] === 'data' ? '2026-11-16' : 'Opis testowy';
+            }
+        }
+        $save(['pola' => $fields, 'evidence_ids' => [$proof['id']]]);
+        if ($code === 'PRZ-14') {
+            // The separate PRZ-00 consistency rule still applies; the agreement does not remove it.
+            expect($s->readiness($cw)['inconsistencies'])->toHaveKey('NS-prz00');
+            $s->transition($cw, $cw->revision(), $s->sources($cw)['hash'], 'explanation', ['key' => 'NS-prz00', 'text' => 'Najwyższe kierownictwo pozostaje do ustalenia w osobnym działaniu.']);
+        }
+    } else {
+        expect($s->readiness($cw)['missing'])->toBe([$code.': uzupełnij plan i termin.']);
+        $save(['plan' => ['opis' => 'Plan uzupełnienia']]);
+        expect($s->readiness($cw)['missing'])->toBe([$code.': uzupełnij plan i termin.']);
+        $save(['plan' => ['termin' => '2026-12-31']]);
+        expect($s->one($cw, 'declaration', 'requirement_id', $id)['payload']['pola'] ?? [])->toBe([]);
+    }
+    expect($s->readiness($cw)['missing'])->toBe([]);
+    $s->transition($cw, $cw->revision(), $s->sources($cw)['hash'], 'submission', []);
+    expect($s->status($cw)['submitted'])->toBeTrue();
+})->with([
+    ['PRZ-00', 'jest'], ['PRZ-00', 'czesciowo'], ['PRZ-00', 'niema'],
+    ['PRZ-14', 'jest'], ['PRZ-14', 'czesciowo'], ['PRZ-14', 'niema'],
+]);
+
+test('enms agreed verification methods preserve the five source choices and persist the three additions', function () {
+    [$audit, $client, $staff, $profile, $w, $s] = enmsFixture();
+    $methods = ['wgląd w dokument', 'oględziny', 'rozmowa', 'zapis w systemie', 'próbka', 'wgląd w zapisy', 'wgląd w zapis w systemie', 'wgląd w pozycję budżetu'];
+    $field = collect($s->registers->fields('verification', $s->options($w)))->firstWhere('key', 'sposob');
+    expect(array_keys($field['choices']))->toBe($methods);
+    $proof = enmsEvidence($w);
+    foreach ($methods as $method) {
+        $verification = enmsSave($w, 'verification', ['evidence_id' => $proof['id'], 'dostepnosc' => 'okazany', 'wiarygodnosc' => 'potwierdzona', 'zakresInformacji' => 'Zakres sprawdzonych informacji', 'sposob' => $method, 'probka' => $method === 'próbka' ? 'Opis liczebności i doboru próbki' : null]);
+        expect($w->record($verification['id'])['payload']['sposob'])->toBe($method)
+            ->and($s->verificationMissing($verification['payload']))->toBe([]);
+    }
+    expect($w->records('verification'))->toHaveCount(1);
+    $response = $this->actingAs($staff)->get(route('audits.enms.show', [$audit, $profile, 'tab' => 'weryfikacja']));
+    $response->assertOk();
+    foreach ($methods as $method) {
+        $response->assertSee('value="'.$method.'"', false);
+    }
+    expect(fn () => enmsSave($w, 'verification', ['evidence_id' => $proof['id'], 'dostepnosc' => 'okazany', 'sposob' => 'nieuzgodniona metoda']))->toThrow(ValidationException::class);
+});
+
 test('enms task execution and acceptance require different grants and the denial is journalled', function () {
     [$audit,$client,$staff,$profile,$w,$s] = enmsFixture();
     $e = enmsEvidence($w);
