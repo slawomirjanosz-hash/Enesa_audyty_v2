@@ -134,10 +134,10 @@ test('copy opens a new unsigned protocol and saving gives it a separate number',
         ->and($saved->signature_data)->toBeNull()->and($source->fresh()->signature_data)->toBe('old-signature');
 });
 
-test('pdf filename contains protocol number and safe bounded description for preview and download', function () {
+test('pdf filename contains protocol number and safe bounded title for preview and download', function () {
     $this->post(route('projects.protocols.store', $this->project), $this->data);
     $protocol = ProjectProtocol::firstOrFail();
-    $protocol->update(['description' => "Odbiór pomp / próba: 2\nNowa linia"]);
+    $protocol->update(['title' => "Odbiór pomp / próba: 2\nNowa linia"]);
     $filename = $protocol->pdfFilename();
     expect($filename)->toBe(str_replace('/', '-', $protocol->number).' - Odbior pomp - proba- 2 Nowa linia.pdf');
     foreach ([0, 1] as $download) {
@@ -145,7 +145,7 @@ test('pdf filename contains protocol number and safe bounded description for pre
         $response->assertOk();
         expect($response->headers->get('Content-Disposition'))->toContain($filename);
     }
-    $protocol->description = str_repeat('Zażółć / "<>:?*', 1000);
+    $protocol->title = str_repeat('Zażółć / "<>:?*', 1000);
     expect(strlen($protocol->pdfFilename()))->toBeLessThan(200);
     expect(preg_match('/[\\\\\/<>:"|?*\r\n]/', $protocol->pdfFilename()))->toBe(0);
 });

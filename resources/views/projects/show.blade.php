@@ -194,7 +194,7 @@
             <span class="legend" style="margin:0 0 0 auto"><span><i class="dot" style="background:#7C3AED"></i>Zadania</span><span><i class="dot" style="background:#f59e0b;transform:rotate(45deg);border-radius:1px"></i>Kamienie milowe</span><span>Linie: dziś i koniec projektu {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></span>
         </div>
         <div class="gantt-progress-legend"><strong>Kolor według postępu:</strong><span><i style="background:#8b5cf6"></i>0–10%</span><span><i style="background:#facc15"></i>11–25%</span><span><i style="background:#fb923c"></i>26–50%</span><span><i style="background:#1d4ed8"></i>51–75%</span><span><i style="background:#60a5fa"></i>76–99%</span><span><i style="background:#22c55e"></i>100%</span></div>
-        @if($canManageSchedule)<div class="gantt-help"><strong>Obsługa:</strong> przeciągnij pasek, aby przesunąć termin; przeciągnij jego krawędź, aby zmienić czas trwania; przeciągnij uchwyt postępu, aby zapisać procent wykonania.</div>@endif
+        @if($canManageSchedule)<div class="gantt-help"><strong>Obsługa:</strong> przeciągnij pasek w pionie, aby zmienić kolejność, lub w poziomie, aby przesunąć termin; przeciągnij jego krawędź, aby zmienić czas trwania; przeciągnij uchwyt postępu, aby zapisać procent wykonania.</div>@endif
         <div id="project-frappe-gantt" class="frappe-gantt-wrap"></div>
     </div>
     <div class="card"><h2>Lista zadań i kamieni milowych <small style="font-weight:500;color:#78827b">(kolejność jak na Gantcie)</small></h2><div id="gantt-task-list"></div></div>
@@ -1122,10 +1122,35 @@ async function persistGanttOrder() {
     const response=await fetch(@json(route('projects.tasks.reorder',$project)),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':projectCsrfToken},body:JSON.stringify({order:projectTimelineItems.map(item=>item.db_id)})});
     if(!response.ok){const data=await response.json().catch(()=>({}));throw new Error(data.message||'Nie udało się zapisać kolejności.');}
 }
+let ganttOrderSaving = false;
 async function moveGanttTask(index,direction) {
-    const target=index+direction;if(target<0||target>=projectTimelineItems.length)return;
-    [projectTimelineItems[index],projectTimelineItems[target]]=[projectTimelineItems[target],projectTimelineItems[index]];
-    try{await persistGanttOrder();renderProjectGantt();}catch(error){[projectTimelineItems[index],projectTimelineItems[target]]=[projectTimelineItems[target],projectTimelineItems[index]];alert(error.message);renderGanttTaskList();}
+    const target=index+direction;
+    if(ganttOrderSaving || index<0 || target<0 || target>=projectTimelineItems.length || direction===0)return;
+    ganttOrderSaving = true;
+    const [item] = projectTimelineItems.splice(index,1);
+    projectTimelineItems.splice(target,0,item);
+    try {
+        await persistGanttOrder();
+        renderProjectGantt();
+    } catch(error) {
+        projectTimelineItems.splice(target,1);
+        projectTimelineItems.splice(index,0,item);
+        alert(error.message);
+        renderProjectGantt();
+    } finally {
+        ganttOrderSaving = false;
+    }
+}
+if(projectCanEdit) {
+    import(@json(asset('js/project-gantt-reorder.js').'?v='.filemtime(public_path('js/project-gantt-reorder.js')))).then(({bindProjectGanttReorder}) => {
+        const container = document.getElementById('project-frappe-gantt');
+        if(!container)return;
+        bindProjectGanttReorder(container,(source,target) => {
+            const index=projectTimelineItems.findIndex(item=>item.id===source);
+            const destination=projectTimelineItems.findIndex(item=>item.id===target);
+            if(destination>=0)moveGanttTask(index,destination-index);
+        });
+    });
 }
 async function deleteGanttTask(index) {
     const task=projectTimelineItems[index];if(!window.confirm('Usunąć zadanie „'+task.name+'”?'))return;
