@@ -61,7 +61,7 @@ class OfferController extends Controller
             // Keep rich content and embedded photos out of MySQL's sort buffer.
             Offer::query()->select([
                 'offers.id', 'offers.offer_number', 'offers.offer_slug', 'offers.offer_full_number',
-                'offers.offer_title', 'offers.company_id', 'offers.assigned_user_id',
+                'offers.offer_title', 'offers.company_id', 'offers.assigned_user_id', 'offers.created_by_id',
                 'offers.kwota_netto', 'offers.status', 'offers.archived_from_status', 'offers.created_at',
             ])->with(['company:id,name', 'assignedUser:id,name']),
             $user,
@@ -133,7 +133,7 @@ class OfferController extends Controller
         abort_unless(app(AuditorAccessService::class)->hasFullAccess($request->user()), 403);
         $companySettings = CompanySettings::first();
         $companies = Company::clients()->orderBy('name')->get();
-        $users = $this->offerAssignableUsers();
+        $users = $this->offerAssignableUsers()->get();
         $offerTemplateTypes = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')
             ->get();
@@ -207,6 +207,9 @@ class OfferController extends Controller
             'offer_title' => ['nullable', 'string', 'max:500'],
             'status' => ['required', 'string', Rule::in(array_keys(OfferStatus::options()))],
             'assigned_user_id' => ['nullable', 'exists:users,id'],
+            'offer_members_present' => ['sometimes', 'accepted'],
+            'member_ids' => ['sometimes', 'array'],
+            'member_ids.*' => ['required', 'integer', 'distinct', $this->validateOfferMember(...)],
             'kwota_netto' => ['nullable', 'numeric', 'min:0'],
             'valid_until' => ['nullable', 'date'],
             'created_at' => ['nullable', 'date'],
@@ -269,7 +272,7 @@ class OfferController extends Controller
         }
 
         $issuedOn = Carbon::parse($data['created_at'] ?? now())->startOfDay();
-        $offer = Offer::create([
+        $attributes = [
             'company_id' => $data['company_id'],
             'offer_number' => $data['offer_number'],
             'offer_slug' => $data['offer_slug'] ?? null,
@@ -294,7 +297,14 @@ class OfferController extends Controller
             'price_sections' => $priceSections,
             'text_sections' => $textSections,
             'delegations' => $delegations,
-        ]);
+        ];
+
+        $offer = DB::transaction(function () use ($attributes, $data): Offer {
+            $offer = Offer::create($attributes);
+            $offer->members()->sync($data['member_ids'] ?? []);
+
+            return $offer;
+        });
 
         if (! empty($data['created_at'])) {
             $offer->created_at = Carbon::parse($data['created_at']);
@@ -346,6 +356,9 @@ class OfferController extends Controller
         if (! auth()->user()->can('viewPrices', $offer)) {
             $this->offerContent->hidePrices($offer);
         }
+        if ($offer->offerRequest && ! auth()->user()->can('view', $offer->offerRequest)) {
+            $offer->setRelation('offerRequest', null);
+        }
 
         return view('offers.show', compact('offer', 'companySettings'));
     }
@@ -364,11 +377,14 @@ class OfferController extends Controller
         $editorUsesLegacyDelegation = $offer->getRawOriginal('delegations') === null;
         $companySettings = CompanySettings::first();
         $companies = Company::clients()->orderBy('name')->get();
-        $users = $this->offerAssignableUsers();
+        $users = $this->offerAssignableUsers()->get();
         $offerTemplateTypes = OfferTemplateType::where('is_active', true)
             ->with('offerTemplateVersions')
             ->get();
         $offerRequest = $offer->offerRequest;
+        if ($offerRequest && ! auth()->user()->can('view', $offerRequest)) {
+            $offerRequest = null;
+        }
 
         $crmOpportunities = CrmOpportunity::with('company')
             ->orderByDesc('created_at')
@@ -457,15 +473,17 @@ class OfferController extends Controller
 
     private function offerAssignableUsers()
     {
-        return User::query()
-            ->whereHas('roles', fn ($roles) => $roles->whereIn('name', [
-                'superadmin',
-                'admin',
-                'auditor_senior',
-                'auditor',
-            ]))
-            ->orderBy('name')
-            ->get();
+        return User::query()->where('is_active', true)
+            ->whereHas('roles')
+            ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))
+            ->orderBy('name');
+    }
+
+    private function validateOfferMember(string $attribute, mixed $value, \Closure $fail): void
+    {
+        if (! is_numeric($value) || ! $this->offerAssignableUsers()->whereKey($value)->exists()) {
+            $fail('Wybierz aktywnego pracownika.');
+        }
     }
 
     public function update(Request $request, Offer $offer): RedirectResponse
@@ -482,6 +500,9 @@ class OfferController extends Controller
             'offer_title' => ['nullable', 'string', 'max:500'],
             'status' => ['required', 'string', Rule::in(array_keys(OfferStatus::options()))],
             'assigned_user_id' => ['nullable', 'exists:users,id'],
+            'offer_members_present' => ['sometimes', 'accepted'],
+            'member_ids' => ['sometimes', 'array'],
+            'member_ids.*' => ['required', 'integer', 'distinct', $this->validateOfferMember(...)],
             'kwota_netto' => ['nullable', 'numeric', 'min:0'],
             'valid_until' => ['nullable', 'date'],
             'created_at' => ['nullable', 'date'],
@@ -558,7 +579,7 @@ class OfferController extends Controller
         }
 
         $issuedOn = Carbon::parse($data['created_at'] ?? $this->safeEditorDate($offer, 'created_at') ?? now())->startOfDay();
-        $offer->update([
+        $attributes = [
             'signature_user_id' => $signatureUserId,
             'company_id' => $offer->is_template ? null : $data['company_id'],
             'offer_number' => $data['offer_number'],
@@ -583,7 +604,15 @@ class OfferController extends Controller
             'price_sections' => $priceSections,
             'text_sections' => $textSections,
             'delegations' => $delegations,
-        ]);
+        ];
+
+        DB::transaction(function () use ($offer, $attributes, $data): void {
+            Offer::query()->lockForUpdate()->findOrFail($offer->id);
+            $offer->update($attributes);
+            if (isset($data['offer_members_present']) || isset($data['member_ids'])) {
+                $offer->members()->sync($data['member_ids'] ?? []);
+            }
+        });
 
         if (! empty($data['created_at'])) {
             $offer->created_at = Carbon::parse($data['created_at']);
@@ -616,7 +645,7 @@ class OfferController extends Controller
             ])->save();
         }
 
-        return redirect()->route('offers.show', $offer)
+        return ($request->user()->can('view', $offer) ? redirect()->route('offers.show', $offer) : redirect()->route('offers.index'))
             ->with('success', 'Oferta '.$offer->offer_full_number.' została zaktualizowana.');
     }
 

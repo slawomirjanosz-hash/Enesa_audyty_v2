@@ -126,7 +126,7 @@ class CompanyController extends Controller
         $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
 
         $relations = [
-            'offers',
+            'offers' => fn ($offers) => $access->scopeByCompanyAccess($offers, $user, 'can_view_offers'),
         ];
         if ($auditsEnabled) {
             $relations[] = 'audits.manager';
@@ -140,9 +140,6 @@ class CompanyController extends Controller
 
         if (! $auditsEnabled || ! $access->canViewCompany($user, $company->id, 'can_view_audits')) {
             $company->setRelation('audits', collect());
-        }
-        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
-            $company->setRelation('offers', collect());
         }
         if (! $access->hasFullAccess($user)) {
             $company->setRelation('users', collect());
@@ -170,10 +167,12 @@ class CompanyController extends Controller
 
         $crmOpportunities = $access->scopeByCompanyAccess(
             CrmOpportunity::with([
-                'assignedUser', 'relatedUsers', 'offers',
+                'assignedUser', 'relatedUsers',
+                'offers' => fn ($offers) => $access->scopeByCompanyAccess($offers, $user, 'can_view_offers'),
                 'tasks' => fn ($tasks) => $tasks->crm()->withTrashed()->with('assignedUser'),
                 'activities' => fn ($activities) => $activities->where('type', 'lead_action')
-                    ->when(! $access->canViewCompany($user, $company->id, 'can_view_offers'), fn ($query) => $query->whereNull('offer_id'))
+                    ->where(fn ($query) => $query->whereNull('offer_id')
+                        ->orWhereHas('offer', fn ($offers) => $access->scopeByCompanyAccess($offers, $user, 'can_view_offers')))
                     ->with(['performedBy', 'user'])->orderByDesc('occurred_on')->orderByDesc('id'),
             ])
                 ->where('company_id', $company->id)
@@ -182,14 +181,12 @@ class CompanyController extends Controller
             'can_view_dashboard'
         )->get();
 
-        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
-            $crmOpportunities->each(fn (CrmOpportunity $opportunity) => $opportunity->setRelation('offers', collect()));
-        }
-
         $stats['crm_opportunities_count'] = $crmOpportunities->count();
 
         $crmTasks = $access->scopeByCompanyAccess(
-            Task::with(['participants', 'assignedUser', 'offer', 'crmOpportunity'])
+            Task::with(['participants', 'assignedUser', 'crmOpportunity',
+                'offer' => fn ($offers) => $access->scopeByCompanyAccess($offers, $user, 'can_view_offers'),
+            ])
                 ->where('company_id', $company->id)
                 ->whereNull('project_id')
                 ->whereNull('audit_id')
@@ -199,10 +196,6 @@ class CompanyController extends Controller
             $user,
             'can_view_dashboard'
         )->get();
-
-        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
-            $crmTasks->each(fn (Task $task) => $task->setRelation('offer', null));
-        }
 
         $stats['crm_tasks_count'] = $crmTasks->count();
 
@@ -218,11 +211,9 @@ class CompanyController extends Controller
 
         $crmActivitiesQuery = CrmActivity::with(['user', 'performedBy', 'crmOpportunity', 'offer'])
             ->where('company_id', $company->id)
+            ->where(fn ($query) => $query->whereNull('offer_id')
+                ->orWhereHas('offer', fn ($offers) => $access->scopeByCompanyAccess($offers, $user, 'can_view_offers')))
             ->orderByDesc('created_at');
-
-        if (! $access->canViewCompany($user, $company->id, 'can_view_offers')) {
-            $crmActivitiesQuery->whereNull('offer_id');
-        }
 
         $crmActivities = $access->scopeByCompanyAccess(
             $crmActivitiesQuery,
@@ -230,7 +221,10 @@ class CompanyController extends Controller
             'can_view_dashboard'
         )->get();
 
-        $offerRequests = $access->scopeByCompanyAccess(OfferRequest::with('offerFormTemplate', 'offers')
+        $offerRequests = $access->scopeByCompanyAccess(OfferRequest::with([
+            'offerFormTemplate',
+            'offers' => fn ($offers) => $access->scopeByCompanyAccess($offers, $user, 'can_view_offers'),
+        ])
             ->where('company_id', $company->id)
             ->orderByDesc('created_at'), $user, 'can_view_offer_requests')
             ->get();

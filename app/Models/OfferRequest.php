@@ -16,6 +16,7 @@ class OfferRequest extends Model
         'company_id',
         'title',
         'created_by_id',
+        'assigned_user_id',
         'offer_form_template_id',
         'offer_form_version_id',
         'status',
@@ -65,6 +66,11 @@ class OfferRequest extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
     }
 
     public function offerFormVersion(): BelongsTo

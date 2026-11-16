@@ -63,6 +63,9 @@
                    value="{{ old('title', $offerRequest->title) }}"
                    placeholder="np. Audyt energetyczny — hala produkcyjna, Gliwice">
             <p style="font-size:12px;color:#888;margin:6px 0 0;">Ta nazwa ułatwia rozpoznanie ankiety na liście zapytań.</p>
+            @if($assignees !== null)
+                @include('offer-requests.assignee')
+            @endif
         </div>
     </div>
 

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\OfferFormTemplate;
 use App\Models\OfferRequest;
+use App\Models\User;
 use App\Services\AuditorAccessService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 
@@ -19,7 +21,9 @@ class OfferRequestController extends Controller
         $templates = OfferFormTemplate::where('is_active', true)->orderBy('name')->get();
         $preselectedCompanyId = $request->integer('company_id') ?: null;
 
-        return view('offer-requests.create', compact('companies', 'templates', 'preselectedCompanyId'));
+        $assignees = $this->assignees()->get(['id', 'name']);
+
+        return view('offer-requests.create', compact('companies', 'templates', 'preselectedCompanyId', 'assignees'));
     }
 
     public function store(Request $request)
@@ -28,6 +32,7 @@ class OfferRequestController extends Controller
 
         $data = $request->validate([
             'company_id' => ['required', 'exists:companies,id'],
+            'assigned_user_id' => ['nullable', 'integer', $this->validateAssignee(...)],
             'title' => ['nullable', 'string', 'max:255'],
             'offer_form_template_id' => ['nullable', 'exists:offer_form_templates,id'],
             'form_responses' => ['nullable', 'array'],
@@ -44,6 +49,7 @@ class OfferRequestController extends Controller
             'company_id' => $data['company_id'],
             'title' => $data['title'] ?? null,
             'created_by_id' => auth()->id(),
+            'assigned_user_id' => $data['assigned_user_id'] ?? null,
             'offer_form_template_id' => $data['offer_form_template_id'] ?? null,
             'form_responses' => $data['form_responses'] ?? [],
             'tresc' => $data['tresc'] ?? null,
@@ -138,7 +144,11 @@ class OfferRequestController extends Controller
 
         $offerRequest->load(['company', 'offerFormTemplate']);
 
-        return view('offer-requests.edit', compact('offerRequest'));
+        $assignees = app(AuditorAccessService::class)->hasFullAccess(auth()->user())
+            ? $this->assignees()->get(['id', 'name'])
+            : null;
+
+        return view('offer-requests.edit', compact('offerRequest', 'assignees'));
     }
 
     public function update(Request $request, OfferRequest $offerRequest)
@@ -151,7 +161,11 @@ class OfferRequestController extends Controller
             'tresc' => ['nullable', 'string', 'max:65000'],
         ]);
 
-        $offerRequest->update([
+        if (app(AuditorAccessService::class)->hasFullAccess($request->user())) {
+            $data += $request->validate(['assigned_user_id' => ['sometimes', 'nullable', 'integer', $this->validateAssignee(...)]]);
+        }
+
+        $offerRequest->update(array_intersect_key($data, ['assigned_user_id' => true]) + [
             'title' => $data['title'] ?? null,
             'form_responses' => $data['form_responses'] ?? [],
             'tresc' => $data['tresc'] ?? null,
@@ -159,5 +173,20 @@ class OfferRequestController extends Controller
 
         return redirect(route('companies.show', $offerRequest->company_id).'#zapytania')
             ->with('success', 'Zapytanie zostało zaktualizowane.');
+    }
+
+    private function assignees(): Builder
+    {
+        return User::query()->where('is_active', true)
+            ->whereHas('roles')
+            ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))
+            ->orderBy('name');
+    }
+
+    private function validateAssignee(string $attribute, mixed $value, \Closure $fail): void
+    {
+        if (! $this->assignees()->whereKey($value)->exists()) {
+            $fail('Wybierz aktywnego pracownika.');
+        }
     }
 }

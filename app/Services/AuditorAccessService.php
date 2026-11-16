@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\AuditorCompanyAccess;
 use App\Models\Document;
+use App\Models\Offer;
+use App\Models\OfferRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -115,17 +117,47 @@ class AuditorAccessService
             'can_view_chat' => 'client_zone.chat.manage',
         ][$ability] ?? null;
 
-        // Regular staff permissions grant access to the shared company dataset.
-        // Per-company restrictions apply only to delegated auditors.
+        // Offer ownership limits regular staff access. Delegated auditors use explicit company grants.
         if (! $this->isDelegatedAuditor($user) && $modulePermission && $user->can($modulePermission)) {
+            if (in_array($ability, ['can_view_offers', 'can_view_offer_requests'], true)) {
+                $table = $query->getModel()->getTable();
+
+                return $query->whereNotNull($table.'.company_id')->where(function (Builder $records) use ($table, $user, $ability) {
+                    $records->where($table.'.assigned_user_id', $user->id)
+                        ->orWhere(fn (Builder $unassigned) => $unassigned->whereNull($table.'.assigned_user_id')
+                            ->where($table.'.created_by_id', $user->id));
+
+                    if ($ability === 'can_view_offers') {
+                        $records->orWhereHas('members', fn (Builder $members) => $members->whereKey($user->id));
+                    }
+                });
+            }
+
             return $query;
         }
 
         return $query->whereIn($companyColumn, $this->accessibleCompanyIds($user, $ability));
     }
 
+    public function canViewOfferRecord(User $user, Offer|OfferRequest $record, string $ability): bool
+    {
+        if ($this->hasFullAccess($user)) {
+            return true;
+        }
+
+        return $record->company_id !== null
+            && $this->canViewCompany($user, $record->company_id, $ability)
+            && ($this->isDelegatedAuditor($user)
+                || ($record->assigned_user_id ?? $record->created_by_id) === $user->id
+                || ($record instanceof Offer && $record->members()->whereKey($user->id)->exists()));
+    }
+
     public function canViewDocument(User $user, Document $document): bool
     {
+        if ($document->offer_id !== null && ! $this->hasFullAccess($user)
+            && (! $document->offer || ! $user->can('view', $document->offer))) {
+            return false;
+        }
         if ($document->project_id !== null) {
             return $document->project !== null && $user->can('view', $document->project)
                 && ($this->hasFullAccess($user) || $user->can('projects.documents.view'));
@@ -163,6 +195,9 @@ class AuditorAccessService
         if ($this->hasFullAccess($user)) {
             return $query;
         }
+
+        $query->where(fn (Builder $documents) => $documents->whereNull('offer_id')
+            ->orWhereHas('offer', fn (Builder $offers) => $this->scopeByCompanyAccess($offers, $user, 'can_view_offers')));
 
         if (! $this->isDelegatedAuditor($user) && $user->can('documents.view')) {
             return $query;

@@ -80,6 +80,7 @@
             <input type="text" name="title" value="{{ old('title') }}" class="field-input"
                    placeholder="np. Audyt energetyczny — hala produkcyjna, Gliwice">
             <p class="hint">Krótka nazwa, po której rozpoznasz to zapytanie na liście.</p>
+            @include('offer-requests.assignee')
         </div>
     </div>
 

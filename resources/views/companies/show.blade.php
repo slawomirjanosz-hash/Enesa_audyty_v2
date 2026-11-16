@@ -1249,7 +1249,7 @@
                         <tr>
                             <td style="font-weight:700;font-family:'Lato',sans-serif;">{{ $offer->offer_full_number ?? $offer->offer_number }}</td>
                             <td style="color:#555;">{{ $offer->offer_title ?? '—' }}</td>
-                            <td style="font-weight:700;color:var(--green);">{{ number_format($offer->kwota_netto ?? 0, 2) }} zł</td>
+                            <td style="font-weight:700;color:var(--green);">@can('viewPrices', $offer){{ number_format($offer->kwota_netto ?? 0, 2) }} zł @else — @endcan</td>
                             <td>
                                 <span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Manrope',sans-serif;{{ $statusStyle }}">
                                     {{ $statusLabel }}

@@ -44,7 +44,7 @@ class RolePermissionCatalog
                 'crm.tasks.team.manage' => 'Zarządzanie zadaniami innych użytkowników CRM',
             ]],
             'offers' => ['label' => 'Oferty', 'permissions' => [
-                'offers.view' => 'Podgląd ofert i zapytań ofertowych',
+                'offers.view' => 'Podgląd przydzielonych ofert i zapytań ofertowych',
                 'offers.create' => 'Tworzenie i kopiowanie ofert',
                 'offers.edit' => 'Edycja ofert i ich statusów',
                 'offers.delete' => 'Usuwanie ofert',

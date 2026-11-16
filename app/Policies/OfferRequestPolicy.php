@@ -13,16 +13,16 @@ class OfferRequestPolicy
 
     public function view(User $user, OfferRequest $offerRequest): bool
     {
-        return app(AuditorAccessService::class)->canViewCompany($user, $offerRequest->company_id, 'can_view_offer_requests');
+        return app(AuditorAccessService::class)->canViewOfferRecord($user, $offerRequest, 'can_view_offer_requests');
     }
 
     public function update(User $user, OfferRequest $offerRequest): bool
     {
-        return $this->canModify($user, 'offers.edit');
+        return $this->view($user, $offerRequest) && $this->canModify($user, 'offers.edit');
     }
 
     public function delete(User $user, OfferRequest $offerRequest): bool
     {
-        return $this->canModify($user, 'offers.delete');
+        return $this->view($user, $offerRequest) && $this->canModify($user, 'offers.delete');
     }
 }

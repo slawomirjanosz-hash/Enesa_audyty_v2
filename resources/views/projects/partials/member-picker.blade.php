@@ -4,7 +4,7 @@
     @if(in_array((int)$person->id, $selectedMembers, true))<input type="hidden" name="member_ids[]" value="{{$person->id}}">@endif
 @endforeach
 <details class="project-member-picker" data-member-picker>
-    <summary>Kto może widzieć projekt <span data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span></summary>
+    <summary>{{ $pickerLabel ?? 'Kto może widzieć projekt' }} <span data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span></summary>
     <div class="project-member-panel">
         <input type="search" data-member-search aria-label="Szukaj użytkownika" placeholder="Szukaj po imieniu lub nazwisku…" autocomplete="off">
         <div class="project-member-options">

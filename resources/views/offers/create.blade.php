@@ -319,6 +319,10 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
                 @endforeach
             </select>
         </div>
+        <div class="field">
+            <input type="hidden" name="offer_members_present" value="1">
+            @include('projects.partials.member-picker', ['pickerLabel' => 'Kto może widzieć ofertę', 'selectedMembers' => old('member_ids', [])])
+        </div>
         <div>
             <label class="field-label">Powiązana szansa CRM</label>
             <select name="crm_opportunity_id" id="crm_opportunity_id" class="field-input">

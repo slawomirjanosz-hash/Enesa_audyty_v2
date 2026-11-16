@@ -21,6 +21,9 @@
                 @if($offerRequest->createdBy)
                     · złożone przez {{ $offerRequest->createdBy->name }}
                 @endif
+                @if($offerRequest->assignedUser)
+                    · odpowiedzialny: {{ $offerRequest->assignedUser->name }}
+                @endif
             </div>
         </div>
         <div>
@@ -42,10 +45,12 @@
                     <i class="ti ti-calculator"></i> Utwórz ofertę
                 </a>
                 @endif
+                @can('update', $offerRequest)
                 <a href="{{ route('offer-requests.edit', $offerRequest) }}" data-tooltip="Uzupełnij ankietę"
                    style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">
                     <i class="ti ti-pencil"></i> Edytuj zapytanie
                 </a>
+                @endcan
                 @if($offerRequest->offerFormTemplate)
                 <a href="{{ route('offer-requests.pdf', $offerRequest) }}" target="_blank" data-tooltip="Pobierz ankietę w PDF"
                    style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--green);border:1px solid #94C4B0;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;font-family:'Manrope',sans-serif;text-decoration:none;">

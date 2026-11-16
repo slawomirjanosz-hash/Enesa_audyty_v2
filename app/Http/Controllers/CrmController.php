@@ -56,7 +56,7 @@ class CrmController extends Controller
             ->where('status', '!=', 'archived')
             ->orderBy('name');
         if ($currentTab === 'companies') {
-            $companyQuery->withCount(['offers', 'audits']);
+            $companyQuery->withCount(['audits', 'offers' => fn ($offers) => $access->scopeByCompanyAccess($offers, $authUser, 'can_view_offers')]);
         }
         $companies = $access->scopeByCompanyAccess($companyQuery, $authUser, 'can_view_dashboard', 'id')->get();
 
@@ -84,9 +84,13 @@ class CrmController extends Controller
         }
         $opportunities = $currentTab === 'pipeline'
             ? (clone $opportunitiesQuery)->with([
-                'company', 'assignedUser', 'relatedUsers', 'offers',
+                'company', 'assignedUser', 'relatedUsers',
+                'offers' => fn ($offers) => $access->scopeByCompanyAccess($offers, $authUser, 'can_view_offers'),
                 'tasks' => fn ($tasks) => $tasks->crm()->withTrashed()->with('assignedUser'),
-                'activities' => fn ($activities) => $activities->where('type', 'lead_action')->with(['performedBy', 'user'])->orderByDesc('occurred_on')->orderByDesc('id'),
+                'activities' => fn ($activities) => $activities->where('type', 'lead_action')
+                    ->where(fn ($query) => $query->whereNull('offer_id')
+                        ->orWhereHas('offer', fn ($offers) => $access->scopeByCompanyAccess($offers, $authUser, 'can_view_offers')))
+                    ->with(['performedBy', 'user'])->orderByDesc('occurred_on')->orderByDesc('id'),
             ])->get()
             : collect();
 
@@ -151,7 +155,7 @@ class CrmController extends Controller
             'important_contacts' => ImportantContact::count(),
         ];
 
-        $archivedCompanies = $currentTab === 'archive' ? Company::with(['offers', 'audits'])
+        $archivedCompanies = $currentTab === 'archive' ? Company::with(['audits', 'offers' => fn ($offers) => $access->scopeByCompanyAccess($offers, $authUser, 'can_view_offers')])
             ->whereNotNull('archived_at')
             ->orderBy('name')
             ->get() : collect();
