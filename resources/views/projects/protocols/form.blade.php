@@ -11,7 +11,7 @@
 <form method="POST" action="{{$protocol->exists ? route('projects.protocols.update',[$project,$protocol]) : route('projects.protocols.store',$project)}}">@csrf @if($protocol->exists)@method('PUT')@endif
 <input type="hidden" name="direction" value="{{$protocol->direction}}">
 <input type="hidden" name="revision" value="{{old('revision',$protocol->revision ?? 0)}}">
-@isset($copiedFrom)<p class="protocol-help">Kopia protokołu {{$copiedFrom}}. Nowy numer zostanie nadany po zapisaniu. Ustawiono dzisiejszą datę; podpis i termin usunięcia usterek nie zostały skopiowane. @unless($client)Przed zapisem sprawdź dane i ponownie wybierz decyzję o fakturowaniu (domyślnie: nie).@endunless</p>@endisset
+@isset($copiedFrom)<p class="protocol-help">Kopia protokołu {{$copiedFrom}}. Nowy numer zostanie nadany po zapisaniu. Podpis i termin usunięcia usterek nie zostały skopiowane. @unless($client)Przed zapisem sprawdź dane i ponownie wybierz decyzję o fakturowaniu (domyślnie: nie).@endunless</p>@endisset
 <div class="protocol-grid">
     <div class="protocol-full">
         <label for="protocol-title">Tytuł protokołu</label>
@@ -22,7 +22,7 @@
 @else
 <div class="protocol-full"><label for="protocol-supplier">Dostawca *</label><select id="protocol-supplier" name="supplier_company_id" required><option value="">Wybierz dostawcę</option>@foreach($suppliers as $supplier)<option value="{{$supplier->id}}" @selected(old('supplier_company_id',$protocol->supplier_company_id)==$supplier->id)>{{$supplier->name}} · {{$supplier->nip}}</option>@endforeach</select></div>
 @endif
-@foreach(['acceptance_date'=>'Data odbioru *','place'=>'Miejsce odbioru','reference'=>$client ? 'Numer zlecenia / zamówienia / umowy *' : 'Numer zamówienia / umowy'] as $key=>$label)<div><label for="protocol-{{$key}}">{{$label}}</label><input id="protocol-{{$key}}" name="{{$key}}" type="{{$key==='acceptance_date'?'date':'text'}}" value="{{old($key,$key==='acceptance_date'?($protocol->acceptance_date?->toDateString() ?? date('Y-m-d')):$protocol->$key)}}" @required($key==='acceptance_date' || ($client && $key==='reference'))></div>@endforeach
+@foreach(['acceptance_date'=>'Data odbioru','place'=>'Miejsce odbioru','reference'=>$client ? 'Numer zlecenia / zamówienia / umowy *' : 'Numer zamówienia / umowy'] as $key=>$label)<div><label for="protocol-{{$key}}">{{$label}}</label><input id="protocol-{{$key}}" name="{{$key}}" type="{{$key==='acceptance_date'?'date':'text'}}" value="{{old($key,$key==='acceptance_date'?$protocol->acceptance_date?->toDateString():$protocol->$key)}}" @required($client && $key==='reference')></div>@endforeach
 @foreach(['kind'=>['Rodzaj odbioru',\App\Models\ProjectProtocol::KINDS],'outcome'=>['Wynik odbioru',\App\Models\ProjectProtocol::OUTCOMES],'invoice_decision'=>['Czy dostawca może wystawić fakturę?',\App\Models\ProjectProtocol::INVOICES]] as $key=>[$label,$options])@continue($client && $key==='invoice_decision')<div><label for="protocol-{{$key}}">{{$label}} *</label><select id="protocol-{{$key}}" name="{{$key}}" required>@foreach($options as $value=>$text)<option value="{{$value}}" @selected(old($key,$protocol->$key ?? ($key==='invoice_decision'?'no':array_key_first($options)))===$value)>{{$text}}</option>@endforeach</select></div>@endforeach
 <div class="protocol-full"><label for="protocol-description">{{ $client ? 'Opis wykonanych prac' : 'Przedmiot i zakres odbioru' }} *</label><textarea id="protocol-description" name="description" required>{{old('description',$protocol->description)}}</textarea></div>
 </div>

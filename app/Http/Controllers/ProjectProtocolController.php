@@ -50,7 +50,7 @@ class ProjectProtocolController extends Controller
             'remarks', 'invoice_conditions', 'attachments', 'supplier_representative', 'items',
             'items_mode', 'manual_items_description', 'direction',
         ]));
-        $copy->acceptance_date = today();
+        $copy->acceptance_date = $protocol->acceptance_date ? today() : null;
         $copy->receiver_name = $copy->isClientAcceptance() ? $protocol->receiver_name : request()->user()->name;
         $copy->invoice_decision = 'no';
 
@@ -94,7 +94,7 @@ class ProjectProtocolController extends Controller
             'manual_items_description' => [$client ? 'exclude' : 'exclude_unless:items_mode,manual', 'required', 'string', 'max:15000'],
             'revision' => ['required', 'integer', 'min:0'],
             'supplier_company_id' => $client ? ['exclude'] : ['required', Rule::exists('companies', 'id')->where('company_type', 'supplier')],
-            'acceptance_date' => ['required', 'date_format:Y-m-d'],
+            'acceptance_date' => ['nullable', 'date_format:Y-m-d'],
             'place' => ['nullable', 'string', 'max:255'], 'reference' => [$client ? 'required' : 'nullable', 'string', 'max:255'],
             'kind' => ['required', Rule::in(array_keys(ProjectProtocol::KINDS))],
             'outcome' => ['required', Rule::in(array_keys(ProjectProtocol::OUTCOMES))],

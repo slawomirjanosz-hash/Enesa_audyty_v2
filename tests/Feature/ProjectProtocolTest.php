@@ -219,3 +219,17 @@ test('protocol deletion is scoped and never reuses issued numbers', function () 
     $this->post($store, $this->data)->assertSessionHasNoErrors();
     expect(ProjectProtocol::sole()->number)->not->toBe($protocol->number);
 });
+
+test('undated protocols leave a blank date for handwriting in the PDF', function () {
+    $client = Company::create(['company_type' => 'client', 'name' => 'Klient', 'status' => 'active']);
+    $this->project->update(['company_id' => $client->id]);
+    foreach (['supplier', 'client'] as $direction) {
+        $data = array_replace($this->data, ['direction' => $direction, 'acceptance_date' => '']);
+        $this->post(route('projects.protocols.store', $this->project), $data)->assertSessionHasNoErrors();
+        $protocol = ProjectProtocol::where('direction', $direction)->sole();
+        expect($protocol->acceptance_date)->toBeNull();
+        expect(view('projects.protocols.pdf', compact('protocol'))->render())->toContain('Data odbioru: ................................');
+        $this->get(route('projects.protocols.pdf', [$this->project, $protocol]))->assertOk();
+    }
+    $this->get(route('projects.show', [$this->project, 'tab' => 'protocols']))->assertOk();
+});
