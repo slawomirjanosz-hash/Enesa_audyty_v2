@@ -101,7 +101,7 @@ class ProjectProtocolController extends Controller
             'invoice_decision' => ['required', Rule::in(array_keys(ProjectProtocol::INVOICES))],
             'description' => ['required', 'string', 'max:15000'],
             'remarks' => ['required_unless:outcome,accepted', 'nullable', 'string', 'max:15000'],
-            'remedy_deadline' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:acceptance_date'],
+            'remedy_deadline' => ['nullable', 'date_format:Y-m-d'],
             'invoice_conditions' => $client ? ['exclude'] : ['required_if:invoice_decision,conditional', 'nullable', 'string', 'max:5000'],
             'attachments' => ['nullable', 'string', 'max:5000'],
             'receiver_name' => ['required', 'string', 'max:255'], 'supplier_representative' => ['required', 'string', 'max:255'],
