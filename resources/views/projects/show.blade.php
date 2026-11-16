@@ -184,7 +184,7 @@
     @endif
     <div class="card"><h2>Interaktywny wykres Gantta</h2>
         <div class="gantt-toolbar">
-            @if($canManageSchedule)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj zadanie</button><button type="button" class="tool-btn" id="gantt-add-milestone"><i class="ti ti-diamond"></i> Dodaj kamień milowy</button>@endif
+            @if($canManageSchedule)<button type="button" class="tool-btn primary" id="gantt-add-task"><i class="ti ti-plus"></i> Dodaj etap</button><button type="button" class="tool-btn" id="gantt-add-milestone"><i class="ti ti-diamond"></i> Dodaj kamień milowy</button>@endif
             <a class="tool-btn" style="text-decoration:none" href="{{route('projects.gantt.export',$project)}}"><i class="ti ti-file-spreadsheet"></i> Eksport Excel</a>
             @if($canManageSchedule)<button type="button" class="tool-btn" onclick="document.getElementById('gantt-import-modal').classList.add('open')"><i class="ti ti-file-upload"></i> Import Excel</button>@endif
             @if($canManageSchedule)<button type="button" class="tool-btn" id="gantt-share"><i class="ti ti-link"></i> Link dla klienta</button>@endif
@@ -604,7 +604,7 @@
 @if($canManageSchedule)
 <div id="gantt-task-modal" class="project-modal" onclick="if(event.target===this)closeGanttTaskModal()">
     <div class="project-modal-box">
-        <div class="modal-head"><h2 id="gantt-modal-title">Dodaj zadanie</h2><button type="button" class="modal-close" onclick="closeGanttTaskModal()">×</button></div>
+        <div class="modal-head"><h2 id="gantt-modal-title">Dodaj etap</h2><button type="button" class="modal-close" onclick="closeGanttTaskModal()">×</button></div>
         <form id="gantt-task-form">
             <input type="hidden" id="gantt-task-id">
             <div class="grid2">
@@ -1041,7 +1041,7 @@ function openGanttTaskModal(taskId = null, defaultType = 'task') {
     const task = taskId ? projectTimelineItems.find(item => item.id === taskId) : null;
     const today = localDate(new Date());
     const milestone=task?.is_milestone||(!task&&defaultType==='milestone');
-    document.getElementById('gantt-modal-title').textContent = task ? (milestone?'Edytuj kamień milowy':'Edytuj zadanie') : (milestone?'Dodaj kamień milowy':'Dodaj zadanie');
+    document.getElementById('gantt-modal-title').textContent = task ? (milestone?'Edytuj kamień milowy':'Edytuj etap') : (milestone?'Dodaj kamień milowy':'Dodaj etap');
     document.getElementById('gantt-task-type').value = milestone ? 'milestone' : 'task';
     document.getElementById('gantt-task-title').value = task?.name || '';
     document.getElementById('gantt-task-start').value = task?.start || today;

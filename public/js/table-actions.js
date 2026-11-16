@@ -20,6 +20,8 @@ const paths = {
     play: 'm8 4 12 8-12 8Z',
     users: 'M10 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0 M1 21v-4a5 5 0 0 1 10 0v4 M16 4a3 3 0 0 1 0 6 M16 13a5 5 0 0 1 5 5v3',
     more: 'M5 11v2 M12 11v2 M19 11v2',
+    moveUp: 'M12 19V5 m-6 6 6-6 6 6',
+    moveDown: 'M12 5v14 m-6-6 6 6 6-6',
 };
 
 export function actionDescriptor(label, iconClass = '') {
@@ -27,6 +29,7 @@ export function actionDescriptor(label, iconClass = '') {
     const text = ({'×':'Usuń', '✕':'Usuń', '+':'Dodaj', '…':'Więcej akcji', '...':'Więcej akcji'})[raw] || raw;
     const normalized = text.toLocaleLowerCase('pl');
     const rules = [
+        [/^przesuń (wyżej|w górę)$|^↑$/, 'moveUp'], [/^przesuń (niżej|w dół)$|^↓$/, 'moveDown'],
         [/przywr|odarchiw|cofnij usuni/, 'restore'], [/usuń|usun|kasuj|delete/, 'delete'],
         [/archiw/, 'archive'], [/kopi|powiel|duplik/, 'copy'], [/pobierz|eksport|ściągn|download/, 'download'],
         [/podgląd|podglad|zobacz|szczegół|otwórz|otworz|przejd/, 'view'], [/edyt|zmień|zmien|popraw/, 'edit'],

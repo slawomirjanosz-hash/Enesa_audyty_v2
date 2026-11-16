@@ -1,4 +1,4 @@
-import {isActionHeading} from './table-actions.js?v=1';
+import {isActionHeading} from './table-actions.js?v=2';
 
 const collator = new Intl.Collator('pl', {numeric: true, sensitivity: 'base'});
 

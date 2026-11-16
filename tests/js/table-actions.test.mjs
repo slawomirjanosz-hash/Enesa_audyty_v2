@@ -34,6 +34,14 @@ test('controls keep their identities handlers destinations names and original te
     assert.equal(link.attributes.href,'/projects/1/copy'); assert.equal(link.attributes.target,'_blank');
 });
 
+test('schedule order buttons retain distinct up and down arrows after enhancement',()=>{
+    const up=control('↑',{title:'Przesuń wyżej'}), down=control('↓',{title:'Przesuń niżej'});
+    enhanceAction(up); enhanceAction(down);
+    assert.equal(actionDescriptor(up.attributes.title).kind,'moveUp');
+    assert.equal(actionDescriptor(down.attributes.title).kind,'moveDown');
+    assert.notEqual(up.children[0].children[0].attributes.d,down.children[0].children[0].attributes.d);
+});
+
 test('hidden and excluded controls stay untouched while disabled actions remain disabled',()=>{
     for(const mode of ['hidden','style','excluded']) {
         const button=control('Usuń'); if(mode==='hidden')button.hidden=true;if(mode==='style')button.style.display='none';if(mode==='excluded')button.closest=()=>({});
