@@ -19,7 +19,7 @@
         <input type="hidden" name="new_status" value="">
         <select name="status" class="badge {{ $badgeClass }} offer-status-select" aria-label="Status oferty {{ $offer->fullNumber() }}" title="{{ $statusLabel }}" data-offer-status-select data-current-status="{{ $offer->status }}">
             @foreach($statusLabels as $value => $label)
-                <option value="{{ $value }}" @selected($offer->status === (string) $value)>{{ $offer->status === (string) $value ? $statusLabel : $label }}</option>
+                <option value="{{ $value }}" @selected($offer->status === (string) $value)>{{ $offer->status === (string) $value ? $statusLabel : ($value === 'zarchiwizowana' ? 'Archiwizuj ofertę' : $label) }}</option>
             @endforeach
             <option value="__add">+ Dodaj status</option>
         </select>

@@ -3,8 +3,15 @@
 @foreach($users->diff($selectableMembers) as $person)
     @if(in_array((int)$person->id, $selectedMembers, true))<input type="hidden" name="member_ids[]" value="{{$person->id}}">@endif
 @endforeach
-<details class="project-member-picker" data-member-picker>
-    <summary>{{ $pickerLabel ?? 'Kto może widzieć projekt' }} <span data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span></summary>
+<details class="project-member-picker @if($pickerAsField ?? false) member-picker-as-field @endif" data-member-picker>
+    @if($pickerAsField ?? false)
+        <summary class="field-input" aria-labelledby="offer-members-label offer-members-count">
+            <span id="offer-members-count" data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span>
+            <i class="ti ti-chevron-down" aria-hidden="true"></i>
+        </summary>
+    @else
+        <summary>{{ $pickerLabel ?? 'Kto może widzieć projekt' }} <span data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span></summary>
+    @endif
     <div class="project-member-panel">
         <input type="search" data-member-search aria-label="Szukaj użytkownika" placeholder="Szukaj po imieniu lub nazwisku…" autocomplete="off">
         <div class="project-member-options">
@@ -17,7 +24,7 @@
 </details>
 @once
 <style>
-.field .project-member-picker{border:1px solid #d5d0c5;border-radius:8px;background:#fff;min-width:0}
+.field .project-member-picker:not(.member-picker-as-field){border:1px solid #d5d0c5;border-radius:8px;background:#fff;min-width:0}
 .project-member-picker summary{cursor:pointer;padding:11px 12px;font-size:13px;font-weight:600;color:var(--green,#1a4d3a)}
 .project-member-picker summary span{display:inline-block;margin-left:8px;font-size:12px;font-weight:400;color:#647169}
 .project-member-panel{padding:0 10px 10px}.project-member-options{max-height:240px;overflow:auto;margin-top:8px}
@@ -25,6 +32,11 @@
 .field .project-member-option[hidden]{display:none}.field .project-member-option input[type=checkbox]{width:16px;height:16px;flex:0 0 16px;margin:0;padding:0;accent-color:var(--green,#1a4d3a)}
 .project-member-option span{white-space:nowrap}.project-member-option:hover{background:#f0f5f2;border-radius:5px}
 .project-member-picker summary:focus-visible{outline:2px solid var(--green,#1a4d3a);outline-offset:2px}
+.member-picker-as-field summary.field-input{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;font:400 13px Lato,sans-serif;color:#1a1a1a;list-style:none}
+.member-picker-as-field summary::-webkit-details-marker{display:none}
+.member-picker-as-field summary [data-member-count]{font:inherit;color:inherit;margin:0}
+.member-picker-as-field .project-member-panel{margin-top:4px;padding:10px;border:1px solid #D0CCC0;border-radius:7px;background:#fff}
+.member-picker-as-field .project-member-option span{white-space:normal;overflow-wrap:anywhere}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{

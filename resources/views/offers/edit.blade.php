@@ -589,7 +589,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
 {{-- Osoba prowadząca + status --}}
 <div style="padding:14px 22px;border-bottom:1px solid #F0EDE6;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:start;">
     <div>
-        <label class="field-label">Osoba prowadząca ({{ $companySettings->name ?? config('app.name', 'Firma') }})</label>
+        <label class="field-label">Osoba prowadząca</label>
         <select name="assigned_user_id" class="field-input">
             <option value="">— nieprzypisana —</option>
             @foreach($users as $user)
@@ -602,8 +602,9 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
     @if(!$offer->is_template)
     <div class="field">
         <input type="hidden" name="offer_members_present" value="1">
+        <span class="field-label" id="offer-members-label">Kto może widzieć ofertę</span>
         @include('projects.partials.member-picker', [
-            'pickerLabel' => 'Kto może widzieć ofertę',
+            'pickerAsField' => true,
             'selectedMembers' => old('member_ids', old('offer_members_present') ? [] : $offer->members->modelKeys()),
         ])
     </div>
@@ -631,7 +632,7 @@ body.table-column-resizing, body.table-column-resizing * { cursor:col-resize !im
         <label class="field-label">Status</label>
         <select name="status" class="field-input" required>
             @foreach(\App\Models\OfferStatus::options() as $value => $label)
-                <option value="{{ $value }}" @selected(old('status', $offer->status) === (string) $value)>{{ $label }}</option>
+                <option value="{{ $value }}" @selected(old('status', $offer->status) === (string) $value)>{{ $value === 'zarchiwizowana' && $offer->status !== 'zarchiwizowana' ? 'Archiwizuj ofertę' : $label }}</option>
             @endforeach
         </select>
     </div>

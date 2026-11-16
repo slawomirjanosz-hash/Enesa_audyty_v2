@@ -8,6 +8,25 @@ use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+test('offer editor can archive and keeps the previous status', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole(Role::findOrCreate('admin'));
+    $company = Company::create(['name' => 'Klient ofert']);
+    $offer = Offer::create(['company_id' => $company->id, 'offer_number' => 'OF-FORM-ARCHIVE', 'status' => 'wygrana']);
+
+    $this->actingAs($admin)->get(route('offers.edit', $offer))->assertOk()
+        ->assertSee('Archiwizuj ofertę');
+    $this->get(route('offers.index'))->assertOk()->assertSee('Archiwizuj ofertę');
+
+    $this->put(route('offers.update', $offer), [
+        'company_id' => $company->id, 'offer_number' => $offer->offer_number, 'status' => 'zarchiwizowana',
+        'liczba_wyjazdow' => 1, 'liczba_noc' => 0, 'liczba_osob' => 1, 'stawka_noc' => 0,
+    ])->assertSessionHasNoErrors()->assertRedirect();
+
+    expect($offer->fresh()->status)->toBe('zarchiwizowana')
+        ->and($offer->fresh()->archived_from_status)->toBe('wygrana');
+});
+
 test('staff can add a reusable status and archive offers with their previous outcome', function () {
     $user = User::factory()->create();
     $user->assignRole(Role::findOrCreate('admin'));
