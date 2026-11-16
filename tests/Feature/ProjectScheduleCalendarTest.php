@@ -39,4 +39,13 @@ test('project schedule costs and participants persist and calendars respect sele
     $this->get($calendar(['scope' => 'team', 'user_ids' => [$participant->id, $outsider->id]]))
         ->assertOk()->assertSee($stage->title)->assertDontSee('Etap tylko osoby odpowiedzialnej');
     $this->get($calendar(['scope' => 'team']))->assertOk()->assertSee($stage->title)->assertSee('Etap tylko osoby odpowiedzialnej');
+
+    $this->postJson($store, array_replace($data, ['title' => 'Etap bez przydziału', 'assigned_to' => null, 'participant_ids' => []]))->assertCreated();
+    $this->postJson($store, array_replace($data, ['title' => 'Etap z samym uczestnikiem', 'assigned_to' => null]))->assertCreated();
+    $this->get($calendar(['scope' => 'team']))->assertOk()->assertDontSee('Etap bez przydziału')->assertSee('Etap z samym uczestnikiem');
+    $this->get($calendar(['scope' => 'team', 'unassigned' => 1]))->assertOk()
+        ->assertSee('Etap bez przydziału')->assertDontSee('Etap z samym uczestnikiem')->assertDontSee($stage->title);
+    $this->get($calendar(['scope' => 'team', 'unassigned' => 1, 'user_ids' => [$participant->id]]))->assertOk()
+        ->assertSee('Etap bez przydziału')->assertSee('Etap z samym uczestnikiem')->assertSee($stage->title);
+    $this->actingAs($outsider)->get($calendar(['scope' => 'team', 'unassigned' => 1]))->assertOk()->assertDontSee('Etap bez przydziału');
 });

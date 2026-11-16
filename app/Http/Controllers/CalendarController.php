@@ -55,6 +55,7 @@ class CalendarController extends Controller
             'user_id' => ['nullable', 'integer', 'exists:users,id'],
             'user_ids' => ['nullable', 'array'],
             'user_ids.*' => ['integer', 'distinct'],
+            'unassigned' => ['nullable', 'boolean'],
         ]);
 
         $month = isset($validated['month'])
@@ -74,6 +75,7 @@ class CalendarController extends Controller
             throw \Illuminate\Validation\ValidationException::withMessages(['user_ids' => 'Wybierz osoby z listy zespołu.']);
         }
         $calendarUserIds = $scope === 'mine' ? [$user->id] : $selectedUserIds;
+        $showUnassigned = $scope === 'team' && $request->boolean('unassigned');
 
         $tasksQuery = Task::query()
             ->with(['assignedUser', 'participants', 'company', 'project', 'crmOpportunity'])
@@ -93,20 +95,36 @@ class CalendarController extends Controller
             $tasksQuery->whereNull('project_id');
         }
 
-        if ($calendarUserIds) {
-            $tasksQuery->where(fn ($query) => $query->whereIn('assigned_to', $calendarUserIds)
-                ->orWhereHas('participants', fn ($participants) => $participants->whereKey($calendarUserIds)));
-        }
+        $tasksQuery->where(function ($query) use ($calendarUserIds, $showUnassigned) {
+            if ($calendarUserIds) {
+                $query->whereIn('assigned_to', $calendarUserIds)
+                    ->orWhereHas('participants', fn ($participants) => $participants->whereKey($calendarUserIds));
+            } elseif (! $showUnassigned) {
+                $query->whereNotNull('assigned_to')->orWhereHas('participants');
+            }
+            if ($showUnassigned) {
+                $query->orWhere(fn ($task) => $task->whereNull('assigned_to')->whereDoesntHave('participants'));
+            }
+        });
 
         $tasks = $tasksQuery->get();
         $personalTasks = BoardTask::calendarEntries()->with('assignee')
             ->whereBetween('due_date', [$gridStart->toDateString(), $gridEnd->toDateString()])
-            ->when($calendarUserIds, fn ($q) => $q->whereIn('assigned_to', $calendarUserIds))
+            ->where(function ($query) use ($calendarUserIds, $showUnassigned) {
+                if ($calendarUserIds) {
+                    $query->whereIn('assigned_to', $calendarUserIds);
+                } elseif (! $showUnassigned) {
+                    $query->whereNotNull('assigned_to');
+                }
+                if ($showUnassigned) {
+                    $query->orWhereNull('assigned_to');
+                }
+            })
             ->orderBy('scheduled_time')->orderBy('id')->get();
         $personalByDate = $personalTasks->groupBy(fn ($task) => $task->due_date->format('Y-m-d'));
         $tasksByDate = $tasks->groupBy(fn (Task $task) => $task->due_date->format('Y-m-d'));
         $hrEventsByDate = collect();
-        $hrEnabled = CompanySettings::moduleIsEnabled('hr');
+        $hrEnabled = CompanySettings::moduleIsEnabled('hr') && ! ($showUnassigned && ! $selectedUserIds);
         $canViewHrTeam = $user->hasRole(['superadmin', 'admin'])
             || $user->can('system.full_access')
             || $user->can('hr.team.view');
@@ -175,7 +193,7 @@ class CalendarController extends Controller
 
         return view('calendar.index', compact(
             'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'hrEventsByDate', 'users',
-            'scope', 'selectedUserIds', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities'
+            'scope', 'selectedUserIds', 'showUnassigned', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities'
         ));
     }
 }

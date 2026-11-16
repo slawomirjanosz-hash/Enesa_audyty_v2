@@ -63,7 +63,7 @@
 @php
     $previousMonth = $month->subMonth()->format('Y-m');
     $nextMonth = $month->addMonth()->format('Y-m');
-    $queryBase = ['scope' => $scope] + ($selectedUserIds ? ['user_ids' => $selectedUserIds] : []);
+    $queryBase = ['scope' => $scope] + ($selectedUserIds ? ['user_ids' => $selectedUserIds] : []) + ($showUnassigned ? ['unassigned' => 1] : []);
     $statusLabels = ['todo' => 'Do zrobienia', 'in_progress' => 'W trakcie', 'done' => 'Wykonane'];
 @endphp
 
@@ -77,14 +77,15 @@
         <button type="button" class="calendar-btn" data-calendar-new="meeting" data-date="{{ today()->format('Y-m-d') }}"><i class="ti ti-calendar-plus"></i> Dodaj spotkanie</button>
         <a class="calendar-btn {{ $scope === 'mine' ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'mine']) }}"><i class="ti ti-user"></i> Moje zadania</a>
         @if($canViewTeam)
-            <a class="calendar-btn {{ $scope === 'team' && !$selectedUserIds ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'team']) }}"><i class="ti ti-users"></i> Cały zespół</a>
+            <a class="calendar-btn {{ $scope === 'team' && !$selectedUserIds && !$showUnassigned ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'team']) }}"><i class="ti ti-users"></i> Cały zespół</a>
             <form method="GET" action="{{ route('calendar.index') }}">
                 <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
                 <input type="hidden" name="scope" value="team">
                 <details class="calendar-people">
-                    <summary class="calendar-btn {{ $selectedUserIds ? 'active' : '' }}"><i class="ti ti-users" aria-hidden="true"></i> Wybrane osoby @if($selectedUserIds) ({{ count($selectedUserIds) }}) @endif</summary>
+                    <summary class="calendar-btn {{ $selectedUserIds || $showUnassigned ? 'active' : '' }}"><i class="ti ti-users" aria-hidden="true"></i> Wybrane osoby @if($selectedUserIds || $showUnassigned) ({{ count($selectedUserIds) + (int) $showUnassigned }}) @endif</summary>
                     <div class="calendar-people-options">
                         <div class="calendar-people-list">
+                            <label><input type="checkbox" name="unassigned" value="1" @checked($showUnassigned)> Nieprzydzielone</label>
                             @foreach($users as $calendarUser)
                                 <label><input type="checkbox" name="user_ids[]" value="{{ $calendarUser->id }}" @checked(in_array($calendarUser->id, $selectedUserIds, true))> {{ $calendarUser->name }}</label>
                             @endforeach
