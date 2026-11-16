@@ -29,6 +29,7 @@ final class Workspace
         } else {
             abort_unless(app(AuditorAccessService::class)->canViewCompany($actor, $audit->company_id, 'can_view_audits'), 403);
         }
+        abort_unless(Rollout::enabled($audit->id), 404);
         abort_unless($profile->audit_id === $audit->id && DB::table('iso_plant_sites')->where('id', $profile->site_id)->where('company_id', $audit->company_id)->exists(), 404);
         abort_unless($audit->surveys()->whereHas('auditType', fn ($q) => $q->where('slug', 'iso50001'))->exists(), 404);
 
@@ -64,8 +65,13 @@ final class Workspace
             $query->where('v.workspace_revision', '<=', $atRevision);
         }
 
-        $records = $query->select('r.id', 'r.kind', 'v.symbol', 'v.version', 'v.payload', 'v.library_version', 'v.scope_version', 'v.actor_id', 'v.created_at')
-            ->orderByDesc('v.workspace_revision')->get()->unique('id')->mapWithKeys(fn ($row) => [$row->id => array_merge((array) $row, ['payload' => json_decode($row->payload, true, 512, JSON_THROW_ON_ERROR)])])->all();
+        // PDF snapshots contain large JSON. Sort in memory to avoid MySQL filesort's JSON buffer limit.
+        $records = $query->select('r.id', 'r.kind', 'v.symbol', 'v.version', 'v.payload', 'v.library_version', 'v.scope_version', 'v.actor_id', 'v.created_at', 'v.workspace_revision')
+            ->get()->sortByDesc('workspace_revision')->unique('id')->mapWithKeys(function ($row) {
+                unset($row->workspace_revision);
+
+                return [$row->id => array_merge((array) $row, ['payload' => json_decode($row->payload, true, 512, JSON_THROW_ON_ERROR)])];
+            })->all();
         // Keep a single immutable snapshot in memory, not every revision of a long import.
         $this->recordCache = $cacheable ? [$cacheKey => $records] : [];
 

@@ -1,6 +1,6 @@
 # EnMS S-1 i referencyjne 5.1 — stan integracji
 
-Stan: kandydat na gałęzi `codex/enms-s1-native-51`, bez wdrożenia produkcyjnego. Nie jest to potwierdzenie zamknięcia wszystkich kryteriów odbioru S-1.
+Stan: po wyjaśnieniu Zadania F przygotowano pilotaż 0.4 na nowych danych, wyłącznie dla kopii QA (audyt 9). Nie jest to potwierdzenie migracji 0.3 → 0.4 ani zamknięcia wszystkich kryteriów odbioru S-1.
 
 ## Materiały i zakres
 
@@ -60,7 +60,7 @@ Użytkownik odpowiedział „1” na oba konkretne pytania o wybór pierwszego w
 
 Przygotowany kod już realizował obie propozycje. Po akceptacji dodano regresję sześciu kombinacji pozycji i odpowiedzi, blokowania niekompletnych danych oraz zapisu/odczytu wszystkich ośmiu sposobów weryfikacji. Pełna regresja 16.11.2026: **60 testów, 506 asercji — wszystkie zaliczone**. W Chromium sprawdzono pola warunkowe, zapis i ponowne otwarcie PRZ-00/PRZ-14 oraz każdej z ośmiu metod, bez błędów JavaScript. Logi: tmp/enms-approved-rules-tests-2026-11-16.log i tmp/enms-approved-rules-browser.log. Nie zmieniano odpowiedzi ani zatwierdzeń produkcyjnych.
 
-## Otwarte przed odbiorem i wdrożeniem
+## Otwarte przed pełnym odbiorem
 
 1. **S1-12:** test grafu po przenumerowaniu nie jest pełnym testem migracji starych zapisów 0.3 → 0.4. W referencyjnym `51_model.js` jest wyłącznie hak do „Zadania F” i trzy zakazy migracji, bez pełnego mapowania. Zapytano o lokalizację tej specyfikacji. Automatycznego przenoszenia znaczeń nie przygotowano. Nie deklarować S1-12 jako zaliczonego. Współistnienie chroni wcześniejsze dane. Ponowne sprawdzenie dostępnych materiałów 16.11.2026 nie ujawniło pliku z mapowaniem.
 2. **S1-1:** zielone testy źródła i osobne testy integracji nie oznaczają pełnej równoważności wszystkich scenariuszy prototypu i platformy. Scenariusz dowodowy odtworzono wraz z przekazaniem klienta i generowaniem dokumentów; macierz upoważnień, zadania, postanowienia i cykl Karty są sprawdzane osobnymi testami platformy. Nie deklarować automatycznej migracji ani odbioru całego S-1. Sondy natywnej warstwy wspólnej są już wykonane.
@@ -68,6 +68,20 @@ Przygotowany kod już realizował obie propozycje. Po akceptacji dodano regresj�
 
 Odcisk wewnątrz PDF dotyczy zamrożonych danych. SHA-256 całego pliku znajduje się w rejestrze. To dwie różne sumy; plik nie zawiera własnej sumy obliczonej po jej dopisaniu.
 
-## Wdrożenie
+## Pilotaż 0.4 — ustalenie z 16.11.2026
 
-Kandydat jest przygotowany na osobnej gałęzi codex/enms-s1-native-51 do dalszego odbioru. Nie wykonano migracji ani wdrożenia produkcyjnego. Railway: web i worker miały SUCCESS dla 39944a8ff80c0169ebdbd61703f202dafbd49b3b. Nie jest to wdrożenie nowego modelu. Dwie rozbieżności zachowania źródła rozstrzygnięto 16.11.2026; przed scaleniem do main pozostaje domknięcie odbioru, przede wszystkim brakującego kontraktu migracji S1-12. Pliki tmp/, output/ i outputs/ nie należą do commita.
+Użytkownik potwierdził brak kompletnego mapowania Zadania F i chce sprawdzić sam obieg 0.4 na nowych danych, bez przenoszenia odpowiedzi i zatwierdzeń 0.3. Dotychczasowy kandydat nie był na produkcji: odczyt Railway przed wdrożeniem wykazał web i worker SUCCESS dla `7664e896565b642625b6935d19f68ac9e5e415d7`, bez tabel EnMS. To była przyczyna braku wejścia do nowego modelu, a nie brak uprawnień w ankiecie.
+
+Gałąź `codex/enms-04-pilot` integruje kandydata z tym aktualnym main i zachowuje zmiany innych czatów. Domyślna lista `enms.audit_ids` zawiera tylko audyt **9 (QA-51-20261116), profil 6**. Można ją jawnie zastąpić zmienną `ENMS_04_AUDIT_IDS` (lista numerów rozdzielonych przecinkiem); pusta lista wyłącza pilot bez usuwania zapisów. Sprawdzenie listy jest dodatkowe wobec istniejących uprawnień i przypisania firmy. Dotyczy wszystkich nowych endpointów, wejścia z ankiety, wspólnych zadań, postępu i powiadomień. Audyt 1 oraz pozostałe audyty zachowują dotychczasowy obieg.
+
+- Konsultant: `/audits/9/enms/6`.
+- Klient: `/client/audits/9/enms/6`.
+- Menu: odpowiedni audyt → ISO 50001 → 5.1 → **Otwórz ankietę 5.1 — wersja 0.4**. Stary przycisk nadal prowadzi do starej ankiety.
+- Raport diagnostyczny i Załącznik szczegółowy: zakładka Raport (`?tab=raport`), wybór dokumentu, przygotowanie projektu, osobno wydanie kontrolowane. Wymagane aktualne zakończenie oceny konsultanta i właściwe upoważnienie do wydania.
+- Karta przywództwa: zakładka Karta (`?tab=karta`); projekt, wydanie, zatwierdzenie i wejście w życie są osobnymi czynnościami wymagającymi odpowiednich upoważnień.
+
+Nowe tabele powstają przez addytywną migrację schematu. GET nie tworzy rekordów; odpowiedzi, dowody, oceny i zatwierdzenia 0.4 zaczynają się puste. Nie uruchamia się kopiowania danych 0.3, czyszczenia starej ankiety ani nadawania upoważnień. Odczyty zależności z bieżących punktów audytu (np. 4.3) pozostają oznaczonymi cytatami źródłowymi, nie stanowią migracji deklaracji lub zgód 5.1. Niepotwierdzone źródła są ujawniane w ograniczeniach.
+
+Dodatkowa regresja pilota obejmuje wejście obu ról, odmowę wszystkich nowych endpointów poza listą, pusty start mimo zatwierdzonej starej ankiety, zachowanie jej zapisów i dokumentów po zapisie 0.4 oraz ukrycie postępu i powiadomień po wyłączeniu pilota. Końcowy wynik: **64 testy, 559 asercji — wszystkie zaliczone** (tmp/enms-pilot-final-tests.log). W Chromium ponownie sprawdzono 11 zakładek, zapis i odczyt, pola warunkowe, sortowanie, widok mobilny oraz wejście z menu i zakładki dokumentów dla obu ról. Odczyt dużych snapshotów EnMS sortuje wersje w pamięci aplikacji, aby nie wymagać sortowania obszernych JSON w buforze MySQL.
+
+Weryfikacja wdrożenia wymaga osobnego sprawdzenia commitów web i worker na Railway, uruchomionego schematu, wejść obu ról i zachowania skrótów starych zapisów audytów 1 i 9. Sam push nie oznacza dostępności pilota. Pliki tmp/, output/ i outputs/ nie należą do commita.

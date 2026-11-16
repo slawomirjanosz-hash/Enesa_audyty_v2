@@ -7,6 +7,14 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+function enmsSystemFixture(): array
+{
+    $fixture = systemFixture();
+    config(['enms.audit_ids' => array_unique([...config('enms.audit_ids', []), $fixture[0]->id])]);
+
+    return $fixture;
+}
+
 function enmsGrant(): array
 {
     return ['class' => 'ORG', 'activity' => 'zatwierdzenie_rezultatu', 'user_id' => 17, 'valid_from' => '2026-01-01', 'valid_until' => '2026-12-31', 'scope_version' => 'scope-1', 'required_steps' => 1];
@@ -80,7 +88,7 @@ test('enms independent assessment excludes the author executor owner and area ma
 });
 
 test('enms workspace keeps historical versions and never changes old questionnaire answers', function () {
-    [$audit, $client, $staff, $profile] = systemFixture();
+    [$audit, $client, $staff, $profile] = enmsSystemFixture();
     $original = $profile->fresh()->getRawOriginal();
     $workspace = Workspace::for($staff, $audit, $profile, false);
     expect($workspace->revision())->toBe(0)->and($workspace->records())->toBe([]);
@@ -98,8 +106,8 @@ test('enms workspace keeps historical versions and never changes old questionnai
 });
 
 test('enms workspace denies foreign company and foreign record identifiers', function () {
-    [$audit, $client, $staff, $profile] = systemFixture();
-    [$otherAudit, $otherClient, $otherStaff, $otherProfile] = systemFixture();
+    [$audit, $client, $staff, $profile] = enmsSystemFixture();
+    [$otherAudit, $otherClient, $otherStaff, $otherProfile] = enmsSystemFixture();
     $first = Workspace::for($staff, $audit, $profile, false);
     $second = Workspace::for($otherClient, $otherAudit, $otherProfile, true);
     $record = $first->append(0, 'evidence', null, 'DOW-1', ['title' => 'Private'], '2026-11-15', 'scope-1');
@@ -115,7 +123,7 @@ test('enms workspace denies foreign company and foreign record identifiers', fun
 });
 
 test('enms rolls back the entire mutation when journal persistence fails', function () {
-    [$audit, $client, $staff, $profile] = systemFixture();
+    [$audit, $client, $staff, $profile] = enmsSystemFixture();
     $workspace = Workspace::for($staff, $audit, $profile, false);
     $armed = true;
     DB::listen(function (QueryExecuted $event) use (&$armed) {
@@ -139,7 +147,7 @@ test('enms rolls back the entire mutation when journal persistence fails', funct
 });
 
 test('enms renumbering preserves the reference graph and historical symbols', function () {
-    [$audit,$client,$staff,$profile] = systemFixture();
+    [$audit,$client,$staff,$profile] = enmsSystemFixture();
     $w = Workspace::for($staff, $audit, $profile, false);
     $proof = $w->append(0, 'evidence', null, 'DOW-1', ['title' => 'Dokument'], '2026-11-15', 'scope-1');
     $task = $w->append(1, 'task', null, 'ZAD-1', ['evidence_id' => $proof['id'], 'requirements' => ['requirement-a', 'requirement-b']], '2026-11-15', 'scope-1');

@@ -9,6 +9,7 @@ final class LeadershipProgress
     /** Audit ids must already be scoped by the existing dashboard access checks. */
     public function forAudits(array $auditIds): array
     {
+        $auditIds = Rollout::auditIds($auditIds);
         if (! $auditIds) {
             return [];
         }

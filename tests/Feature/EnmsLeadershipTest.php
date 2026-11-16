@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 function enmsFixture(): array
 {
-    [$audit,$client,$staff,$profile] = systemFixture();
+    [$audit,$client,$staff,$profile] = enmsSystemFixture();
     IsoSystemReview::create(['audit_id' => $audit->id, 'site_id' => $profile->site_id, 'source_profile_id' => $profile->id, 'section' => '4-3', 'source_hash' => 'test-source', 'status' => 'editing', 'lock_version' => 1, 'answers' => ['ZAKRES' => ['opis' => 'Zakres testowy']]]);
 
     return [$audit, $client, $staff, $profile, Workspace::for($staff, $audit, $profile, false), app(LeadershipWorkflow::class)];

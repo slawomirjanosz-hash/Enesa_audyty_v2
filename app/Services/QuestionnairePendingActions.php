@@ -7,6 +7,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoStakeholderReview;
 use App\Models\IsoSystemReview;
 use App\Services\Enms\LeadershipWorkflow;
+use App\Services\Enms\Rollout;
 use App\Services\Enms\Workspace;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -17,10 +18,11 @@ class QuestionnairePendingActions
     public function enmsForClient(Collection $audits): array
     {
         $actions = [];
-        if (! auth()->check() || $audits->isEmpty()) {
+        $enabledIds = Rollout::auditIds($audits->pluck('id')->all());
+        if (! auth()->check() || ! $enabledIds) {
             return $actions;
         }
-        $ids = DB::table('enms_workspaces')->whereIn('audit_id', $audits->pluck('id'))->pluck('audit_id');
+        $ids = DB::table('enms_workspaces')->whereIn('audit_id', $enabledIds)->pluck('audit_id');
         $service = app(LeadershipWorkflow::class);
         foreach (IsoPlantProfile::whereIn('audit_id', $ids)->latestPerSite()->get() as $profile) {
             $audit = $audits->firstWhere('id', $profile->audit_id);
@@ -68,7 +70,8 @@ class QuestionnairePendingActions
             }
         }
 
-        $enmsAuditIds = DB::table('enms_workspaces')->whereIn('audit_id', $audits->pluck('id'))->pluck('audit_id');
+        $enabledIds = Rollout::auditIds($audits->pluck('id')->all());
+        $enmsAuditIds = $enabledIds ? DB::table('enms_workspaces')->whereIn('audit_id', $enabledIds)->pluck('audit_id') : collect();
         if (auth()->check() && $enmsAuditIds->isNotEmpty()) {
             $service = app(LeadershipWorkflow::class);
             foreach (IsoPlantProfile::whereIn('audit_id', $enmsAuditIds)->latestPerSite()->get() as $profile) {
