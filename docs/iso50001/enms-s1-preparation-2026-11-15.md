@@ -76,7 +76,7 @@ Gałąź `codex/enms-04-pilot` integruje kandydata z tym aktualnym main i zachow
 
 - Konsultant: `/audits/9/enms/6`.
 - Klient: `/client/audits/9/enms/6`.
-- Menu: odpowiedni audyt → ISO 50001 → 5.1 → **Otwórz ankietę 5.1 — wersja 0.4**. Stary przycisk nadal prowadzi do starej ankiety.
+- Menu: odpowiedni audyt → ISO 50001 → 5.1 → **Otwórz ankietę 5.1**. W pilocie karta pokazuje wyłącznie obieg 0.4 i jego postęp. Wcześniejsza wersja 0.3 pozostaje dostępna w zakładce **Historia**. Poza pilotem pojedynczy przycisk nadal prowadzi do dotychczasowego obiegu.
 - Raport diagnostyczny i Załącznik szczegółowy: zakładka Raport (`?tab=raport`), wybór dokumentu, przygotowanie projektu, osobno wydanie kontrolowane. Wymagane aktualne zakończenie oceny konsultanta i właściwe upoważnienie do wydania.
 - Karta przywództwa: zakładka Karta (`?tab=karta`); projekt, wydanie, zatwierdzenie i wejście w życie są osobnymi czynnościami wymagającymi odpowiednich upoważnień.
 

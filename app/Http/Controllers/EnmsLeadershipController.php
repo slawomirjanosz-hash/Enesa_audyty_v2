@@ -52,7 +52,7 @@ final class EnmsLeadershipController extends Controller
         if (! $client) {
             $tabs += ['weryfikacja' => 'Ocena · 5. Deklaracje i dowody', 'ocena' => 'Ocena · 6. Pokrycie i ocena', 'ustalenia' => 'Ocena · 7. Ustalenia i pytania'];
         }
-        $tabs += ['zadania' => 'Ocena · 8. Postanowienia i zadania', 'raport' => 'Dokumenty · 9. Raport diagnostyczny', 'karta' => 'Dokumenty · 10. Karta przywództwa', 'historia' => 'Wcześniejsza ankieta i historia'];
+        $tabs += ['zadania' => 'Ocena · 8. Postanowienia i zadania', 'raport' => 'Dokumenty · 9. Raport diagnostyczny', 'karta' => 'Dokumenty · 10. Karta przywództwa', 'historia' => 'Historia'];
         $tab = array_key_exists($request->query('tab', 'pytania'), $tabs) ? $request->query('tab', 'pytania') : 'pytania';
         $groups = match ($tab) {
             'dowody' => ['evidence'], 'weryfikacja' => ['verification', 'citation_verification'], 'ocena' => ['coverage', 'closure', 'assessment'],
