@@ -616,7 +616,9 @@
                 <div class="field full milestone-note field-hidden" id="gantt-milestone-note">Kamień milowy ma jeden termin. Na wykresie pojawi się jako romb, a jego status pokaże, czy etap został wykonany w terminie.</div>
                 <div class="field"><label>Postęp (%)</label><input type="number" id="gantt-task-progress" min="0" max="100" value="0" required></div>
                 <div class="field"><label>Zależne od zadania</label><select id="gantt-task-dependency"><option value="">Brak — zadanie główne</option></select></div>
-                <div class="field"><label>Osoba odpowiedzialna</label><select id="gantt-task-assignee"><option value="">Nieprzypisane</option>@foreach($project->members as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div>
+                <div class="field"><label for="gantt-task-cost">Koszt etapu (PLN)</label><input id="gantt-task-cost" type="number" min="0" max="9999999999.99" step="0.01"></div>
+                <fieldset class="field full" style="min-width:0"><legend>Osoby zaangażowane</legend><div class="member-checks">@forelse($projectTeam as $member)<label class="member-check"><input type="checkbox" class="gantt-participant" value="{{$member->id}}"> {{$member->name}}</label>@empty Brak osób w zespole projektu. @endforelse</div></fieldset>
+                <div class="field"><label for="gantt-task-assignee">Osoba odpowiedzialna</label><select id="gantt-task-assignee"><option value="">Nieprzypisane</option>@foreach($projectTeam as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div>
                 <div class="field"><label>Priorytet</label><select id="gantt-task-priority"><option value="low">Niski</option><option value="medium" selected>Średni</option><option value="high">Wysoki</option></select></div>
                 <div class="field full"><label>Opis</label><textarea id="gantt-task-description" rows="3"></textarea></div>
             </div>
@@ -1050,6 +1052,9 @@ function openGanttTaskModal(taskId = null, defaultType = 'task') {
     document.getElementById('gantt-task-progress').value = task?.progress || 0;
     document.getElementById('gantt-task-dependency').value = task?.dependencies || '';
     document.getElementById('gantt-task-assignee').value = task?.assigned_to || '';
+    document.getElementById('gantt-task-cost').value = task?.schedule_cost ?? '';
+    const participants = new Set((task?.participant_ids ?? []).map(Number));
+    document.querySelectorAll('.gantt-participant').forEach(input => input.checked = participants.has(Number(input.value)));
     document.getElementById('gantt-task-priority').value = task?.priority || 'medium';
     document.getElementById('gantt-task-description').value = task?.description || '';
     toggleGanttMilestoneFields();
@@ -1075,17 +1080,20 @@ function renderGanttTaskList() {
     const container = document.getElementById('gantt-task-list');
     if (!container) return;
     if (!projectTimelineItems.length) {container.innerHTML='<div class="empty">Brak zadań w harmonogramie.</div>';return;}
+    const currency = new Intl.NumberFormat('pl-PL', {style:'currency',currency:'PLN'});
+    const cents = task => task.schedule_cost == null ? null : Math.round(Number(task.schedule_cost)*100);
+    const total = projectTimelineItems.reduce((sum,task) => sum + (cents(task) ?? 0),0);
     const rows = projectTimelineItems.map((task,index) => {
         const timing=ganttTaskTiming(task), dependency=task.dependencies ? projectTimelineItems.find(item=>item.id===task.dependencies)?.name || '—' : '—';
         const actions=projectCanEdit ? '<div class="mini-actions"><button class="mini-btn edit list-edit" data-index="'+index+'" title="Edytuj">✎</button><button class="mini-btn delete list-delete" data-index="'+index+'" title="Usuń">×</button><button class="mini-btn move list-up" data-index="'+index+'" title="Przesuń wyżej" '+(index===0?'disabled':'')+'>↑</button><button class="mini-btn move list-down" data-index="'+index+'" title="Przesuń niżej" '+(index===projectTimelineItems.length-1?'disabled':'')+'>↓</button></div>' : '';
         const slider=projectCanEdit ? '<div class="progress-wrap"><input class="list-progress" data-index="'+index+'" type="range" min="0" max="100" value="'+task.progress+'"><strong>'+task.progress+'%</strong></div>' : task.progress+'%';
         const checkbox=projectCanEdit ? '<td class="gantt-select-cell"><input class="gantt-task-check" type="checkbox" value="'+task.db_id+'" aria-label="Zaznacz zadanie '+escapeProjectHtml(task.name)+'"></td>' : '';
         const milestoneBadge=task.is_milestone?'<span class="milestone-badge">◆ Kamień milowy</span>':'';
-        return '<tr class="'+(timing.status==='done'?'done-row':timing.status==='overdue'?'overdue-row':'')+'">'+checkbox+'<td><strong>'+escapeProjectHtml(task.name)+'</strong>'+milestoneBadge+'<br><small>Zależne od: '+escapeProjectHtml(dependency)+'</small></td><td>'+escapeProjectHtml(task.assignee||'—')+'</td><td title="'+escapeProjectHtml(task.description||'')+'">'+escapeProjectHtml(task.description ? (task.description.length>55?task.description.slice(0,55)+'…':task.description) : '—')+'</td><td>'+localDate(task.end)+'</td><td>'+slider+'</td><td><span class="task-status '+timing.status+'">'+timing.label+'</span></td><td><span class="days-value '+(timing.days<0?'late':'ok')+'">'+timing.daysLabel+'</span></td><td>'+actions+'</td></tr>';
+        return '<tr class="'+(timing.status==='done'?'done-row':timing.status==='overdue'?'overdue-row':'')+'">'+checkbox+'<td><strong>'+escapeProjectHtml(task.name)+'</strong>'+milestoneBadge+'<br><small>Zależne od: '+escapeProjectHtml(dependency)+'</small></td><td>'+escapeProjectHtml(task.assignee||'—')+'</td><td>'+escapeProjectHtml((task.participant_names||[]).join(', ')||'—')+'</td><td data-sort-value="'+(cents(task) ?? '')+'">'+(cents(task) == null?'—':currency.format(cents(task)/100))+'</td><td title="'+escapeProjectHtml(task.description||'')+'">'+escapeProjectHtml(task.description ? (task.description.length>55?task.description.slice(0,55)+'…':task.description) : '—')+'</td><td>'+localDate(task.end)+'</td><td>'+slider+'</td><td><span class="task-status '+timing.status+'">'+timing.label+'</span></td><td><span class="days-value '+(timing.days<0?'late':'ok')+'">'+timing.daysLabel+'</span></td><td>'+actions+'</td></tr>';
     }).join('');
     const bulkToolbar=projectCanEdit ? '<div class="gantt-bulk-toolbar"><span class="gantt-bulk-count">Nie zaznaczono zadań</span><button type="button" class="gantt-bulk-delete" disabled><i class="ti ti-trash"></i> Usuń zaznaczone</button></div>' : '';
     const selectAllHeader=projectCanEdit ? '<th class="gantt-select-cell"><input class="gantt-check-all" type="checkbox" aria-label="Zaznacz wszystkie zadania" title="Zaznacz wszystkie"></th>' : '';
-    container.innerHTML=bulkToolbar+'<div style="overflow-x:auto"><table class="gantt-list-table"><thead><tr>'+selectAllHeader+'<th>Zadanie</th><th>Osoba</th><th>Opis</th><th>Termin</th><th>Wykonanie</th><th>Status</th><th>Dni</th><th style="text-align:right">Akcje</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    container.innerHTML=bulkToolbar+'<div style="overflow-x:auto"><table class="gantt-list-table"><thead><tr>'+selectAllHeader+'<th>Zadanie</th><th>Osoba odpowiedzialna</th><th>Osoby zaangażowane</th><th>Koszt</th><th>Opis</th><th>Termin</th><th>Wykonanie</th><th>Status</th><th>Dni</th><th style="text-align:right">Akcje</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><th scope="row" colspan="'+(projectCanEdit?4:3)+'">Suma kosztów</th><td><strong>'+currency.format(total/100)+'</strong></td><td colspan="6"></td></tr></tfoot></table></div>';
     container.querySelector('.gantt-check-all')?.addEventListener('change',event=>{container.querySelectorAll('.gantt-task-check').forEach(checkbox=>checkbox.checked=event.target.checked);updateGanttBulkControls();});
     container.querySelectorAll('.gantt-task-check').forEach(checkbox=>checkbox.addEventListener('change',updateGanttBulkControls));
     container.querySelector('.gantt-bulk-delete')?.addEventListener('click',deleteSelectedGanttTasks);
@@ -1201,6 +1209,8 @@ document.getElementById('gantt-task-form')?.addEventListener('submit', async eve
         status: progress >= 100 ? 'done' : (progress > 0 ? 'in_progress' : 'todo'),
         priority: document.getElementById('gantt-task-priority').value,
         assigned_to: document.getElementById('gantt-task-assignee').value || null,
+        schedule_cost: document.getElementById('gantt-task-cost').value || null,
+        participant_ids: Array.from(document.querySelectorAll('.gantt-participant:checked'), input => Number(input.value)),
         depends_on_task_id: dependency ? Number(dependency.replace('task-', '')) : null,
         description: document.getElementById('gantt-task-description').value || null,
     };

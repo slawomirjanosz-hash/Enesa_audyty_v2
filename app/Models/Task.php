@@ -33,7 +33,7 @@ class Task extends Model
 
     protected $fillable = [
         'title', 'description', 'assigned_to', 'created_by', 'scheduled_time',
-        'deleted_by', 'company_id', 'crm_opportunity_id', 'offer_id', 'project_id', 'audit_id', 'depends_on_task_id', 'status', 'priority', 'start_date', 'due_date', 'progress', 'project_position', 'is_milestone',
+        'deleted_by', 'company_id', 'crm_opportunity_id', 'offer_id', 'project_id', 'audit_id', 'depends_on_task_id', 'status', 'priority', 'start_date', 'due_date', 'progress', 'project_position', 'is_milestone', 'schedule_cost',
     ];
 
     protected $casts = [
@@ -41,6 +41,7 @@ class Task extends Model
         'due_date' => 'date',
         'start_date' => 'date',
         'progress' => 'integer',
+        'schedule_cost' => 'decimal:2',
         'project_position' => 'integer',
         'is_milestone' => 'boolean',
     ];

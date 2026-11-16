@@ -45,7 +45,7 @@ class CalendarController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
-        $canViewTeam = $user->hasRole('superadmin')
+        $canViewTeam = $user->hasRole(['superadmin', 'admin'])
             || $user->can('system.full_access')
             || $user->can('calendar.team.view');
 
@@ -53,6 +53,8 @@ class CalendarController extends Controller
             'month' => ['nullable', 'date_format:Y-m'],
             'scope' => ['nullable', 'in:mine,team'],
             'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'user_ids' => ['nullable', 'array'],
+            'user_ids.*' => ['integer', 'distinct'],
         ]);
 
         $month = isset($validated['month'])
@@ -62,12 +64,19 @@ class CalendarController extends Controller
         $gridEnd = $month->endOfMonth()->endOfWeek(CarbonInterface::SUNDAY);
 
         $scope = $canViewTeam && ($validated['scope'] ?? 'mine') === 'team' ? 'team' : 'mine';
-        $selectedUserId = $scope === 'team' && isset($validated['user_id'])
-            ? (int) $validated['user_id']
-            : null;
+        $users = $canViewTeam
+            ? User::where('is_active', true)->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))->orderBy('name')->get()
+            : collect([$user]);
+        $selectedUserIds = $scope === 'team'
+            ? array_map('intval', $validated['user_ids'] ?? array_filter([$validated['user_id'] ?? null]))
+            : [];
+        if (array_diff($selectedUserIds, $users->pluck('id')->all())) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['user_ids' => 'Wybierz osoby z listy zespołu.']);
+        }
+        $calendarUserIds = $scope === 'mine' ? [$user->id] : $selectedUserIds;
 
         $tasksQuery = Task::query()
-            ->with(['assignedUser', 'company', 'project', 'crmOpportunity'])
+            ->with(['assignedUser', 'participants', 'company', 'project', 'crmOpportunity'])
             ->whereNotNull('due_date')
             ->whereBetween('due_date', [$gridStart->toDateString(), $gridEnd->toDateString()])
             ->orderBy('due_date')
@@ -84,17 +93,15 @@ class CalendarController extends Controller
             $tasksQuery->whereNull('project_id');
         }
 
-        if ($scope === 'mine') {
-            $tasksQuery->forUser($user->id);
-        } elseif ($selectedUserId) {
-            $tasksQuery->forUser($selectedUserId);
+        if ($calendarUserIds) {
+            $tasksQuery->where(fn ($query) => $query->whereIn('assigned_to', $calendarUserIds)
+                ->orWhereHas('participants', fn ($participants) => $participants->whereKey($calendarUserIds)));
         }
 
         $tasks = $tasksQuery->get();
         $personalTasks = BoardTask::calendarEntries()->with('assignee')
             ->whereBetween('due_date', [$gridStart->toDateString(), $gridEnd->toDateString()])
-            ->when($scope === 'mine', fn ($q) => $q->where('assigned_to', $user->id))
-            ->when($selectedUserId, fn ($q) => $q->where('assigned_to', $selectedUserId))
+            ->when($calendarUserIds, fn ($q) => $q->whereIn('assigned_to', $calendarUserIds))
             ->orderBy('scheduled_time')->orderBy('id')->get();
         $personalByDate = $personalTasks->groupBy(fn ($task) => $task->due_date->format('Y-m-d'));
         $tasksByDate = $tasks->groupBy(fn (Task $task) => $task->due_date->format('Y-m-d'));
@@ -103,7 +110,7 @@ class CalendarController extends Controller
         $canViewHrTeam = $user->hasRole(['superadmin', 'admin'])
             || $user->can('system.full_access')
             || $user->can('hr.team.view');
-        $hrUserId = $scope === 'team' && $canViewHrTeam ? $selectedUserId : $user->id;
+        $hrUserIds = $scope === 'team' && $canViewHrTeam ? $selectedUserIds : [$user->id];
         $addHrEvent = function (CarbonImmutable $date, array $event) use ($hrEventsByDate, $gridStart, $gridEnd): void {
             if ($date->betweenIncluded($gridStart, $gridEnd)) {
                 $key = $date->toDateString();
@@ -115,7 +122,7 @@ class CalendarController extends Controller
             $trips = HrBusinessTrip::with('user')
                 ->where('departure_at', '<=', $gridEnd->endOfDay())
                 ->where(fn ($query) => $query->whereNull('return_at')->orWhere('return_at', '>=', $gridStart->startOfDay()))
-                ->when($hrUserId, fn ($query) => $query->where('user_id', $hrUserId))->get();
+                ->when($hrUserIds, fn ($query) => $query->whereIn('user_id', $hrUserIds))->get();
             foreach ($trips as $trip) {
                 $date = CarbonImmutable::parse($trip->departure_at)->startOfDay();
                 $lastDate = CarbonImmutable::parse($trip->return_at ?? $trip->departure_at)->startOfDay();
@@ -134,7 +141,7 @@ class CalendarController extends Controller
         if ($hrEnabled && ($user->hasRole('superadmin') || $user->canAny(['system.full_access', 'hr.leaves.view']))) {
             $leaves = HrLeave::with('user')->whereIn('approval_status', ['legacy', 'approved', 'recorded'])->whereDate('start_date', '<=', $gridEnd)
                 ->whereDate('end_date', '>=', $gridStart)
-                ->when($hrUserId, fn ($query) => $query->where('user_id', $hrUserId))->get();
+                ->when($hrUserIds, fn ($query) => $query->whereIn('user_id', $hrUserIds))->get();
             foreach ($leaves as $leave) {
                 $date = CarbonImmutable::parse($leave->start_date);
                 $lastDate = CarbonImmutable::parse($leave->end_date);
@@ -152,14 +159,6 @@ class CalendarController extends Controller
         $days = collect(range(0, (int) $gridStart->diffInDays($gridEnd)))
             ->map(fn (int $offset) => $gridStart->addDays($offset));
 
-        $users = $canViewTeam
-            ? User::query()
-                ->where('is_active', true)
-                ->whereHas('roles', fn ($roles) => $roles->whereNotIn('name', ['client_admin', 'client_user']))
-                ->orderBy('name')
-                ->get()
-            : collect([$user]);
-
         $monthTasks = $tasks->toBase()->concat($personalTasks)->filter(fn ($task) => $task->due_date->betweenIncluded($month, $month->endOfMonth()));
         $stats = [
             'month' => $monthTasks->count(),
@@ -176,7 +175,7 @@ class CalendarController extends Controller
 
         return view('calendar.index', compact(
             'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'hrEventsByDate', 'users',
-            'scope', 'selectedUserId', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities'
+            'scope', 'selectedUserIds', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities'
         ));
     }
 }

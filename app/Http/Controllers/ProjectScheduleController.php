@@ -33,20 +33,29 @@ class ProjectScheduleController extends Controller
             'priority' => ['required', 'in:low,medium,high'],
             'progress' => ['required', 'integer', 'between:0,100'],
             'is_milestone' => ['sometimes', 'boolean'],
+            'schedule_cost' => ['sometimes', 'nullable', 'numeric', 'decimal:0,2', 'between:0,9999999999.99'],
+            'participant_ids' => ['sometimes', 'array', 'max:100'],
+            'participant_ids.*' => ['integer', 'distinct', 'exists:users,id'],
         ]);
         if ($data['is_milestone'] ?? false) {
             $data['due_date'] = $data['start_date'];
         }
         $this->validateProjectTaskAssignee($project, $data['assigned_to'] ?? null);
+        $participants = $this->extractParticipants($project, $data);
         $this->validateTaskDependency($project, null, $data['depends_on_task_id'] ?? null);
         $data['project_position'] = ((int) $project->tasks()->max('project_position')) + 1;
-        $task = $project->tasks()->create($data + [
-            'company_id' => $project->company_id,
-            'created_by' => $request->user()->id,
-        ]);
+        $task = DB::transaction(function () use ($project, $data, $request, $participants) {
+            $task = $project->tasks()->create($data + [
+                'company_id' => $project->company_id,
+                'created_by' => $request->user()->id,
+            ]);
+            $task->participants()->sync($participants ?? []);
+
+            return $task;
+        });
 
         if ($request->expectsJson()) {
-            $task->load('assignedUser');
+            $task->load(['assignedUser', 'participants']);
 
             return response()->json($this->taskTimelinePayload($project, $task), 201);
         }
@@ -69,6 +78,9 @@ class ProjectScheduleController extends Controller
             'start_date' => ['sometimes', 'date'],
             'due_date' => ['sometimes', 'date', 'after_or_equal:start_date'],
             'is_milestone' => ['sometimes', 'boolean'],
+            'schedule_cost' => ['sometimes', 'nullable', 'numeric', 'decimal:0,2', 'between:0,9999999999.99'],
+            'participant_ids' => ['sometimes', 'array', 'max:100'],
+            'participant_ids.*' => ['integer', 'distinct', 'exists:users,id'],
         ]);
         if (($data['is_milestone'] ?? $task->is_milestone) && isset($data['start_date'])) {
             $data['due_date'] = $data['start_date'];
@@ -88,7 +100,13 @@ class ProjectScheduleController extends Controller
         if ($data['status'] === 'done') {
             $data['progress'] = 100;
         }
-        $task->update($data);
+        $participants = $this->extractParticipants($project, $data);
+        DB::transaction(function () use ($task, $data, $participants) {
+            $task->update($data);
+            if ($participants !== null) {
+                $task->participants()->sync($participants);
+            }
+        });
         if ($oldEnd && $task->due_date) {
             $shiftDays = (int) $oldEnd->diffInDays($task->due_date, false);
             if ($shiftDays !== 0) {
@@ -98,9 +116,9 @@ class ProjectScheduleController extends Controller
         }
 
         if ($request->expectsJson()) {
-            $task->load('assignedUser');
+            $task->load(['assignedUser', 'participants']);
             $payload = $this->taskTimelinePayload($project, $task);
-            $payload['project_tasks'] = $project->tasks()->with('assignedUser')->get()
+            $payload['project_tasks'] = $project->tasks()->with(['assignedUser', 'participants'])->get()
                 ->map(fn (Task $projectTask) => $this->taskTimelinePayload($project, $projectTask))->values();
 
             return response()->json($payload);
@@ -277,12 +295,30 @@ class ProjectScheduleController extends Controller
             'description' => $task->description,
             'assigned_to' => $task->assigned_to,
             'assignee' => $task->assignedUser?->name,
+            'schedule_cost' => $task->schedule_cost,
+            'participant_ids' => $task->participants->pluck('id')->all(),
+            'participant_names' => $task->participants->pluck('name')->all(),
             'is_milestone' => $task->is_milestone,
             'dependencies' => $task->depends_on_task_id ? 'task-'.$task->depends_on_task_id : '',
             'update_url' => route('projects.tasks.update', [$project, $task]),
             'delete_url' => route('projects.tasks.destroy', [$project, $task]),
             'position' => $task->project_position,
         ];
+    }
+
+    private function extractParticipants(Project $project, array &$data): ?array
+    {
+        if (! array_key_exists('participant_ids', $data)) {
+            return null;
+        }
+        $ids = array_map('intval', $data['participant_ids']);
+        unset($data['participant_ids']);
+        $team = $project->members()->pluck('users.id')->push($project->manager_id)->all();
+        if (array_diff($ids, $team)) {
+            throw ValidationException::withMessages(['participant_ids' => 'Wybierz wyłącznie osoby z zespołu projektu.']);
+        }
+
+        return $ids;
     }
 
     private function validateProjectTaskAssignee(Project $project, ?int $userId): void

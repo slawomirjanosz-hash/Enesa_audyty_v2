@@ -95,7 +95,7 @@ class ProjectController extends Controller
         $canViewProtocols = $fullAccess || $user->canAny(['projects.protocols.view', 'projects.protocols.manage']);
         $canManageProtocols = $fullAccess || $user->can('projects.protocols.manage');
         $project->load([
-            'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency',
+            'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency', 'tasks.participants',
             'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'financialEntries.projectRequirement', 'financeGroups.entries',
             'requirements.responsible', 'requirements.supplierCompany', 'documents.uploader',
             'documentFolders.documents.uploader', 'documentFolders.shares',
@@ -106,6 +106,9 @@ class ProjectController extends Controller
             'start' => $task->start_date->format('Y-m-d'), 'end' => $task->due_date->format('Y-m-d'),
             'progress' => $task->progress, 'color' => '#7C3AED',
             'assignee' => $task->assignedUser?->name,
+            'schedule_cost' => $task->schedule_cost,
+            'participant_ids' => $task->participants->pluck('id')->all(),
+            'participant_names' => $task->participants->pluck('name')->all(),
             'description' => $task->description,
             'priority' => $task->priority,
             'status' => $task->status,
@@ -166,7 +169,7 @@ class ProjectController extends Controller
         ]);
 
         $copy = DB::transaction(function () use ($data, $project, $request): Project {
-            $project->load(['members', 'tasks', 'requirements']);
+            $project->load(['members', 'tasks.participants', 'requirements']);
 
             $copy = $project->replicate(['public_gantt_token']);
             $copy->fill([
@@ -192,6 +195,7 @@ class ProjectController extends Controller
                     'deleted_by' => null,
                 ]);
                 $taskCopy->save();
+                $taskCopy->participants()->sync($task->participants->modelKeys());
                 $taskIds[$task->id] = $taskCopy->id;
             }
 

@@ -55,6 +55,7 @@
     .calendar-legend span { display:inline-flex;align-items:center;gap:5px; }
     .calendar-dot { width:8px;height:8px;border-radius:50%;display:inline-block; }
     @media(max-width:800px) { .calendar-stats{grid-template-columns:repeat(2,1fr)}.calendar-header h1{font-size:21px}.calendar-actions{width:100%}.calendar-filter{flex:1;min-width:150px} }
+.calendar-people{position:relative}.calendar-people summary{list-style:none;cursor:pointer}.calendar-people summary::-webkit-details-marker{display:none}.calendar-people-options{position:absolute;right:0;top:100%;z-index:5;min-width:min(240px,75vw);padding:10px;background:#fff;border:1px solid #e5e1d8;border-radius:8px;box-shadow:0 8px 22px #0002}.calendar-people-list{max-height:260px;overflow:auto;margin-bottom:8px}.calendar-people-list label{display:block;padding:4px}
 </style>
 @endpush
 
@@ -62,7 +63,7 @@
 @php
     $previousMonth = $month->subMonth()->format('Y-m');
     $nextMonth = $month->addMonth()->format('Y-m');
-    $queryBase = ['scope' => $scope] + ($selectedUserId ? ['user_id' => $selectedUserId] : []);
+    $queryBase = ['scope' => $scope] + ($selectedUserIds ? ['user_ids' => $selectedUserIds] : []);
     $statusLabels = ['todo' => 'Do zrobienia', 'in_progress' => 'W trakcie', 'done' => 'Wykonane'];
 @endphp
 
@@ -76,16 +77,21 @@
         <button type="button" class="calendar-btn" data-calendar-new="meeting" data-date="{{ today()->format('Y-m-d') }}"><i class="ti ti-calendar-plus"></i> Dodaj spotkanie</button>
         <a class="calendar-btn {{ $scope === 'mine' ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'mine']) }}"><i class="ti ti-user"></i> Moje zadania</a>
         @if($canViewTeam)
-            <a class="calendar-btn {{ $scope === 'team' && !$selectedUserId ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'team']) }}"><i class="ti ti-users"></i> Cały zespół</a>
+            <a class="calendar-btn {{ $scope === 'team' && !$selectedUserIds ? 'active' : '' }}" href="{{ route('calendar.index', ['month' => $month->format('Y-m'), 'scope' => 'team']) }}"><i class="ti ti-users"></i> Cały zespół</a>
             <form method="GET" action="{{ route('calendar.index') }}">
                 <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
                 <input type="hidden" name="scope" value="team">
-                <select class="calendar-filter" name="user_id" onchange="this.form.submit()" aria-label="Wybierz użytkownika">
-                    <option value="">Wszyscy użytkownicy</option>
-                    @foreach($users as $calendarUser)
-                        <option value="{{ $calendarUser->id }}" {{ $selectedUserId === $calendarUser->id ? 'selected' : '' }}>{{ $calendarUser->name }}</option>
-                    @endforeach
-                </select>
+                <details class="calendar-people">
+                    <summary class="calendar-btn {{ $selectedUserIds ? 'active' : '' }}"><i class="ti ti-users" aria-hidden="true"></i> Wybrane osoby @if($selectedUserIds) ({{ count($selectedUserIds) }}) @endif</summary>
+                    <div class="calendar-people-options">
+                        <div class="calendar-people-list">
+                            @foreach($users as $calendarUser)
+                                <label><input type="checkbox" name="user_ids[]" value="{{ $calendarUser->id }}" @checked(in_array($calendarUser->id, $selectedUserIds, true))> {{ $calendarUser->name }}</label>
+                            @endforeach
+                        </div>
+                        <button class="calendar-btn" type="submit">Pokaż</button>
+                    </div>
+                </details>
             </form>
         @endif
     </div>
@@ -142,10 +148,11 @@
                             @php
                                 $taskUrl = $task->project ? route('projects.show', $task->project) : route('crm.index', ['tab' => 'tasks']);
                                 $context = $task->project?->name ?? $task->company?->name ?? 'Bez firmy';
+                                $taskPeople = collect([$task->assignedUser])->merge($task->participants)->filter()->unique('id')->pluck('name')->implode(', ');
                             @endphp
-                            <a href="{{ $taskUrl }}" class="calendar-event priority-{{ $task->priority }} {{ $task->status === 'done' ? 'done' : '' }}" title="{{ $task->title }} · {{ $task->assignedUser?->name ?? 'Nieprzypisane' }} · {{ $statusLabels[$task->status] ?? $task->status }}">
+                            <a href="{{ $taskUrl }}" class="calendar-event priority-{{ $task->priority }} {{ $task->status === 'done' ? 'done' : '' }}" title="{{ $task->title }} · {{ $taskPeople ?: 'Nieprzypisane' }} · {{ $statusLabels[$task->status] ?? $task->status }}">
                                 <span class="calendar-event-title">{{ $task->scheduled_time ? substr($task->scheduled_time, 0, 5).' · ' : '' }}{{ $task->is_milestone ? '◆ ' : '' }}{{ $task->title }}</span>
-                                <span class="calendar-event-meta">{{ $task->assignedUser?->name ?? 'Nieprzypisane' }} · {{ $context }}</span>
+                                <span class="calendar-event-meta">{{ $taskPeople ?: 'Nieprzypisane' }} · {{ $context }}</span>
                             </a>
                         @endforeach
                         @foreach($dayHrEvents as $event)
