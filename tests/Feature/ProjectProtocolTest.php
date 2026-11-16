@@ -149,3 +149,39 @@ test('pdf filename contains protocol number and safe bounded description for pre
     expect(strlen($protocol->pdfFilename()))->toBeLessThan(200);
     expect(preg_match('/[\\\\\/<>:"|?*\r\n]/', $protocol->pdfFilename()))->toBe(0);
 });
+
+test('client acceptance uses the project customer and produces a signed-off works form without supplier prices', function () {
+    $client = Company::create(['company_type' => 'client', 'name' => 'Odbiorca prac', 'status' => 'active']);
+    $this->project->update(['company_id' => $client->id]);
+    $create = route('projects.protocols.create', [$this->project, 'direction' => 'client']);
+    $this->get($create)->assertOk()->assertSee('Odbiorca prac')->assertSee('Opis wykonanych prac')
+        ->assertSee('Osoba lub osoby odbierające')->assertDontSee('Czy dostawca może wystawić fakturę?');
+    $data = array_replace($this->data, ['direction' => 'client', 'description' => 'Montaż i uruchomienie instalacji', 'receiver_name' => 'Jan Kowalski, Maria Wiśniewska']);
+    $store = route('projects.protocols.store', $this->project);
+    $this->from($create)->post($store, array_replace($data, ['reference' => '']))->assertSessionHasErrors('reference');
+    $this->post($store, $data)->assertSessionHasNoErrors()->assertRedirect();
+    $protocol = ProjectProtocol::sole();
+    expect($protocol->direction)->toBe('client')->and($protocol->number)->toStartWith('POK/')
+        ->and($protocol->supplier_company_id)->toBeNull()->and($protocol->items)->toBe([])
+        ->and($protocol->invoice_conditions)->toBeNull()->and($protocol->client_snapshot['name'])->toBe($client->name);
+    $client->update(['name' => 'Zmieniona nazwa klienta']);
+    $this->get(route('projects.show', [$this->project, 'tab' => 'protocols']))->assertOk()
+        ->assertSee('Odbiór od dostawcy')->assertSee('Odbiór u klienta')->assertSee('Odbiorca prac');
+    $html = view('projects.protocols.pdf', compact('protocol'))->render();
+    expect($html)->toContain('Protokół odbioru prac u klienta', 'Odbiorca prac', 'Jan Kowalski, Maria Wiśniewska', 'ZAM/2026/128')
+        ->not->toContain('Cena netto', 'Fakturowanie:');
+    $pdf = route('projects.protocols.pdf', [$this->project, $protocol]);
+    $this->get($pdf)->assertOk()->assertHeader('Content-Type', 'application/pdf');
+    $this->get(route('projects.protocols.copy', [$this->project, $protocol]))->assertOk()->assertSee('value="client"', false);
+    $this->put(route('projects.protocols.update', [$this->project, $protocol]), array_replace($data, ['direction' => 'supplier', 'revision' => 1]))
+        ->assertSessionHasNoErrors()->assertRedirect();
+    expect($protocol->refresh()->direction)->toBe('client')->and($protocol->client_snapshot['name'])->toBe('Odbiorca prac');
+    $other = Project::create(['number' => 'CLIENT-OTHER', 'name' => 'Inny projekt', 'status' => 'active']);
+    $this->get(route('projects.protocols.pdf', [$other, $protocol]))->assertNotFound();
+});
+
+test('client acceptance requires a client assigned to the project', function () {
+    $this->post(route('projects.protocols.store', $this->project), array_replace($this->data, ['direction' => 'client']))
+        ->assertSessionHasErrors('reference');
+    expect(ProjectProtocol::count())->toBe(0);
+});

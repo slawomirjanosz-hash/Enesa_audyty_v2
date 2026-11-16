@@ -9,7 +9,16 @@ class ProjectProtocol extends Model
 {
     protected $guarded = ['id'];
 
-    protected $casts = ['acceptance_date' => 'date', 'remedy_deadline' => 'date', 'items' => 'array', 'issuer_snapshot' => 'array', 'supplier_snapshot' => 'array', 'revision' => 'integer'];
+    protected $attributes = ['direction' => 'supplier'];
+
+    protected $casts = ['acceptance_date' => 'date', 'remedy_deadline' => 'date', 'items' => 'array', 'issuer_snapshot' => 'array', 'supplier_snapshot' => 'array', 'client_snapshot' => 'array', 'revision' => 'integer'];
+
+    public const DIRECTIONS = ['supplier' => 'Odbiór od dostawcy', 'client' => 'Odbiór u klienta'];
+
+    public function isClientAcceptance(): bool
+    {
+        return $this->direction === 'client';
+    }
 
     public const KINDS = ['partial' => 'Odbiór częściowy', 'final' => 'Odbiór końcowy'];
 

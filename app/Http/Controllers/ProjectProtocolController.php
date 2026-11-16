@@ -26,11 +26,13 @@ class ProjectProtocolController extends Controller
             || $user->can('projects.protocols.manage') || (! $manage && $user->can('projects.protocols.view')), 403);
     }
 
-    public function create(Project $project)
+    public function create(Request $request, Project $project)
     {
         $this->access($project, null, true);
 
-        return $this->form($project, new ProjectProtocol);
+        $data = $request->validate(['direction' => ['sometimes', Rule::in(array_keys(ProjectProtocol::DIRECTIONS))]]);
+
+        return $this->form($project, new ProjectProtocol($data));
     }
 
     public function edit(Project $project, ProjectProtocol $protocol)
@@ -46,10 +48,10 @@ class ProjectProtocolController extends Controller
         $copy = new ProjectProtocol($protocol->only([
             'supplier_company_id', 'place', 'reference', 'kind', 'outcome', 'description',
             'remarks', 'invoice_conditions', 'attachments', 'supplier_representative', 'items',
-            'items_mode', 'manual_items_description',
+            'items_mode', 'manual_items_description', 'direction',
         ]));
         $copy->acceptance_date = today();
-        $copy->receiver_name = request()->user()->name;
+        $copy->receiver_name = $copy->isClientAcceptance() ? $protocol->receiver_name : request()->user()->name;
         $copy->invoice_decision = 'no';
 
         return $this->form($project, $copy)->with('copiedFrom', $protocol->number);
@@ -59,7 +61,7 @@ class ProjectProtocolController extends Controller
     {
         return view('projects.protocols.form', [
             'project' => $project, 'protocol' => $protocol,
-            'suppliers' => Company::suppliers()->where(fn ($q) => $q->whereNull('archived_at')->orWhere('id', $protocol->supplier_company_id))->orderBy('name')->get(),
+            'suppliers' => $protocol->isClientAcceptance() ? collect() : Company::suppliers()->where(fn ($q) => $q->whereNull('archived_at')->orWhere('id', $protocol->supplier_company_id))->orderBy('name')->get(),
         ]);
     }
 
@@ -76,6 +78,12 @@ class ProjectProtocolController extends Controller
     private function save(Request $request, Project $project, ProjectProtocol $protocol)
     {
         $this->access($project, $protocol->exists ? $protocol : null, true);
+        $type = $request->validate(['direction' => ['sometimes', Rule::in(array_keys(ProjectProtocol::DIRECTIONS))]]);
+        $direction = $protocol->exists ? $protocol->direction : ($type['direction'] ?? 'supplier');
+        $client = $direction === 'client';
+        if ($client) {
+            $request->merge(['items_mode' => 'manual', 'invoice_decision' => 'no', 'use_signature' => false]);
+        }
         $manual = $request->input('items_mode', 'detailed') === 'manual';
         // Never retain hidden prices, even if a crafted request includes them.
         if ($manual) {
@@ -83,18 +91,18 @@ class ProjectProtocolController extends Controller
         }
         $data = $request->validate([
             'items_mode' => ['sometimes', 'required', Rule::in(['detailed', 'manual'])],
-            'manual_items_description' => ['exclude_unless:items_mode,manual', 'required', 'string', 'max:15000'],
+            'manual_items_description' => [$client ? 'exclude' : 'exclude_unless:items_mode,manual', 'required', 'string', 'max:15000'],
             'revision' => ['required', 'integer', 'min:0'],
-            'supplier_company_id' => ['required', Rule::exists('companies', 'id')->where('company_type', 'supplier')],
+            'supplier_company_id' => $client ? ['exclude'] : ['required', Rule::exists('companies', 'id')->where('company_type', 'supplier')],
             'acceptance_date' => ['required', 'date_format:Y-m-d'],
-            'place' => ['nullable', 'string', 'max:255'], 'reference' => ['nullable', 'string', 'max:255'],
+            'place' => ['nullable', 'string', 'max:255'], 'reference' => [$client ? 'required' : 'nullable', 'string', 'max:255'],
             'kind' => ['required', Rule::in(array_keys(ProjectProtocol::KINDS))],
             'outcome' => ['required', Rule::in(array_keys(ProjectProtocol::OUTCOMES))],
             'invoice_decision' => ['required', Rule::in(array_keys(ProjectProtocol::INVOICES))],
             'description' => ['required', 'string', 'max:15000'],
             'remarks' => ['required_unless:outcome,accepted', 'nullable', 'string', 'max:15000'],
             'remedy_deadline' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:acceptance_date'],
-            'invoice_conditions' => ['required_if:invoice_decision,conditional', 'nullable', 'string', 'max:5000'],
+            'invoice_conditions' => $client ? ['exclude'] : ['required_if:invoice_decision,conditional', 'nullable', 'string', 'max:5000'],
             'attachments' => ['nullable', 'string', 'max:5000'],
             'receiver_name' => ['required', 'string', 'max:255'], 'supplier_representative' => ['required', 'string', 'max:255'],
             'use_signature' => ['nullable', 'boolean'],
@@ -117,7 +125,8 @@ class ProjectProtocolController extends Controller
         }
         $revision = $data['revision'];
         $data['items_mode'] = $manual ? 'manual' : 'detailed';
-        $data['manual_items_description'] = $manual ? $data['manual_items_description'] : null;
+        $data['manual_items_description'] = $data['manual_items_description'] ?? null;
+        $data['direction'] = $direction;
         unset($data['revision'], $data['use_signature']);
         $data['items'] = array_map(function ($row) {
             $net = (int) round(round((float) $row['quantity'] * 100) * round((float) $row['price'] * 100) / 100);
@@ -125,29 +134,38 @@ class ProjectProtocolController extends Controller
             return array_intersect_key($row, array_flip(['name', 'quantity', 'unit', 'price', 'vat']))
                 + ['net_cents' => $net, 'vat_cents' => (int) round($net * (is_numeric($row['vat']) ? (int) $row['vat'] : 0) / 100)];
         }, $data['items']);
-        DB::transaction(function () use ($project, $protocol, $data, $signature, $revision, $request) {
+        DB::transaction(function () use ($project, $protocol, $data, $signature, $revision, $request, $client) {
             // Serialize numbering across projects that can share a manually entered suffix.
             $issuer = CompanySettings::query()->lockForUpdate()->first();
-            Project::whereKey($project->id)->lockForUpdate()->firstOrFail();
+            $lockedProject = Project::whereKey($project->id)->lockForUpdate()->firstOrFail();
             $existing = $protocol->exists;
             if ($existing) {
                 $protocol->refresh();
                 abort_if($protocol->revision !== (int) $revision, 409, 'Protokół zmieniono w innym oknie. Odśwież formularz.');
             }
-            $supplier = Company::findOrFail($data['supplier_company_id']);
+            $supplier = $client ? null : Company::findOrFail($data['supplier_company_id']);
+            $clientSnapshot = $existing ? $protocol->client_snapshot : null;
+            if ($client && ! $existing) {
+                $customer = $lockedProject->company;
+                if (! $customer) {
+                    throw ValidationException::withMessages(['reference' => 'Przypisz klienta w danych projektu, aby zapisać protokół odbioru u klienta.']);
+                }
+                $clientSnapshot = $customer->only(['name', 'address', 'city', 'nip']);
+            }
             $snapshot = $existing ? $protocol->issuer_snapshot : [
                 'name' => $issuer?->name ?: config('app.name'), 'address' => $issuer?->address, 'city' => $issuer?->city, 'postcode' => $issuer?->postcode, 'nip' => $issuer?->nip,
                 'logo' => $issuer && ($issuer->logo_data || ($issuer->logo_path && Storage::disk('public')->exists($issuer->logo_path))) ? $issuer->logoDataUri() : null,
                 'color' => $issuer?->primaryColor() ?? '#1A4D3A',
                 'project_number' => $project->number, 'project_name' => $project->name,
             ];
-            $supplierSnapshot = $existing && $protocol->supplier_company_id === $supplier->id
-                ? $protocol->supplier_snapshot : $supplier->only(['name', 'address', 'city', 'nip']);
+            $supplierSnapshot = ! $supplier ? [] : ($existing && $protocol->supplier_company_id === $supplier->id
+                ? $protocol->supplier_snapshot : $supplier->only(['name', 'address', 'city', 'nip']));
             $protocol->fill($data + ['project_id' => $project->id, 'issuer_snapshot' => $snapshot, 'supplier_snapshot' => $supplierSnapshot,
+                'client_snapshot' => $clientSnapshot,
                 'signature_data' => $signature, 'revision' => $existing ? $protocol->revision + 1 : 1]);
             if (! $existing) {
                 $protocol->created_by = $request->user()->id;
-                $prefix = 'PO/'.$project->protocolProjectReference().'/'.now()->format('Y').'/';
+                $prefix = ($client ? 'POK/' : 'PO/').$project->protocolProjectReference().'/'.now()->format('Y').'/';
                 $sequence = (int) (ProjectProtocol::where('number', 'like', $prefix.'%')->pluck('number')
                     ->map(fn (string $number): int => (int) substr($number, strlen($prefix)))->max() ?? 0) + 1;
                 $protocol->number = $prefix.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT);

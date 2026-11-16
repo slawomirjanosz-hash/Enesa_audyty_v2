@@ -132,7 +132,7 @@ class ProjectController extends Controller
             'canViewDocuments' => $canViewDocuments,
             'canViewProtocols' => $canViewProtocols,
             'canManageProtocols' => $canManageProtocols,
-            'protocols' => $canViewProtocols ? ProjectProtocol::where('project_id', $project->id)->latest()->get(['id', 'project_id', 'number', 'acceptance_date', 'supplier_snapshot', 'kind', 'outcome', 'invoice_decision', 'items', 'revision', 'created_at']) : collect(),
+            'protocols' => $canViewProtocols ? ProjectProtocol::where('project_id', $project->id)->latest()->get(['id', 'project_id', 'number', 'acceptance_date', 'supplier_snapshot', 'client_snapshot', 'direction', 'kind', 'outcome', 'invoice_decision', 'items', 'items_mode', 'revision', 'created_at']) : collect(),
             'canCopyProject' => $fullAccess && $user->can('projects.create'),
         ]);
     }
