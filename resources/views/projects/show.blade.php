@@ -535,12 +535,22 @@
 
 @if($canViewDocuments)
 <section id="pane-documents" class="pane">
+<style>
+#pane-documents{--document-action-width:152px;--document-action-height:38px}
+#pane-documents .workspace-link-form{grid-template-columns:minmax(160px,260px) minmax(0,1fr) var(--document-action-width)}
+#pane-documents form[enctype="multipart/form-data"]>div{grid-template-columns:minmax(0,1fr) minmax(180px,280px) var(--document-action-width)}
+#pane-documents .document-action-row{display:flex;flex-wrap:wrap;align-items:end;gap:10px}
+#pane-documents .document-action-row .field{margin:0;min-width:0;max-width:100%}
+#pane-documents .document-action-row .btn{margin-inline-start:auto}
+#pane-documents .workspace-link-form>.btn,#pane-documents .document-action-row>.btn,#pane-documents .document-section-action,#pane-documents form[enctype="multipart/form-data"]>div>.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;width:var(--document-action-width);height:var(--document-action-height);font-size:12px;white-space:nowrap;justify-self:end}
+@media(max-width:700px){#pane-documents .workspace-link-form,#pane-documents form[enctype="multipart/form-data"]>div{grid-template-columns:1fr}#pane-documents .document-action-row .field{flex:1 1 100%}}
+</style>
     @include('documents.external-links',['owner'=>$project,'canManageLinks'=>$canEdit,'compactHelp'=>true])
     @include('documents.quota')
     @if($canEdit)
     <div class="card">
         <x-document-help heading="Katalogi i udostępnianie"><p>Dla katalogu możesz utworzyć bezpieczny link dla osoby, która nie ma konta w systemie.</p></x-document-help>
-        <form method="POST" action="{{route('projects.document-folders.store',$project)}}" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap">@csrf
+        <form method="POST" action="{{route('projects.document-folders.store',$project)}}" class="document-action-row">@csrf
             <div class="field" style="min-width:260px"><label>Nazwa nowego katalogu</label><input name="name" maxlength="120" required placeholder="np. Dokumentacja od projektantów"></div>
             <button class="btn"><i class="ti ti-folder-plus"></i> Dodaj katalog</button>
         </form>
@@ -552,11 +562,11 @@
     <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap">
             <div><h2 style="margin-bottom:4px"><i class="ti ti-folder" style="color:var(--green)"></i> {{$folder->name}}</h2><small style="color:#66736b">{{$folder->documents->count()}} plików · {{\App\Models\Document::formatBytes((int)$folder->documents->sum('size'))}}</small></div>
-            @if($canEdit)<form method="POST" action="{{route('projects.document-folders.destroy',[$project,$folder])}}" onsubmit="return confirm('Usunąć pusty katalog i wyłączyć wszystkie jego linki?')">@csrf @method('DELETE')<button class="btn btn-red" @disabled($folder->documents->isNotEmpty()) title="{{$folder->documents->isNotEmpty()?'Najpierw usuń dokumenty z katalogu':'Usuń katalog'}}">Usuń katalog</button></form>@endif
+            @if($canEdit)<form method="POST" action="{{route('projects.document-folders.destroy',[$project,$folder])}}" onsubmit="return confirm('Usunąć pusty katalog i wyłączyć wszystkie jego linki?')">@csrf @method('DELETE')<button class="btn btn-red document-section-action" @disabled($folder->documents->isNotEmpty()) title="{{$folder->documents->isNotEmpty()?'Najpierw usuń dokumenty z katalogu':'Usuń katalog'}}">Usuń katalog</button></form>@endif
         </div>
         @if($canEdit)
         <div style="margin:14px 0;padding:13px;background:#f6f8f5;border-radius:8px">
-            <form method="POST" action="{{route('projects.document-folders.shares.store',[$project,$folder])}}" style="display:flex;gap:9px;align-items:end;flex-wrap:wrap">@csrf
+            <form method="POST" action="{{route('projects.document-folders.shares.store',[$project,$folder])}}" class="document-action-row">@csrf
                 <div class="field"><label>Uprawnienia linku</label><select name="access_level"><option value="view">Tylko przeglądanie</option><option value="upload">Przeglądanie i dodawanie plików</option></select></div>
                 <div class="field"><label>Ważny do (opcjonalnie)</label><input type="datetime-local" name="expires_at" min="{{now()->addMinute()->format('Y-m-d\TH:i')}}"></div>
                 <button class="btn btn-soft"><i class="ti ti-link"></i> Utwórz link</button>
