@@ -48,7 +48,9 @@ test('offers sort before pagination and support related company and owner column
         $this->get(route('offers.index', ['table_sort' => $column, 'table_direction' => 'desc']))->assertOk();
     }
     $this->get(route('offers.index', ['table_sort' => 'amount', 'table_direction' => 'desc']))
-        ->assertViewHas('offers', fn ($page) => (float) $page->first()->kwota_netto === 22.0);
+        ->assertViewHas('offers', fn ($page) => (float) $page->first()->kwota_netto === 22.0
+            && ! array_key_exists('price_sections', $page->first()->getAttributes())
+            && ! array_key_exists('text_sections', $page->first()->getAttributes()));
 });
 
 test('documents sort numerically by size before pagination and keep search filters', function () {

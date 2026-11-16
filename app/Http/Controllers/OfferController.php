@@ -58,7 +58,12 @@ class OfferController extends Controller
         $access = app(AuditorAccessService::class);
         $user = $request->user();
         $query = $access->scopeByCompanyAccess(
-            Offer::with(['company', 'assignedUser', 'createdBy']),
+            // Keep rich content and embedded photos out of MySQL's sort buffer.
+            Offer::query()->select([
+                'offers.id', 'offers.offer_number', 'offers.offer_slug', 'offers.offer_full_number',
+                'offers.offer_title', 'offers.company_id', 'offers.assigned_user_id',
+                'offers.kwota_netto', 'offers.status', 'offers.archived_from_status', 'offers.created_at',
+            ])->with(['company:id,name', 'assignedUser:id,name']),
             $user,
             'can_view_offers'
         )
