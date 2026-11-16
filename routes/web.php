@@ -518,6 +518,7 @@ Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 
     Route::get('/{project}/protocols/{protocol}/edit', [ProjectProtocolController::class, 'edit'])->name('protocols.edit');
     Route::get('/{project}/protocols/{protocol}/copy', [ProjectProtocolController::class, 'copy'])->name('protocols.copy');
     Route::put('/{project}/protocols/{protocol}', [ProjectProtocolController::class, 'update'])->name('protocols.update');
+    Route::delete('/{project}/protocols/{protocol}', [ProjectProtocolController::class, 'destroy'])->name('protocols.destroy');
     Route::get('/{project}/protocols/{protocol}/pdf', [ProjectProtocolController::class, 'pdf'])->name('protocols.pdf');
     Route::get('/', [ProjectController::class, 'index'])->name('index');
     Route::post('/', [ProjectController::class, 'store'])->middleware('app.permission:projects.create')->name('store');

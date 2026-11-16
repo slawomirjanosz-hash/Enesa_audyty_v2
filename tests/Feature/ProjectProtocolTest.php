@@ -199,3 +199,23 @@ test('both protocol forms keep title and save controls inside the form card', fu
         expect($xpath->query($form.'/div[@class="protocol-actions"]/button')->length)->toBe(1);
     }
 });
+
+test('protocol deletion is scoped and never reuses issued numbers', function () {
+    $store = route('projects.protocols.store', $this->project);
+    $this->post($store, $this->data)->assertSessionHasNoErrors();
+    $protocol = ProjectProtocol::sole();
+    $other = Project::create(['number' => 'DELETE-OTHER', 'name' => 'Inny projekt', 'status' => 'active']);
+    $this->delete(route('projects.protocols.destroy', [$other, $protocol]))->assertNotFound();
+    $destroy = route('projects.protocols.destroy', [$this->project, $protocol]);
+    $reader = User::factory()->create();
+    $role = Role::findOrCreate('protocol-delete-reader');
+    $role->givePermissionTo('projects.view', 'projects.protocols.view');
+    $reader->assignRole($role);
+    $this->project->members()->attach($reader);
+    $this->actingAs($reader)->delete($destroy)->assertForbidden();
+    $this->actingAs($this->admin)->delete($destroy)->assertRedirect(route('projects.show', [$this->project, 'tab' => 'protocols']));
+    $this->assertSoftDeleted($protocol);
+    $this->get(route('projects.protocols.pdf', [$this->project, $protocol]))->assertNotFound();
+    $this->post($store, $this->data)->assertSessionHasNoErrors();
+    expect(ProjectProtocol::sole()->number)->not->toBe($protocol->number);
+});

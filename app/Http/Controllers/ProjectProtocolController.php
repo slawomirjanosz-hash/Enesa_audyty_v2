@@ -167,7 +167,7 @@ class ProjectProtocolController extends Controller
             if (! $existing) {
                 $protocol->created_by = $request->user()->id;
                 $prefix = ($client ? 'POK/' : 'PO/').$project->protocolProjectReference().'/'.now()->format('Y').'/';
-                $sequence = (int) (ProjectProtocol::where('number', 'like', $prefix.'%')->pluck('number')
+                $sequence = (int) (ProjectProtocol::withTrashed()->where('number', 'like', $prefix.'%')->pluck('number')
                     ->map(fn (string $number): int => (int) substr($number, strlen($prefix)))->max() ?? 0) + 1;
                 $protocol->number = $prefix.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT);
             }
@@ -175,6 +175,15 @@ class ProjectProtocolController extends Controller
         });
 
         return redirect()->route('projects.show', ['project' => $project, 'tab' => 'protocols'])->with('success', 'Protokół został zapisany.');
+    }
+
+    public function destroy(Project $project, ProjectProtocol $protocol)
+    {
+        $this->access($project, $protocol, true);
+        $protocol->delete();
+
+        return redirect()->route('projects.show', ['project' => $project, 'tab' => 'protocols'])
+            ->with('success', 'Protokół został usunięty.');
     }
 
     public function pdf(Request $request, Project $project, ProjectProtocol $protocol)
