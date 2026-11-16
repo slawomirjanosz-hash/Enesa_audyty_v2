@@ -811,6 +811,9 @@
         <button class="tab-btn active" onclick="switchTab('overview', this)">
             <i class="ti ti-layout-grid"></i> Przegląd
         </button>
+        <button id="tab-btn-notes" class="tab-btn" onclick="switchTab('notes', this)">
+            <i class="ti ti-notes"></i> Notatki
+        </button>
         @if($auditsEnabled)
         <button class="tab-btn" id="tab-btn-audits" onclick="switchTab('audits', this)">
             <i class="ti ti-clipboard-list"></i> Audyty
@@ -1730,6 +1733,28 @@
     </div>
 
     {{-- ═══ ZAKŁADKA: DOKUMENTY ═══ --}}
+    <div id="tab-notes" class="tab-panel">
+        <div class="card-section">
+            <h3><i class="ti ti-notes"></i> Notatki klienta</h3>
+            @can('update', $company)
+                <form method="POST" action="{{ route('companies.notes.update', $company) }}#notes">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-field">
+                        <label for="company-notes">Treść notatek</label>
+                        <textarea id="company-notes" name="notes" rows="8" maxlength="16000" placeholder="Zapisz ważne ustalenia lub informacje o kliencie">{{ $errors->companyNotes->any() && is_string(old('notes')) ? old('notes') : $company->notes }}</textarea>
+                        @error('notes', 'companyNotes')
+                            <p role="alert">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <button type="submit" class="btn-action btn-primary-action"><i class="ti ti-check"></i> Zapisz notatki</button>
+                </form>
+            @else
+                <div style="white-space:pre-wrap;overflow-wrap:anywhere">{{ $company->notes ?: 'Brak notatek.' }}</div>
+            @endcan
+        </div>
+    </div>
+
     <div id="tab-documents" class="tab-panel">
         @include('documents.external-links', ['owner' => $company, 'canManageLinks' => auth()->user()->can('update', $company)])
         @if(app(\App\Services\CompanyReliabilityAccess::class)->allows(auth()->user(), 'view', $company))
@@ -2246,11 +2271,6 @@
                     <input type="file" name="logo" accept="image/png,image/jpeg" style="width:100%;margin-top:6px;font-size:13px;">
                     <div style="font-size:11px;color:#9CA3AF;margin-top:4px;">PNG lub JPG, do 2 MB.</div>
                 </div>
-                <div style="grid-column:1/-1;">
-                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Notatki</label>
-                    <textarea name="notes" rows="3"
-                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;resize:vertical;">{{ $company->notes }}</textarea>
-                </div>
             </div>
             <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
                 <button type="button" onclick="closeEditModal()"
@@ -2503,7 +2523,11 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         document.getElementById('companyOpportunityPreview').style.display = 'block';
     }
 
-    // Auto-open Zapytania tab when URL has #zapytania
+    if (window.location.hash === '#notes' || @json($errors->companyNotes->any())) {
+        const btn = document.getElementById('tab-btn-notes');
+        if (btn) switchTab('notes', btn);
+    }
+
     if (window.location.hash === '#documents') {
         const btn = document.getElementById('tab-btn-documents');
         if (btn) switchTab('documents', btn);

@@ -283,6 +283,18 @@ class CompanyController extends Controller
             : redirect()->back()->with('success', 'Dane firmy zostały zaktualizowane.');
     }
 
+    public function updateNotes(Request $request, Company $company)
+    {
+        $this->authorize('view', $company);
+        $this->authorize('update', $company);
+        abort_if($company->company_type === 'supplier', 404);
+
+        $data = $request->validateWithBag('companyNotes', ['notes' => ['present', 'nullable', 'string', 'max:16000']]);
+        $company->update($data);
+
+        return redirect(route('companies.show', $company).'#notes')->with('success', 'Notatki klienta zostały zapisane.');
+    }
+
     public function accept(Request $request, Company $company)
     {
         $this->authorize('update', $company);

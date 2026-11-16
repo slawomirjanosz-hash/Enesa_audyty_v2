@@ -275,6 +275,7 @@ Route::middleware(['auth', 'staff.role'])->group(function () {
         Route::post('/companies/{company}/document-links', [DocumentLinkController::class, 'storeCompany'])->middleware('app.permission:crm.companies.manage')->name('companies.document-links.store');
         Route::delete('/companies/{company}/document-links/{link}', [DocumentLinkController::class, 'destroyCompany'])->middleware('app.permission:crm.companies.manage')->name('companies.document-links.destroy');
         Route::put('/companies/{company}', [CompanyController::class, 'update'])->middleware('app.permission:crm.companies.manage')->name('companies.update');
+        Route::patch('/companies/{company}/notes', [CompanyController::class, 'updateNotes'])->middleware('app.permission:crm.companies.manage')->name('companies.notes.update');
         Route::post('/companies/{company}/accept', [CompanyController::class, 'accept'])->middleware('app.permission:crm.companies.manage')->name('companies.accept');
         Route::post('/companies/{company}/users', [CompanyController::class, 'storeUser'])->middleware('app.permission:crm.companies.manage')->name('companies.users.store');
         Route::post('/companies/{company}/assign-existing', [CompanyController::class, 'assignExisting'])->middleware('app.permission:crm.companies.manage')->name('companies.users.assignExisting');
