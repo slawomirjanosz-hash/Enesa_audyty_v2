@@ -16,7 +16,7 @@ class HrVehicleController extends Controller
 {
     public function responsibility(Request $request, string $column): RedirectResponse
     {
-        abort_unless(HrAccess::canManageSettings($request->user()), 403);
+        abort_unless($request->user()->hasRole(['admin', 'superadmin']), 403);
         abort_unless(array_key_exists($column, HrVehicle::COLUMNS), 404);
         $eligible = HrVehicleColumnResponsibility::eligiblePeople()->pluck('id')->all();
         $data = $request->validate([
@@ -37,9 +37,16 @@ class HrVehicleController extends Controller
         return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Zapisano odpowiedzialność za kolumnę „'.HrVehicle::COLUMNS[$column].'”.');
     }
 
+    private function delegatedColumns(Request $request, HrVehicle $vehicle): array
+    {
+        return $vehicle->type === 'company'
+            ? HrVehicleColumnResponsibility::editableColumns($request->user(), HrVehicleColumnResponsibility::all()->keyBy('column_key'))
+            : [];
+    }
+
     public function location(Request $request, HrVehicle $vehicle): RedirectResponse
     {
-        abort_unless($vehicle->canEdit($request->user()), 403);
+        abort_unless($vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true), 403);
         abort_unless($vehicle->is_active, 404);
         $data = $request->validate(['usage_location' => ['nullable', 'string', 'exists:hr_vehicle_locations,name']]);
         $vehicle->update(['usage_location' => $data['usage_location'] ?? null]);
@@ -73,17 +80,19 @@ class HrVehicleController extends Controller
 
     public function edit(Request $request, HrVehicle $vehicle): View
     {
-        abort_unless($vehicle->canEdit($request->user()), 403);
+        $editableColumns = $vehicle->canEdit($request->user()) ? null : $this->delegatedColumns($request, $vehicle);
+        abort_if($editableColumns === [], 403);
         abort_unless($vehicle->is_active, 404);
 
-        return view('hr.vehicle-edit', ['vehicle' => $vehicle, 'canTeam' => HrAccess::canViewTeam($request->user())]);
+        return view('hr.vehicle-edit', ['vehicle' => $vehicle, 'editableColumns' => $editableColumns]);
     }
 
     public function update(Request $request, HrVehicle $vehicle): RedirectResponse
     {
-        abort_unless($vehicle->canEdit($request->user()), 403);
+        $editableColumns = $vehicle->canEdit($request->user()) ? null : $this->delegatedColumns($request, $vehicle);
+        abort_if($editableColumns === [], 403);
         abort_unless($vehicle->is_active, 404);
-        $data = $this->vehicleData($request, $vehicle);
+        $data = $this->vehicleData($request, $vehicle, $editableColumns);
         // Changing ownership/type of an existing record could expose private data.
         unset($data['type']);
         if (array_key_exists('responsible_user_id', $data)) {
@@ -103,11 +112,11 @@ class HrVehicleController extends Controller
         return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Twój widok aut został zapisany.');
     }
 
-    private function vehicleData(Request $request, ?HrVehicle $vehicle = null): array
+    private function vehicleData(Request $request, ?HrVehicle $vehicle = null, ?array $editableColumns = null): array
     {
         $owner = $vehicle?->user_id ?? $request->user()->id;
 
-        $data = $request->validateWithBag('vehicle', [
+        $rules = [
             'type' => [$vehicle ? 'sometimes' : 'required', Rule::in(['private', 'company'])],
             'name' => ['required', 'string', 'max:255'],
             'registration_number' => ['required', 'string', 'max:30', Rule::unique('hr_vehicles')->where(fn ($q) => $q->where('user_id', ($vehicle?->type ?? $request->input('type')) === 'company' ? null : $owner))->ignore($vehicle)],
@@ -128,7 +137,18 @@ class HrVehicleController extends Controller
             'inspection_due_at' => ['nullable', 'date_format:Y-m-d'],
             'registration_document' => ['nullable', 'string', 'max:255'],
             'registration_document_present' => ['nullable', 'boolean'],
-        ]);
+        ];
+        if ($editableColumns !== null) {
+            foreach ($rules as $field => $rule) {
+                if (! in_array(HrVehicleColumnResponsibility::columnFor($field), $editableColumns, true)) {
+                    abort_if($request->exists($field), 403);
+                    unset($rules[$field]);
+                } else {
+                    $rules[$field] = ['sometimes', ...$rule];
+                }
+            }
+        }
+        $data = $request->validateWithBag('vehicle', $rules);
         if (! empty($data['usage_location']) && $data['usage_location'] !== $vehicle?->usage_location) {
             validator($data, ['usage_location' => ['exists:hr_vehicle_locations,name']])->validateWithBag('vehicle');
         }

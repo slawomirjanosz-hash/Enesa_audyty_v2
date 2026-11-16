@@ -24,18 +24,25 @@
 <button class="hr-btn" type="button" onclick="openHrModal('vehicle-modal')"><i class="ti ti-plus"></i> Dodaj auto</button></div></div>
 <div class="vehicle-legend">Terminy ubezpieczenia i przeglądu: żółty — do 14 dni, czerwony — do 7 dni (także dzisiaj), czerwony wiersz — po terminie. Prywatne auta są widoczne tylko dla autora.</div>
 <div class="vehicle-table-wrap"><table class="hr-table vehicle-table" style="--columns:{{count($visibleColumns)+2}}"><thead><tr><th>Lp.</th>
+@php
+    $canAssignVehicleColumns = auth()->user()->hasRole(['admin', 'superadmin']);
+    $columnEditors = \App\Models\HrVehicleColumnResponsibility::editableColumns(auth()->user(), $vehicleColumnResponsibilities);
+@endphp
 @foreach($visibleColumns as $key=>$label)
 @php
     $columnPeople = $vehicleColumnResponsibilities->get($key)?->user_ids ?? [];
+    $names = $vehicleResponsibilityPeople->filter(fn ($person) => !$columnPeople || in_array($person->id, $columnPeople, true))->pluck('name')->implode(', ');
+    $responsibilityHint = ($names ? 'Odpowiedzialni: '.$names.'.' : 'Brak aktywnych osób odpowiedzialnych.').($canAssignVehicleColumns ? ' Kliknij, aby zmienić.' : '');
 @endphp
-<th title="{{$label}}" data-sort-label="{{$label}}" @if(in_array($key,['registration_number','fuel_card_number'])) data-sort-type="text" @endif><span data-sort-title>{{\App\Models\HrVehicle::SHORT_COLUMNS[$key] ?? $label}}</span><span data-table-header-controls><button class="vehicle-column-person {{$columnPeople ? 'assigned' : ''}}" type="button" @disabled(!$canManageHrSettings) aria-label="Odpowiedzialni za: {{$label}}" title="{{$columnPeople ? 'Przypisane osoby: '.count($columnPeople).'. Kliknij, aby sprawdzić lub zmienić.' : 'Wszyscy z uprawnieniem odpowiedzialności za samochody. Kliknij, aby wybrać osoby.'}}" @if($canManageHrSettings) onclick="event.stopPropagation();openVehicleColumnResponsibility(@js($key))" @endif><i class="ti ti-user-cog" aria-hidden="true"></i>@if($columnPeople)<small>{{count($columnPeople)}}</small>@endif</button></span></th>
+<th title="{{$label}}" data-sort-label="{{$label}}" @if(in_array($key,['registration_number','fuel_card_number'])) data-sort-type="text" @endif><span data-sort-title>{{\App\Models\HrVehicle::SHORT_COLUMNS[$key] ?? $label}}</span><span data-table-header-controls title="{{$responsibilityHint}}"><button class="vehicle-column-person {{$columnPeople ? 'assigned' : ''}}" type="button" @disabled(!$canAssignVehicleColumns) aria-label="Odpowiedzialni za: {{$label}}" title="{{$responsibilityHint}}" @if($canAssignVehicleColumns) onclick="event.stopPropagation();openVehicleColumnResponsibility(@js($key))" @endif><i class="ti ti-user-cog" aria-hidden="true"></i>@if($columnPeople)<small>{{count($columnPeople)}}</small>@endif</button></span></th>
 @endforeach<th data-sortable="false">Akcje</th></tr></thead><tbody>
 @forelse($vehicles as $vehicle)
 @php
     $insuranceState = $vehicle->deadlineState('insurance_expires_at');
     $inspectionState = $vehicle->deadlineState('inspection_due_at');
     $overdue = in_array('overdue',[$insuranceState,$inspectionState]);
-    $editable = $vehicle->canEdit(auth()->user());
+    $fullyEditable = $vehicle->canEdit(auth()->user());
+    $editable = $fullyEditable || ($vehicle->type === 'company' && $columnEditors !== []);
 @endphp
 <tr class="{{$overdue?'vehicle-overdue':''}}" @if($editable) data-vehicle-edit="{{route('hr.vehicles.edit',$vehicle)}}" tabindex="0" aria-label="Edytuj auto {{$vehicle->name}}" title="Kliknij, aby edytować samochód" @endif>
 <td>{{$loop->iteration}}</td>
@@ -58,7 +65,7 @@
     if($key==='registration_document') $sortValue = $display;
 @endphp
 <td class="{{$deadline?'deadline-'.$deadline:''}}" data-sort-value="{{$key==='type'?$display:$sortValue}}" @if($deadline) title="{{$label}}: {{ match($deadline) { 'overdue'=>'termin minął', 'urgent'=>'do 7 dni', default=>'do 14 dni' } }}" @endif>
-@if($key==='usage_location' && $editable)
+@if($key==='usage_location' && ($fullyEditable || ($vehicle->type === 'company' && in_array($key, $columnEditors, true))))
 <form method="POST" action="{{route('hr.vehicles.location',$vehicle)}}">@csrf @method('PATCH')
 <select name="usage_location" aria-label="Lokalizacja {{$vehicle->name}}" onchange="this.form.submit()" style="width:100%;font:inherit"><option value="">Nie podano</option>
 @foreach($vehicleLocations as $location)<option value="{{$location->name}}" @selected($value===$location->name)>{{$location->name}}</option>@endforeach
@@ -68,7 +75,7 @@
 @if($key==='registration_document' && $vehicle->registration_document_present!==null && $value)<small style="display:block" title="{{$value}}">{{$value}}</small>@endif
 </td>
 @endforeach
-<td><div class="vehicle-actions"><a class="hr-btn" href="{{route('hr.vehicles.service.index',$vehicle)}}" title="Książka serwisowa auta" aria-label="Książka serwisowa auta"><i class="ti ti-book"></i></a>@if($editable)<a class="hr-btn" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj auto" aria-label="Edytuj auto"><i class="ti ti-pencil"></i></a><form method="POST" action="{{route('hr.vehicles.destroy',$vehicle)}}" onsubmit="return confirm('Usunąć samochód z aktywnej listy?')">@csrf @method('DELETE')<button class="hr-btn danger" title="Usuń auto" aria-label="Usuń auto"><i class="ti ti-trash"></i></button></form>@endif</div></td>
+<td><div class="vehicle-actions"><a class="hr-btn" href="{{route('hr.vehicles.service.index',$vehicle)}}" title="Książka serwisowa auta" aria-label="Książka serwisowa auta"><i class="ti ti-book"></i></a>@if($editable)<a class="hr-btn" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj auto" aria-label="Edytuj auto"><i class="ti ti-pencil"></i></a>@endif @if($fullyEditable)<form method="POST" action="{{route('hr.vehicles.destroy',$vehicle)}}" onsubmit="return confirm('Usunąć samochód z aktywnej listy?')">@csrf @method('DELETE')<button class="hr-btn danger" title="Usuń auto" aria-label="Usuń auto"><i class="ti ti-trash"></i></button></form>@endif</div></td>
 </tr>
 @empty<tr data-sort-fixed><td colspan="{{count($visibleColumns)+2}}" class="hr-empty">Brak samochodów.</td></tr>@endforelse
 </tbody></table></div></div>
@@ -85,5 +92,5 @@ if(!window.hrVehicleNavigationReady){
     });
 }
 </script>
-@if($canManageHrSettings)@include('hr.partials.vehicle-column-responsibility')@endif
-<style>.vehicle-column-person{display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:24px;height:20px;box-sizing:border-box;border:0;background:transparent;color:#82918b;cursor:pointer;padding:0 3px;font-size:13px;line-height:1;border-radius:4px}.vehicle-column-person.assigned{color:#1f3a5f;background:#e6edf7}.vehicle-column-person small{font-size:9px}.vehicle-column-person:disabled{cursor:default}.vehicle-column-person:hover:not(:disabled){background:#dbeafe}.vehicle-column-people{display:grid;gap:8px;max-height:45vh;overflow:auto;margin:15px 0}.vehicle-column-people label{display:flex;align-items:center;gap:9px;padding:6px}.vehicle-column-people input{width:17px;height:17px;accent-color:var(--green)}</style>
+@if($canAssignVehicleColumns)@include('hr.partials.vehicle-column-responsibility')@endif
+<style>.vehicle-column-person{display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:24px;height:20px;box-sizing:border-box;border:0;background:transparent;color:#82918b;cursor:pointer;padding:0 3px;font-size:13px;line-height:1;border-radius:4px}.vehicle-column-person.assigned{color:#1f3a5f;background:#e6edf7}.vehicle-column-person small{font-size:9px}.vehicle-column-person:disabled{pointer-events:none}.vehicle-column-person:hover:not(:disabled){background:#dbeafe}.vehicle-column-people{display:grid;gap:8px;max-height:45vh;overflow:auto;margin:15px 0}.vehicle-column-people label{display:flex;align-items:center;gap:9px;padding:6px}.vehicle-column-people input{width:17px;height:17px;accent-color:var(--green)}</style>

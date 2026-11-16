@@ -55,6 +55,30 @@ test('only HR managers can assign eligible fleet people and changes are revision
     $this->put(route('hr.vehicles.column-responsibility', 'password'), ['revision' => 1])->assertNotFound();
 });
 
+test('fleet responsibility allows editing assigned and default columns without access to private cars or deletion', function () {
+    $person = columnPerson();
+    $other = columnPerson();
+    $admin = columnPerson(false, true);
+    columnAssign('insurance_expires_at', [$person->id]);
+    columnAssign('inspection_due_at', [$other->id]);
+    columnAssign('usage_location', [$other->id]);
+    $car = HrVehicle::create(['type' => 'company', 'name' => 'Flota', 'registration_number' => 'EDIT-COL']);
+    $private = HrVehicle::create(['type' => 'private', 'name' => 'Prywatny', 'registration_number' => 'PRIVATE-EDIT', 'created_by' => $other->id]);
+    $index = route('hr.index', ['tab' => 'vehicles']);
+    $this->actingAs($person)->get($index)->assertOk()->assertSee('Odpowiedzialni: '.$person->name)->assertDontSee('Kliknij, aby zmienić.');
+    $this->get(route('hr.vehicles.edit', $car))->assertOk()
+        ->assertSee('name="insurance_expires_at"', false)->assertDontSee('name="inspection_due_at"', false)->assertDontSee('Usuń samochód');
+    $update = route('hr.vehicles.update', $car);
+    $this->put($update, ['insurance_expires_at' => '2026-12-01', 'make_model' => 'Test'])->assertSessionHasNoErrors();
+    $this->put($update, ['inspection_due_at' => '2026-12-01'])->assertForbidden();
+    $this->patch(route('hr.vehicles.location', $car), ['usage_location' => null])->assertForbidden();
+    $this->delete(route('hr.vehicles.destroy', $car))->assertForbidden();
+    $this->get(route('hr.vehicles.edit', $private))->assertForbidden();
+    expect($car->fresh()->insurance_expires_at->toDateString())->toBe('2026-12-01')
+        ->and($car->fresh()->make_model)->toBe('Test')->and($car->fresh()->inspection_due_at)->toBeNull();
+    $this->actingAs($admin)->get($index)->assertOk()->assertSee('Odpowiedzialni: '.$person->name.'. Kliknij, aby zmienić.');
+});
+
 test('column-specific dates reach assigned managers and the linked owner without leaking other columns or private cars', function () {
     $insurance = columnPerson();
     $inspection = columnPerson();

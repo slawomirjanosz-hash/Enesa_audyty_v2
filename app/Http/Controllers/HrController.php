@@ -72,7 +72,7 @@ class HrController extends Controller
         $canManageHrSettings = HrAccess::canManageSettings($user);
         $vehicleLocations = HrVehicleLocation::orderBy('name')->get();
         $vehicleColumnResponsibilities = $tab === 'vehicles' ? HrVehicleColumnResponsibility::all()->keyBy('column_key') : collect();
-        $vehicleResponsibilityPeople = $tab === 'vehicles' && $canManageHrSettings ? HrVehicleColumnResponsibility::eligiblePeople() : collect();
+        $vehicleResponsibilityPeople = $tab === 'vehicles' ? HrVehicleColumnResponsibility::eligiblePeople() : collect();
         $leaveBalanceUser = $canTeam && ! $request->integer('user_id') ? null : User::find($selectedUserId);
         $leaveBalance = $leaveBalanceUser?->has_employment_contract
             ? $leaveBalanceUser->annualLeaveBalance($leaveYear)

@@ -8,8 +8,8 @@
 <form method="POST" action="{{route('hr.vehicles.update',$vehicle)}}">@csrf @method('PUT')
 @include('hr.partials.vehicle-fields')
 <div class="vehicle-edit-actions"><a href="{{route('hr.index',['tab'=>'vehicles'])}}">Anuluj</a><button type="submit">Zapisz samochód</button></div></form>
-<form method="POST" action="{{route('hr.vehicles.destroy',$vehicle)}}" style="margin-top:20px" onsubmit="return confirm('Usunąć ten samochód z aktywnej listy? Dotychczasowe delegacje pozostaną zachowane.')">
+@if($editableColumns === null)<form method="POST" action="{{route('hr.vehicles.destroy',$vehicle)}}" style="margin-top:20px" onsubmit="return confirm('Usunąć ten samochód z aktywnej listy? Dotychczasowe delegacje pozostaną zachowane.')">
     @csrf @method('DELETE')
     <button type="submit" title="Usuń samochód" style="border:1px solid #fecaca;border-radius:7px;padding:10px 16px;background:#fff;color:#b91c1c;cursor:pointer"><i class="ti ti-trash"></i> Usuń samochód</button>
-</form></div>
+</form>@endif</div>
 @endsection
