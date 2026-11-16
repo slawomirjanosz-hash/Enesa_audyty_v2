@@ -51,16 +51,23 @@ Nowe 5.1 rozpoczyna osobny obieg. Wcześniejsze odpowiedzi pozostają dostępne.
 - PDF: render Poppler i kontrola tekstu czterech rezultatów; brak technicznych zakładek, danych obcych scenariuszy i identyfikatorów pól. Sprawdzono układ i wszystkie strony załącznika.
 - Dodatkowo sprawdzono raport z wypełnionego scenariusza (5 stron) i szczegółowy załącznik (25 stron), z logo pobranym z ustawień platformy; wszystkie strony wyrenderowano i sprawdzono układ.
 
+## Uzgodnienia użytkownika — 16.11.2026
+
+Użytkownik odpowiedział „1” na oba konkretne pytania o wybór pierwszego wariantu. Obie korekty źródła zostały zaakceptowane:
+
+- **PRZ-00 / PRZ-14:** przy „jest” wymagane są szczegóły i dowód; przy „częściowo” i „jeszcze tego nie ma” — plan i termin. Ukryte szczegóły nie blokują przekazania odpowiedzi o braku wdrożenia. Pozostałe reguły spójności, w tym konieczność wyjaśnienia braku wskazania najwyższego kierownictwa przy zadeklarowanym rozwiązaniu, nadal obowiązują.
+- **Lista sposobów weryfikacji:** pozostają „wgląd w dokument”, „oględziny”, „rozmowa”, „zapis w systemie” i „próbka”; dodano zaakceptowane „wgląd w zapisy”, „wgląd w zapis w systemie” i „wgląd w pozycję budżetu”. Zachowano brzmienia oraz identyfikatory ośmiu wartości.
+
+Przygotowany kod już realizował obie propozycje. Po akceptacji dodano regresję sześciu kombinacji pozycji i odpowiedzi, blokowania niekompletnych danych oraz zapisu/odczytu wszystkich ośmiu sposobów weryfikacji. Pełna regresja 16.11.2026: **60 testów, 506 asercji — wszystkie zaliczone**. W Chromium sprawdzono pola warunkowe, zapis i ponowne otwarcie PRZ-00/PRZ-14 oraz każdej z ośmiu metod, bez błędów JavaScript. Logi: tmp/enms-approved-rules-tests-2026-11-16.log i tmp/enms-approved-rules-browser.log. Nie zmieniano odpowiedzi ani zatwierdzeń produkcyjnych.
+
 ## Otwarte przed odbiorem i wdrożeniem
 
-1. **PRZ-00 / PRZ-14:** źródłowe polaWidoczne ukrywa szczegóły przy „jeszcze tego nie ma”, natomiast brakiFormalne wymaga ukrytych szczegółów dla każdej odpowiedzianej pozycji metodycznej. Zapytano użytkownika o zasadę: szczegóły przy „jest”, plan i termin przy „częściowo” / „jeszcze tego nie ma”. Lokalny kod realizuje tę propozycję, lecz korekta źródła nie została zatwierdzona.
-2. **S1-12:** test grafu po przenumerowaniu nie jest pełnym testem migracji starych zapisów 0.3 → 0.4. W referencyjnym `51_model.js` jest wyłącznie hak do „Zadania F” i trzy zakazy migracji, bez pełnego mapowania. Zapytano o lokalizację tej specyfikacji. Automatycznego przenoszenia znaczeń nie przygotowano. Nie deklarować S1-12 jako zaliczonego. Współistnienie chroni wcześniejsze dane.
-3. **S1-1:** zielone testy źródła i osobne testy integracji nie oznaczają pełnej równoważności wszystkich scenariuszy prototypu i platformy. Scenariusz dowodowy odtworzono wraz z przekazaniem klienta i generowaniem dokumentów; macierz upoważnień, zadania, postanowienia i cykl Karty są sprawdzane osobnymi testami platformy. Nie deklarować automatycznej migracji ani odbioru całego S-1. Sondy natywnej warstwy wspólnej są już wykonane.
-4. **Lista sposobów weryfikacji:** scenariusz źródłowy używa dodatkowo „wgląd w zapisy”, „wgląd w zapis w systemie” i „wgląd w pozycję budżetu”, których nie ma w źródłowym select. Zapytano użytkownika o dodanie tych trzech wartości bez usuwania pięciu dotychczasowych. Lokalny kandydat zawiera tę propozycję; wymaga rozstrzygnięcia przed publikacją.
-5. Retencja oraz operacyjny test odtworzenia kopii produkcji nie zostały tym zadaniem uzgodnione ani potwierdzone.
+1. **S1-12:** test grafu po przenumerowaniu nie jest pełnym testem migracji starych zapisów 0.3 → 0.4. W referencyjnym `51_model.js` jest wyłącznie hak do „Zadania F” i trzy zakazy migracji, bez pełnego mapowania. Zapytano o lokalizację tej specyfikacji. Automatycznego przenoszenia znaczeń nie przygotowano. Nie deklarować S1-12 jako zaliczonego. Współistnienie chroni wcześniejsze dane. Ponowne sprawdzenie dostępnych materiałów 16.11.2026 nie ujawniło pliku z mapowaniem.
+2. **S1-1:** zielone testy źródła i osobne testy integracji nie oznaczają pełnej równoważności wszystkich scenariuszy prototypu i platformy. Scenariusz dowodowy odtworzono wraz z przekazaniem klienta i generowaniem dokumentów; macierz upoważnień, zadania, postanowienia i cykl Karty są sprawdzane osobnymi testami platformy. Nie deklarować automatycznej migracji ani odbioru całego S-1. Sondy natywnej warstwy wspólnej są już wykonane.
+3. Retencja oraz operacyjny test odtworzenia kopii produkcji nie zostały tym zadaniem uzgodnione ani potwierdzone.
 
 Odcisk wewnątrz PDF dotyczy zamrożonych danych. SHA-256 całego pliku znajduje się w rejestrze. To dwie różne sumy; plik nie zawiera własnej sumy obliczonej po jej dopisaniu.
 
 ## Wdrożenie
 
-Kandydat jest przygotowany na osobnej gałęzi codex/enms-s1-native-51 do dalszego odbioru. Nie wykonano migracji ani wdrożenia produkcyjnego. Railway: web i worker miały SUCCESS dla 39944a8ff80c0169ebdbd61703f202dafbd49b3b. Nie jest to wdrożenie nowego modelu. Przed scaleniem do main i wdrożeniem trzeba rozstrzygnąć obie otwarte reguły i domknąć odbiór. Pliki tmp/, output/ i outputs/ nie należą do commita.
+Kandydat jest przygotowany na osobnej gałęzi codex/enms-s1-native-51 do dalszego odbioru. Nie wykonano migracji ani wdrożenia produkcyjnego. Railway: web i worker miały SUCCESS dla 39944a8ff80c0169ebdbd61703f202dafbd49b3b. Nie jest to wdrożenie nowego modelu. Dwie rozbieżności zachowania źródła rozstrzygnięto 16.11.2026; przed scaleniem do main pozostaje domknięcie odbioru, przede wszystkim brakującego kontraktu migracji S1-12. Pliki tmp/, output/ i outputs/ nie należą do commita.
