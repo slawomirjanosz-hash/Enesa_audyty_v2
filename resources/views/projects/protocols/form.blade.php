@@ -12,7 +12,8 @@
 <input type="hidden" name="direction" value="{{$protocol->direction}}">
 <input type="hidden" name="revision" value="{{old('revision',$protocol->revision ?? 0)}}">
 @isset($copiedFrom)<p class="protocol-help">Kopia protokołu {{$copiedFrom}}. Nowy numer zostanie nadany po zapisaniu. Ustawiono dzisiejszą datę; podpis i termin usunięcia usterek nie zostały skopiowane. @unless($client)Przed zapisem sprawdź dane i ponownie wybierz decyzję o fakturowaniu (domyślnie: nie).@endunless</p>@endisset
-<div class="protocol-grid">
+
+
 @if($client)
 <div class="protocol-full"><strong>Klient:</strong> {{$protocol->client_snapshot['name'] ?? $project->company?->name ?? 'Brak klienta przypisanego do projektu'}}</div>
 @else
@@ -35,7 +36,8 @@
 </tbody></table></div><p><button type="button" id="protocol-add-item">+ Dodaj pozycję</button></p><p id="protocol-totals" aria-live="polite" style="padding:12px;background:#f6f7f5;border-radius:7px"></p>
 </fieldset>
 @endunless
-<div class="protocol-grid">
+
+
 @foreach(['remarks'=>'Uwagi, usterki i zastrzeżenia','invoice_conditions'=>'Warunki fakturowania / uzgodnienia rozliczeniowe','attachments'=>'Wykaz załączników (np. dokumentacja, atesty, wyniki prób)'] as $key=>$label)@continue($client && $key==='invoice_conditions')<div class="protocol-full"><label for="protocol-{{$key}}">{{$label}}</label><textarea id="protocol-{{$key}}" name="{{$key}}">{{old($key,$protocol->$key)}}</textarea></div>@endforeach
 <div><label for="protocol-remedy">Termin usunięcia usterek</label><input id="protocol-remedy" type="date" name="remedy_deadline" value="{{old('remedy_deadline',$protocol->remedy_deadline?->toDateString())}}"></div>
 <div><label for="protocol-receiver">{{ $client ? 'Osoba lub osoby odbierające po stronie klienta' : 'Przedstawiciel odbierającego' }} *</label><input id="protocol-receiver" name="receiver_name" value="{{old('receiver_name',$protocol->receiver_name ?? ($client ? null : auth()->user()->name))}}" required></div>

@@ -46,7 +46,7 @@ class ProjectProtocolController extends Controller
     {
         $this->access($project, $protocol, true);
         $copy = new ProjectProtocol($protocol->only([
-            'supplier_company_id', 'place', 'reference', 'kind', 'outcome', 'description',
+            'supplier_company_id', 'place', 'reference', 'kind', 'outcome', 'description', 'title',
             'remarks', 'invoice_conditions', 'attachments', 'supplier_representative', 'items',
             'items_mode', 'manual_items_description', 'direction',
         ]));
@@ -99,6 +99,7 @@ class ProjectProtocolController extends Controller
             'kind' => ['required', Rule::in(array_keys(ProjectProtocol::KINDS))],
             'outcome' => ['required', Rule::in(array_keys(ProjectProtocol::OUTCOMES))],
             'invoice_decision' => ['required', Rule::in(array_keys(ProjectProtocol::INVOICES))],
+            'title' => ['nullable', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:15000'],
             'remarks' => ['required_unless:outcome,accepted', 'nullable', 'string', 'max:15000'],
             'remedy_deadline' => ['nullable', 'date_format:Y-m-d'],
