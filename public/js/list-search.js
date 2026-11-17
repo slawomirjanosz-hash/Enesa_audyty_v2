@@ -6,7 +6,8 @@ export function filterList(root, selector, query) {
         if (item.tagName === 'TR' && item.querySelector('td[colspan]')) return;
         const clone = item.cloneNode(true);
         clone.querySelectorAll('button,form,select,[aria-hidden="true"]').forEach(node => node.remove());
-        const visible = matchesSearch(item.dataset.searchText || item.dataset.importantContactSearch || clone.textContent, query);
+        const text = item.dataset.searchText || item.dataset.importantContactSearch || clone.textContent;
+        const visible = matchesSearch([text, item.dataset.searchExtra].join(' '), query);
         item.style.display = visible ? '' : 'none';
         if (visible) count++;
     });

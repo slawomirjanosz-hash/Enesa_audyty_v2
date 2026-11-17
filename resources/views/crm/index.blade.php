@@ -138,7 +138,7 @@
     </h1>
     <div class="app-search-toolbar">
         @if($currentTab !== 'pipeline')
-            @include('partials.list-search', ['searchId' => 'crm-list-search', 'searchTargets' => '.table-card tbody tr, .important-contact-card', 'searchPlaceholder' => 'Szukaj: firma, osoba, zadanie…'])
+            @include('partials.list-search', ['searchId' => 'crm-list-search', 'searchTargets' => '.table-card tbody tr, .task-table-wrap tbody tr, .important-contact-card', 'searchPlaceholder' => 'Szukaj: firma, osoba, zadanie…'])
         @endif
         @if($currentTab === 'pipeline')
             <div class="app-header-search">
@@ -570,7 +570,7 @@
             @php
                 $overdue = $task->due_date && $task->due_date->isBefore(today()) && $task->status === 'todo';
             @endphp
-            <tr>
+            <tr data-search-extra="{{ $task->description }}">
                 <td style="font-weight:600;">{{ $task->title }}</td>
                 <td style="color:#888;font-size:12px;">{{ $task->company?->name ?? '—' }}</td>
                 <td>
@@ -638,7 +638,7 @@
         <tbody id="team-tasks-tbody">
             @forelse($otherTasks as $task)
             @php $overdue = $task->due_date && $task->due_date->isBefore(today()) && $task->status === 'todo'; @endphp
-            <tr>
+            <tr data-search-extra="{{ $task->description }}">
                 <td style="font-weight:600;">{{ $task->title }}</td>
                 <td style="color:#888;font-size:12px;">{{ $task->company?->name ?? '—' }}</td>
                 <td>

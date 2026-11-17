@@ -13,3 +13,16 @@ test('shared local search handles Polish terms and restores rows without sorting
     assert.equal(rows[1].style.display, '');
     assert.equal(filterList(root, 'tr', 'absent'), 0);
 });
+
+test('task search matches a surname together with words from the description', () => {
+    const row = {
+        tagName: 'TR',
+        style: {},
+        dataset: {searchExtra: 'Wymiana sprzętu'},
+        querySelector: () => null,
+        cloneNode: () => ({textContent: 'Odbiór · Przemysław Zagozda', querySelectorAll: () => []}),
+    };
+    const root = {querySelectorAll: () => [row]};
+    assert.equal(filterList(root, '.task-table-wrap tbody tr', 'zagozda sprzetu'), 1);
+    assert.equal(filterList(root, '.task-table-wrap tbody tr', 'nowak sprzetu'), 0);
+});
