@@ -61,7 +61,7 @@ test('protocol number uses project suffix and avoids collisions without renumber
 
 test('project protocols save totals snapshots and render branded pdf with signatures', function () {
     CompanySettings::first()->update(['logo_data' => base64_encode(file_get_contents(public_path('Logo2.png'))), 'logo_mime' => 'image/png']);
-    $this->get(route('projects.protocols.create', $this->project))->assertOk()->assertSee('Przedstawiciel dostawcy');
+    $this->get(route('projects.protocols.create', $this->project))->assertOk()->assertSee('Przedstawiciele dostawcy');
     $this->post(route('projects.protocols.store', $this->project), $this->data)->assertRedirect()->assertSessionHasNoErrors();
     $protocol = ProjectProtocol::firstOrFail();
     expect($protocol->totals())->toBe(['net' => 246912, 'vat' => 56790, 'gross' => 303702]);
@@ -155,7 +155,7 @@ test('client acceptance uses the project customer and produces a signed-off work
     $this->project->update(['company_id' => $client->id]);
     $create = route('projects.protocols.create', [$this->project, 'direction' => 'client']);
     $this->get($create)->assertOk()->assertSee('Odbiorca prac')->assertSee('Opis wykonanych prac')
-        ->assertSee('Osoba lub osoby odbierające')->assertDontSee('Czy dostawca może wystawić fakturę?');
+        ->assertSee('Odbierający po stronie klienta')->assertDontSee('Czy dostawca może wystawić fakturę?');
     $data = array_replace($this->data, ['direction' => 'client', 'title' => 'Odbiór instalacji', 'description' => 'Montaż i uruchomienie instalacji', 'receiver_name' => 'Jan Kowalski, Maria Wiśniewska']);
     $store = route('projects.protocols.store', $this->project);
     $this->from($create)->post($store, array_replace($data, ['reference' => '']))->assertSessionHasErrors('reference');
@@ -193,9 +193,11 @@ test('both protocol forms keep title and save controls inside the form card', fu
         @$dom->loadHTML($response->getContent());
         $xpath = new DOMXPath($dom);
         $form = '//div[@class="protocol-card"]/form';
-        foreach (['title', 'remedy_deadline', 'receiver_name', 'supplier_representative'] as $field) {
+        foreach (['title', 'remedy_deadline'] as $field) {
             expect($xpath->query($form.'/div[@class="protocol-grid"]//input[@name="'.$field.'"]')->length)->toBe(1);
         }
+        expect($xpath->query($form.'//div[@data-people-rows]/*/*[@name="receivers[]"]')->length)->toBe(1);
+        expect($xpath->query($form.'//div[@data-people-rows]/*/*[@name="representatives[]"]')->length)->toBe(1);
         expect($xpath->query($form.'/div[@class="protocol-actions"]/button')->length)->toBe(1);
     }
 });
@@ -232,4 +234,28 @@ test('undated protocols leave a blank date for handwriting in the PDF', function
         $this->get(route('projects.protocols.pdf', [$this->project, $protocol]))->assertOk();
     }
     $this->get(route('projects.show', [$this->project, 'tab' => 'protocols']))->assertOk();
+});
+
+test('both protocols accept multiple people or blank signatures and hide the printed revision', function () {
+    $customer = Company::create(['company_type' => 'client', 'name' => 'Klient', 'status' => 'active']);
+    $this->project->update(['company_id' => $customer->id]);
+    $first = User::factory()->create(['is_active' => true]);
+    $second = User::factory()->create(['is_active' => true]);
+    $store = route('projects.protocols.store', $this->project);
+    foreach (['client', 'supplier'] as $direction) {
+        $internal = [$first->name, $second->name];
+        $external = ['Alicja Testowa', 'Tomasz Testowy'];
+        [$receivers, $representatives] = $direction === 'client' ? [$external, $internal] : [$internal, $external];
+        $data = array_replace($this->data, ['direction' => $direction, 'acceptance_date' => '', 'receivers' => $receivers, 'representatives' => $representatives]);
+        $this->post($store, $data)->assertSessionHasNoErrors();
+        $protocol = ProjectProtocol::where('direction', $direction)->sole();
+        expect($protocol->peopleNames('receiver_name'))->toBe($receivers)
+            ->and($protocol->peopleNames('supplier_representative'))->toBe($representatives);
+        $pdf = view('projects.protocols.pdf', compact('protocol'))->render();
+        expect($pdf)->toContain(' – Odbiór etapu prac', 'Data odbioru: ................................', ...array_merge($receivers, $representatives))
+            ->not->toContain('Wersja', 'wersja');
+        $this->put(route('projects.protocols.update', [$this->project, $protocol]), array_replace($data, ['revision' => 1, 'receivers' => [''], 'representatives' => ['']]))->assertSessionHasNoErrors()->assertRedirect();
+        expect($protocol->fresh()->peopleNames('receiver_name'))->toBe([])
+            ->and($protocol->fresh()->peopleNames('supplier_representative'))->toBe([]);
+    }
 });

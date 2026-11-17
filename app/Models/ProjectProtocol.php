@@ -23,7 +23,12 @@ class ProjectProtocol extends Model
         return $this->direction === 'client';
     }
 
-    public const KINDS = ['partial' => 'Odbiór częściowy', 'final' => 'Odbiór końcowy'];
+    public const KINDS = ['partial' => 'Odbiór etapu prac', 'final' => 'Odbiór końcowy'];
+
+    public function peopleNames(string $field): array
+    {
+        return preg_split('/\R/u', (string) $this->{$field}, -1, PREG_SPLIT_NO_EMPTY);
+    }
 
     public const OUTCOMES = ['accepted' => 'Odebrano bez uwag', 'reserved' => 'Odebrano z uwagami', 'rejected' => 'Odmowa odbioru'];
 

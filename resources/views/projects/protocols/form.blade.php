@@ -22,7 +22,7 @@
 @else
 <div class="protocol-full"><label for="protocol-supplier">Dostawca *</label><select id="protocol-supplier" name="supplier_company_id" required><option value="">Wybierz dostawcę</option>@foreach($suppliers as $supplier)<option value="{{$supplier->id}}" @selected(old('supplier_company_id',$protocol->supplier_company_id)==$supplier->id)>{{$supplier->name}} · {{$supplier->nip}}</option>@endforeach</select></div>
 @endif
-@foreach(['acceptance_date'=>'Data odbioru','place'=>'Miejsce odbioru','reference'=>$client ? 'Numer zlecenia / zamówienia / umowy *' : 'Numer zamówienia / umowy'] as $key=>$label)<div><label for="protocol-{{$key}}">{{$label}}</label><input id="protocol-{{$key}}" name="{{$key}}" type="{{$key==='acceptance_date'?'date':'text'}}" value="{{old($key,$key==='acceptance_date'?$protocol->acceptance_date?->toDateString():$protocol->$key)}}" @required($client && $key==='reference')></div>@endforeach
+@foreach(['acceptance_date'=>'Data odbioru (pozostaw pustą do wpisania ręcznie)','place'=>'Miejsce odbioru','reference'=>$client ? 'Numer zlecenia / zamówienia / umowy *' : 'Numer zamówienia / umowy'] as $key=>$label)<div><label for="protocol-{{$key}}">{{$label}}</label><input id="protocol-{{$key}}" name="{{$key}}" type="{{$key==='acceptance_date'?'date':'text'}}" value="{{old($key,$key==='acceptance_date'?$protocol->acceptance_date?->toDateString():$protocol->$key)}}" @required($client && $key==='reference')></div>@endforeach
 @foreach(['kind'=>['Rodzaj odbioru',\App\Models\ProjectProtocol::KINDS],'outcome'=>['Wynik odbioru',\App\Models\ProjectProtocol::OUTCOMES],'invoice_decision'=>['Czy dostawca może wystawić fakturę?',\App\Models\ProjectProtocol::INVOICES]] as $key=>[$label,$options])@continue($client && $key==='invoice_decision')<div><label for="protocol-{{$key}}">{{$label}} *</label><select id="protocol-{{$key}}" name="{{$key}}" required>@foreach($options as $value=>$text)<option value="{{$value}}" @selected(old($key,$protocol->$key ?? ($key==='invoice_decision'?'no':array_key_first($options)))===$value)>{{$text}}</option>@endforeach</select></div>@endforeach
 <div class="protocol-full"><label for="protocol-description">{{ $client ? 'Opis wykonanych prac' : 'Przedmiot i zakres odbioru' }} *</label><textarea id="protocol-description" name="description" required>{{old('description',$protocol->description)}}</textarea></div>
 </div>
@@ -42,8 +42,20 @@
 <div class="protocol-grid">
 @foreach(['remarks'=>'Uwagi, usterki i zastrzeżenia','invoice_conditions'=>'Warunki fakturowania / uzgodnienia rozliczeniowe','attachments'=>'Wykaz załączników (np. dokumentacja, atesty, wyniki prób)'] as $key=>$label)@continue($client && $key==='invoice_conditions')<div class="protocol-full"><label for="protocol-{{$key}}">{{$label}}</label><textarea id="protocol-{{$key}}" name="{{$key}}">{{old($key,$protocol->$key)}}</textarea></div>@endforeach
 <div><label for="protocol-remedy">Termin usunięcia usterek</label><input id="protocol-remedy" type="date" name="remedy_deadline" value="{{old('remedy_deadline',$protocol->remedy_deadline?->toDateString())}}"></div>
-<div><label for="protocol-receiver">{{ $client ? 'Osoba lub osoby odbierające po stronie klienta' : 'Przedstawiciel odbierającego' }} *</label><input id="protocol-receiver" name="receiver_name" value="{{old('receiver_name',$protocol->receiver_name ?? ($client ? null : auth()->user()->name))}}" required></div>
-<div><label for="protocol-representative">{{ $client ? 'Przedstawiciel wykonawcy' : 'Przedstawiciel dostawcy' }} *</label><input id="protocol-representative" name="supplier_representative" value="{{old('supplier_representative',$protocol->supplier_representative ?? ($client ? auth()->user()->name : null))}}" required></div>
+@foreach(['receivers' => [$client ? 'Odbierający po stronie klienta' : 'Odbierający z naszej firmy', 'receiver_name', !$client], 'representatives' => [$client ? 'Przedstawiciele wykonawcy' : 'Przedstawiciele dostawcy', 'supplier_representative', $client]] as $key => [$label, $field, $internal])
+    @php($names = (array) old($key, $protocol->peopleNames($field)))
+    @php($options = array_unique(array_merge($representatives, $protocol->peopleNames($field))))
+    <div class="protocol-full" data-protocol-people>
+        <label for="protocol-{{$key}}">{{$label}}</label>
+        <div data-people-rows style="display:grid;gap:6px">
+            @foreach($names ?: [''] as $name)
+                @include('projects.protocols.person-input', ['inputId' => $loop->first ? 'protocol-'.$key : null])
+            @endforeach
+        </div>
+        <template>@include('projects.protocols.person-input', ['name' => '', 'inputId' => null])</template>
+        <p style="margin-top:6px"><button type="button" data-add-person>+ Dodaj osobę</button></p>
+    </div>
+@endforeach
 </div>
 @unless($client)
 <p><label><input type="checkbox" name="use_signature" value="1" @checked(old('use_signature'))> Dołącz mój zapisany podpis do pola odbierającego</label></p>
@@ -67,4 +79,21 @@ document.getElementById('protocol-add-item').addEventListener('click',updateProt
 updateProtocolTotals();
 </script>
 @endunless
+<script>
+document.querySelectorAll('[data-protocol-people]').forEach(group => {
+    const rows = group.querySelector('[data-people-rows]');
+    group.querySelector('[data-add-person]').addEventListener('click', () => {
+        if (rows.children.length >= 20) return;
+        rows.append(group.querySelector('template').content.cloneNode(true));
+        rows.lastElementChild.querySelector('input,select').focus();
+    });
+    rows.addEventListener('click', event => {
+        const button = event.target.closest('[data-remove-person]');
+        if (!button) return;
+        const row = button.parentElement;
+        if (row === rows.firstElementChild) row.querySelector('input,select').value = '';
+        else row.remove();
+    });
+});
+</script>
 @endsection

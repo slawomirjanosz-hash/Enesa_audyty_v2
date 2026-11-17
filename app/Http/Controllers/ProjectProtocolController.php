@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Project;
 use App\Models\ProjectProtocol;
+use App\Models\User;
 use App\Services\AuditorAccessService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -61,8 +62,16 @@ class ProjectProtocolController extends Controller
     {
         return view('projects.protocols.form', [
             'project' => $project, 'protocol' => $protocol,
+            'representatives' => $this->representativeNames(),
             'suppliers' => $protocol->isClientAcceptance() ? collect() : Company::suppliers()->where(fn ($q) => $q->whereNull('archived_at')->orWhere('id', $protocol->supplier_company_id))->orderBy('name')->get(),
         ]);
+    }
+
+    private function representativeNames(): array
+    {
+        return User::where('is_active', true)
+            ->whereDoesntHave('roles', fn ($roles) => $roles->whereIn('name', ['client_admin', 'client_user']))
+            ->orderBy('name')->pluck('name')->unique()->values()->all();
     }
 
     public function store(Request $request, Project $project)
@@ -81,6 +90,23 @@ class ProjectProtocolController extends Controller
         $type = $request->validate(['direction' => ['sometimes', Rule::in(array_keys(ProjectProtocol::DIRECTIONS))]]);
         $direction = $protocol->exists ? $protocol->direction : ($type['direction'] ?? 'supplier');
         $client = $direction === 'client';
+        $internal = $client ? 'supplier_representative' : 'receiver_name';
+        $people = $request->validate([
+            'receivers' => ['sometimes', 'array', 'max:20'],
+            'receivers.*' => ['nullable', 'string', 'max:255', 'not_regex:/[\r\n]/'],
+            'representatives' => ['sometimes', 'array', 'max:20'],
+            'representatives.*' => ['nullable', 'string', 'max:255', 'not_regex:/[\r\n]/'],
+        ]);
+        foreach (['receivers' => 'receiver_name', 'representatives' => 'supplier_representative'] as $input => $field) {
+            if (! array_key_exists($input, $people)) {
+                continue;
+            }
+            $names = array_values(array_unique(array_filter($people[$input], fn ($name) => filled($name))));
+            if ($field === $internal && array_diff($names, array_merge($this->representativeNames(), $protocol->peopleNames($field)))) {
+                throw ValidationException::withMessages([$input => 'Wybierz przedstawicieli z listy.']);
+            }
+            $request->merge([$field => implode("\n", $names)]);
+        }
         if ($client) {
             $request->merge(['items_mode' => 'manual', 'invoice_decision' => 'no', 'use_signature' => false]);
         }
@@ -105,7 +131,7 @@ class ProjectProtocolController extends Controller
             'remedy_deadline' => ['nullable', 'date_format:Y-m-d'],
             'invoice_conditions' => $client ? ['exclude'] : ['required_if:invoice_decision,conditional', 'nullable', 'string', 'max:5000'],
             'attachments' => ['nullable', 'string', 'max:5000'],
-            'receiver_name' => ['required', 'string', 'max:255'], 'supplier_representative' => ['required', 'string', 'max:255'],
+            'receiver_name' => ['nullable', 'string', 'max:255'], 'supplier_representative' => ['nullable', 'string', 'max:255'],
             'use_signature' => ['nullable', 'boolean'],
             'items' => [$manual ? 'present' : 'required', 'array', $manual ? 'max:0' : 'min:1', 'max:100'],
             'items.*.name' => ['required', 'string', 'max:500'],
@@ -120,6 +146,8 @@ class ProjectProtocolController extends Controller
         if ($data['outcome'] === 'accepted' && ! empty($data['remarks'])) {
             throw ValidationException::withMessages(['outcome' => 'Wpisano uwagi. Wybierz odbiór z uwagami.']);
         }
+        $data['receiver_name'] ??= '';
+        $data['supplier_representative'] ??= '';
         $signature = $request->boolean('use_signature') ? $request->user()->signatureDataUri() : null;
         if ($request->boolean('use_signature') && (! $signature || $data['receiver_name'] !== $request->user()->name)) {
             throw ValidationException::withMessages(['use_signature' => 'Możesz dołączyć wyłącznie własny zapisany podpis, ze swoim imieniem i nazwiskiem odbierającego.']);
