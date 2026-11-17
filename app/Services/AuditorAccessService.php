@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AuditorCompanyAccess;
+use App\Models\CompanySettings;
 use App\Models\Document;
 use App\Models\Offer;
 use App\Models\OfferRequest;
@@ -12,6 +13,24 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AuditorAccessService
 {
+    public function canAccessOffers(User $user): bool
+    {
+        return CompanySettings::moduleIsEnabled('offers')
+            && ($this->hasFullAccess($user) || $user->can('offers.view'));
+    }
+
+    public function canAccessProjects(User $user): bool
+    {
+        return CompanySettings::moduleIsEnabled('projects')
+            && ($this->hasFullAccess($user) || $user->can('projects.view'));
+    }
+
+    private function offerAccessDenied(User $user, string $ability): bool
+    {
+        return in_array($ability, ['can_view_offers', 'can_view_offer_requests', 'can_view_offer_prices'], true)
+            && ! $this->canAccessOffers($user);
+    }
+
     public function hasFullAccess(User $user): bool
     {
         return $user->hasRole('superadmin') || $user->can('system.full_access');
@@ -24,6 +43,9 @@ class AuditorAccessService
 
     public function canViewCompany(User $user, int $companyId, string $ability): bool
     {
+        if ($this->offerAccessDenied($user, $ability)) {
+            return false;
+        }
         if ($this->hasFullAccess($user)) {
             return true;
         }
@@ -72,6 +94,9 @@ class AuditorAccessService
 
     public function accessibleCompanyIds(User $user, string $ability): array
     {
+        if ($this->offerAccessDenied($user, $ability)) {
+            return [-1];
+        }
         if ($this->hasFullAccess($user)) {
             return [];
         }
@@ -103,6 +128,9 @@ class AuditorAccessService
 
     public function scopeByCompanyAccess(Builder|Relation $query, User $user, string $ability, string $companyColumn = 'company_id'): Builder|Relation
     {
+        if ($this->offerAccessDenied($user, $ability)) {
+            return $query->whereRaw('1 = 0');
+        }
         if ($this->hasFullAccess($user)) {
             return $query;
         }
@@ -141,6 +169,9 @@ class AuditorAccessService
 
     public function canViewOfferRecord(User $user, Offer|OfferRequest $record, string $ability): bool
     {
+        if ($this->offerAccessDenied($user, $ability)) {
+            return false;
+        }
         if ($this->hasFullAccess($user)) {
             return true;
         }
@@ -158,9 +189,12 @@ class AuditorAccessService
             && (! $document->offer || ! $user->can('view', $document->offer))) {
             return false;
         }
-        if ($document->project_id !== null) {
-            return $document->project !== null && $user->can('view', $document->project)
-                && ($this->hasFullAccess($user) || $user->can('projects.documents.view'));
+        if ($document->project_id !== null || $document->project_document_folder_id !== null) {
+            return $this->canAccessProjects($user)
+                && ($this->hasFullAccess($user) || $user->can('projects.documents.view'))
+                && ($document->project_id === null || ($document->project && $user->can('view', $document->project)))
+                && ($document->project_document_folder_id === null
+                    || ($document->projectFolder?->project && $user->can('view', $document->projectFolder->project)));
         }
         if ($this->hasFullAccess($user)) {
             return true;
@@ -180,18 +214,18 @@ class AuditorAccessService
 
     public function scopeDocumentsVisibleTo(Builder $query, User $user): Builder
     {
-        $query->where(function (Builder $documents) use ($user) {
-            $documents->whereNull('project_id')->orWhereHas('project', function (Builder $projects) use ($user) {
-                if (! $this->hasFullAccess($user)) {
-                    if (! $user->can('projects.view') || ! $user->can('projects.documents.view')) {
+        foreach (['project_id' => 'project', 'project_document_folder_id' => 'projectFolder.project'] as $column => $relation) {
+            $query->where(function (Builder $documents) use ($user, $column, $relation) {
+                $documents->whereNull($column)->orWhereHas($relation, function (Builder $projects) use ($user) {
+                    if (! $this->canAccessProjects($user) || (! $this->hasFullAccess($user) && ! $user->can('projects.documents.view'))) {
                         $projects->whereRaw('1 = 0');
-                    } else {
+                    } elseif (! $this->hasFullAccess($user)) {
                         $projects->where(fn (Builder $members) => $members->where('manager_id', $user->id)
                             ->orWhereHas('members', fn (Builder $users) => $users->whereKey($user->id)));
                     }
-                }
+                });
             });
-        });
+        }
         if ($this->hasFullAccess($user)) {
             return $query;
         }

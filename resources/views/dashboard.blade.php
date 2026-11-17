@@ -486,6 +486,7 @@
     </a>
     @endif
 
+    @if($offersEnabled)
     {{-- Oferty do wysłania --}}
     <div class="stat-card">
         <div class="stat-icon stat-icon-blue">
@@ -499,6 +500,8 @@
             </div>
         </div>
     </div>
+
+    @endif
 
     {{-- Nowe rejestracje --}}
     <div class="stat-card">
@@ -631,10 +634,12 @@
                     <span>{{ $company->projects->count() }} {{ $company->projects->count() === 1 ? 'projekt' : ($company->projects->count() < 5 ? 'projekty' : 'projektów') }} @if($company->projects->sum('overdue_tasks_count') > 0)<strong style="color:#C62828" title="Zadania projektowe po terminie">! {{ $company->projects->sum('overdue_tasks_count') }}</strong>@endif</span>
                 </div>
                 @endif
+                @if($offersEnabled)
                 <div class="tile-info-row">
                     <i class="ti ti-file-invoice"></i>
                     <span>{{ $company->offers->count() }} {{ $company->offers->count() === 1 ? 'oferta' : ($company->offers->count() < 5 ? 'oferty' : 'ofert') }}</span>
                 </div>
+                @endif
                 @if($canViewDashboardDocuments)
                 <div class="tile-info-row" data-dashboard-metric="documents">
                     <i class="ti ti-files"></i>
@@ -690,10 +695,10 @@
             <th onclick="sortCompaniesTable(2)">Status <span class="sort-icon-dash">⇅</span></th>
             @if($auditsEnabled)<th data-dashboard-metric="audits" onclick="sortCompaniesTable(3,true)">Audyty <span class="sort-icon-dash">⇅</span></th>@endif
             @if($projectsEnabled)<th data-dashboard-metric="projects" onclick="sortCompaniesTable({{$auditsEnabled ? 4 : 3}},true)">Projekty <span class="sort-icon-dash">⇅</span></th>@endif
-            <th onclick="sortCompaniesTable({{3 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Oferty <span class="sort-icon-dash">⇅</span></th>
-            @if($canViewDashboardDocuments)<th data-dashboard-metric="documents" onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Dokumenty <span class="sort-icon-dash">⇅</span></th>@endif
-            <th onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled + (int)$canViewDashboardDocuments}},true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
-            <th onclick="sortCompaniesTable({{5 + (int)$auditsEnabled + (int)$projectsEnabled + (int)$canViewDashboardDocuments}})">Data dodania <span class="sort-icon-dash">⇅</span></th>
+            @if($offersEnabled)<th onclick="sortCompaniesTable({{3 + (int)$auditsEnabled + (int)$projectsEnabled}},true)">Oferty <span class="sort-icon-dash">⇅</span></th>@endif
+            @if($canViewDashboardDocuments)<th data-dashboard-metric="documents" onclick="sortCompaniesTable({{3 + (int)$auditsEnabled + (int)$projectsEnabled + (int)$offersEnabled}},true)">Dokumenty <span class="sort-icon-dash">⇅</span></th>@endif
+            <th onclick="sortCompaniesTable({{3 + (int)$auditsEnabled + (int)$projectsEnabled + (int)$offersEnabled + (int)$canViewDashboardDocuments}},true)">Użytkownicy <span class="sort-icon-dash">⇅</span></th>
+            <th onclick="sortCompaniesTable({{4 + (int)$auditsEnabled + (int)$projectsEnabled + (int)$offersEnabled + (int)$canViewDashboardDocuments}})">Data dodania <span class="sort-icon-dash">⇅</span></th>
             <th style="text-align:right;">Akcje</th>
         </tr>
     </thead>
@@ -750,7 +755,7 @@
                 </td>
                 @if($auditsEnabled)<td data-dashboard-metric="audits" style="text-align:center;">{{ $company->audits->count() }}</td>@endif
                 @if($projectsEnabled)<td data-dashboard-metric="projects" style="text-align:center;">{{ $company->projects->count() }}</td>@endif
-                <td style="text-align:center;">{{ $company->offers->count() }}</td>
+                @if($offersEnabled)<td style="text-align:center;">{{ $company->offers->count() }}</td>@endif
                 @if($canViewDashboardDocuments)<td data-dashboard-metric="documents" style="text-align:center;">{{ $company->documents_count }}</td>@endif
                 <td style="text-align:center;">{{ $company->users->count() }}</td>
                 <td data-sort-value="{{ $company->created_at?->format('Y-m-d H:i:s') }}" style="white-space:nowrap;">{{ $company->created_at?->format('d.m.Y H:i') ?? '—' }}</td>
@@ -796,7 +801,7 @@
                     </td>
                     <td style="padding:10px 16px;color:#5a6a60;">{{ $ao->updated_at->format('d.m.Y H:i') }}</td>
                     <td style="padding:10px 16px;text-align:right;font-family:'Lato',sans-serif;font-weight:700;color:#1A1A1A;">
-                        @if($ao->kwota_netto !== null)
+                        @if(auth()->user()->can('viewPrices', $ao) && $ao->kwota_netto !== null)
                             {{ number_format($ao->kwota_netto, 2, ',', ' ') }} zł
                         @else
                             —

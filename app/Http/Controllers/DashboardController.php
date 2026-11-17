@@ -24,7 +24,8 @@ class DashboardController extends Controller
         $user = $request->user();
         $lastSeenTaskId = $user->dashboard_tasks_seen_id ?? 0;
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
-        $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
+        $projectsEnabled = $access->canAccessProjects($user);
+        $offersEnabled = $access->canAccessOffers($user);
         $canPrioritizeCompanies = $access->hasFullAccess($user);
         $canViewDashboardDocuments = $access->hasFullAccess($user) || $user->can('dashboard.documents.view');
         $relations = [
@@ -55,7 +56,7 @@ class DashboardController extends Controller
             ])]);
         }
         if ($canViewDashboardDocuments) {
-            $companiesQuery->withCount('documents');
+            $companiesQuery->withCount(['documents' => fn ($documents) => $access->scopeDocumentsVisibleTo($documents, $user)]);
         }
         $companies = $access->scopeByCompanyAccess(
             $companiesQuery,
@@ -132,7 +133,7 @@ class DashboardController extends Controller
             ->limit(10), $user, 'can_view_offers')
             ->get();
 
-        return view('dashboard', compact('companies', 'stats', 'newRequests', 'acceptedOffers', 'auditsEnabled', 'projectsEnabled', 'canPrioritizeCompanies', 'canViewDashboardDocuments'));
+        return view('dashboard', compact('companies', 'stats', 'newRequests', 'acceptedOffers', 'auditsEnabled', 'projectsEnabled', 'offersEnabled', 'canPrioritizeCompanies', 'canViewDashboardDocuments'));
     }
 
     public function reorderCompanies(Request $request): JsonResponse

@@ -123,7 +123,8 @@ class CompanyController extends Controller
         $canManageCrm = $access->hasFullAccess($user);
         $canManageAudits = $access->hasFullAccess($user) || $user->can('audits.manage');
         $auditsEnabled = CompanySettings::moduleIsEnabled('audits');
-        $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
+        $projectsEnabled = $access->canAccessProjects($user);
+        $offersEnabled = $access->canAccessOffers($user);
 
         $relations = [
             'offers' => fn ($offers) => $access->scopeByCompanyAccess($offers, $user, 'can_view_offers'),
@@ -236,7 +237,7 @@ class CompanyController extends Controller
 
         return view('companies.show', compact(
             'company', 'stats', 'crmOpportunities', 'crmTasks', 'crmActivities', 'offerRequests', 'documents',
-            'projects', 'auditsEnabled', 'projectsEnabled', 'canManageCrm', 'crmAssignableUsers', 'canManageAudits', 'auditUsers'
+            'projects', 'auditsEnabled', 'projectsEnabled', 'offersEnabled', 'canManageCrm', 'crmAssignableUsers', 'canManageAudits', 'auditUsers'
         ))->with('auditTypes', $canManageAudits ? AuditType::orderBy('name')->get() : collect());
     }
 

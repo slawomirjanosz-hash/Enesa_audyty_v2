@@ -775,6 +775,7 @@
         </div>
     </div>
     @endif
+    @if($offersEnabled)
     <div class="stat-card">
         <div class="stat-icon orange"><i class="ti ti-file-invoice"></i></div>
         <div>
@@ -782,6 +783,7 @@
             <div class="stat-label">Oferty</div>
         </div>
     </div>
+    @endif
     <div class="stat-card">
         <div class="stat-icon blue"><i class="ti ti-target"></i></div>
         <div>
@@ -822,6 +824,7 @@
             @endif
         </button>
         @endif
+        @if($offersEnabled)
         <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests', this)">
             <i class="ti ti-inbox"></i> Zapytania
             @if(isset($offerRequests) && $offerRequests->isNotEmpty())
@@ -834,6 +837,7 @@
                 <span class="tab-badge">{{ $stats['offers_count'] }}</span>
             @endif
         </button>
+        @endif
         @if($projectsEnabled)
         <button class="tab-btn" id="tab-btn-projects" onclick="switchTab('projects', this)">
             <i class="ti ti-folders"></i> Projekty
@@ -946,7 +950,7 @@
                                 <div class="activity-icon" style="background:#FFF3E0;color:#E65100;"><i class="ti ti-file-invoice"></i></div>
                                 <div class="activity-text">
                                     Oferta <strong>#{{ $offer->id }}</strong>
-                                    — {{ number_format($offer->total_price ?? 0, 2) }} zł
+                                    @can('viewPrices', $offer) — {{ number_format($offer->kwota_netto ?? 0, 2) }} zł @endcan
                                 </div>
                                 <div class="activity-time">{{ $offer->created_at->diffForHumans() }}</div>
                             </div>

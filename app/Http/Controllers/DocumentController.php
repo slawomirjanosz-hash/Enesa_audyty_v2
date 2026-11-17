@@ -44,7 +44,8 @@ class DocumentController extends Controller
             $query->where(fn ($q) => $q->where('original_filename', 'like', '%'.$search.'%')
                 ->orWhere('type', 'like', '%'.$search.'%')
                 ->orWhereHas('company', fn ($company) => $company->where('name', 'like', '%'.$search.'%'))
-                ->orWhereHas('offer', fn ($offer) => $offer->where('number', 'like', '%'.$search.'%'))
+                ->orWhereHas('offer', fn ($offer) => $offer->where('offer_number', 'like', '%'.$search.'%')
+                    ->orWhere('offer_full_number', 'like', '%'.$search.'%'))
                 ->orWhereHas('uploader', fn ($user) => $user->where('name', 'like', '%'.$search.'%')));
         }
         $query->with(['company', 'offer', 'uploader'])->orderByDesc('updated_at')->orderByDesc('id');
