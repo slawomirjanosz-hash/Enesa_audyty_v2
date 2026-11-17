@@ -489,7 +489,21 @@ test('an accountant processes their own invoice as accounting and confirms it as
     $this->post($workflow, ['action' => 'settled', 'revision' => 2, 'tab' => 'all', 'settlement_method' => 'refund'])
         ->assertSessionHasNoErrors();
     $this->get(route('expenses.index'))->assertOk()->assertSee('Potwierdź rozliczenie');
-    $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 3])->assertForbidden();
     $this->post($workflow, ['action' => 'closed', 'revision' => 3])->assertSessionHasNoErrors();
     expect($invoice->fresh()->workflow_status)->toBe('closed');
+    $this->get(route('expenses.index'))->assertOk()->assertSee('Usuń fakturę '.$invoice->invoice_number);
+    $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => $invoice->fresh()->revision])->assertSessionHas('success');
+    $this->assertSoftDeleted('expense_invoices', ['id' => $invoice->id, 'deleted_by' => $finance->id]);
+});
+
+test('administrators can delete closed invoices within their register access', function () {
+    $admin = expenseUser();
+    $admin->assignRole(Role::findOrCreate('admin'));
+    $closed = expenseRecord($admin, ['settled_at' => now(), 'workflow_status' => 'closed', 'revision' => 1]);
+    $private = expenseRecord(expenseUser(), ['settled_at' => now(), 'workflow_status' => 'closed', 'revision' => 1]);
+
+    $this->actingAs($admin)->get(route('expenses.index'))->assertOk()->assertSee('Usuń fakturę '.$closed->invoice_number);
+    $this->delete(route('expenses.destroy', $private), ['confirm' => 1, 'revision' => $private->revision])->assertForbidden();
+    $this->delete(route('expenses.destroy', $closed), ['confirm' => 1, 'revision' => $closed->revision])->assertSessionHas('success');
+    $this->assertSoftDeleted('expense_invoices', ['id' => $closed->id, 'deleted_by' => $admin->id]);
 });

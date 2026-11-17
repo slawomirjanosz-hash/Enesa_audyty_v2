@@ -426,7 +426,7 @@ class ExpenseInvoiceController extends Controller
         $request->validate(['confirm' => ['required', 'accepted'], 'revision' => ['required', 'integer', 'min:1']]);
         DB::transaction(function () use ($request, $invoice): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
-            abort_unless($current->canBeDeletedBy($request->user(), ($this->accounting($request->user()) && ($request->input('tab') === 'all' || $current->owner_id !== $request->user()->id))), 403);
+            abort_unless($current->canBeDeletedBy($request->user(), $this->accounting($request->user())), 403);
             abort_unless($current->revision === (int) $request->input('revision'), 409, 'Faktura została zmieniona. Odśwież stronę przed usunięciem.');
             $current->forceFill(['deleted_by' => $request->user()->id, 'revision' => $current->revision + 1])->save();
             $current->delete();

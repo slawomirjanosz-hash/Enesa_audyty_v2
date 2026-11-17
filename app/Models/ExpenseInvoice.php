@@ -22,7 +22,15 @@ class ExpenseInvoice extends Model
 
     public function canBeDeletedBy(User $user, bool $accounting): bool
     {
-        return $accounting || (
+        if ($accounting) {
+            return true;
+        }
+
+        if ($user->hasRole('admin')) {
+            return $this->owner_id === $user->id || ($this->is_unassigned && $this->owner_id === null);
+        }
+
+        return (
             (int) $this->created_by === $user->id
             && $this->owner_id === $user->id
             && ! $this->is_unassigned
