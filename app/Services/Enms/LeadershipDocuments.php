@@ -97,7 +97,7 @@ final class LeadershipDocuments
                 continue;
             }
             $label = $this->workflow->library->criteria()[$p['criterion_id']]['id'];
-            if ($p['basis'] !== $this->workflow->basis($w, $p['criterion_id'])) {
+            if (! SnapshotComparison::same($p['basis'], $this->workflow->basis($w, $p['criterion_id']))) {
                 $messages[] = "$label: podstawa zamknięcia zmieniła się; wymagane ponowne rozstrzygnięcie konsultanta.";
             } elseif ($p['partial_only'] ?? false) {
                 $messages[] = "$label: zamknięte wyłącznie na podstawie pokryć częściowych.";
@@ -108,7 +108,7 @@ final class LeadershipDocuments
             foreach ($d['payload']['citations'] ?? [] as $key => $citation) {
                 $v = $this->workflow->one($w, 'citation_verification', 'citation_key', $r['id'].'/'.$key)['payload'] ?? [];
                 $field = collect($r['pola'])->firstWhere('klucz', $key);
-                if (($v['state'] ?? '') !== 'zweryfikowana' || ($v['citation'] ?? null) !== $citation) {
+                if (($v['state'] ?? '') !== 'zweryfikowana' || ! SnapshotComparison::same($v['citation'] ?? null, $citation)) {
                     $messages[] = ($r['iso'] ?? $r['kod']).' — '.$field['etykieta'].': brak aktualnej weryfikacji merytorycznej cytatu. Zatwierdzenie dokumentu źródłowego nie zastępuje sprawdzenia cytatu.';
                 }
             }

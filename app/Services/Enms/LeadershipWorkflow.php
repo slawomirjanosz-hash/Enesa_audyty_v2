@@ -213,7 +213,7 @@ final class LeadershipWorkflow
                     }
                     $cid = $this->library->id('criterion', $criterion['id']);
                     $closure = $this->one($w, 'closure', 'criterion_id', $cid);
-                    if (($closure['payload']['stan'] ?? '') !== 'zamkniete' || ($closure['payload']['basis'] ?? null) !== $this->basis($w, $cid)) {
+                    if (($closure['payload']['stan'] ?? '') !== 'zamkniete' || ! SnapshotComparison::same($closure['payload']['basis'] ?? null, $this->basis($w, $cid))) {
                         $this->invalid('Kryterium '.$criterion['id'].' wymaga aktualnego zamknięcia przez audytora.');
                     }
                 }
@@ -445,7 +445,7 @@ final class LeadershipWorkflow
             }
             foreach ($declaration['citations'] ?? [] as $key => $citation) {
                 $field = collect($requirement['pola'])->firstWhere('klucz', $key);
-                if ($citation !== ($source['citations'][$field['zrodlo']['obiekt']] ?? null)) {
+                if (! SnapshotComparison::same($citation, $source['citations'][$field['zrodlo']['obiekt']] ?? null)) {
                     $missing[] = "$label: źródło pola „".$field['etykieta'].'” zmieniło się. Sprawdź i zapisz odpowiedź ponownie.';
                 }
             }
@@ -584,7 +584,7 @@ final class LeadershipWorkflow
                     }
                 }
                 foreach ($w->records('closure') as $c) {
-                    if ($c['payload']['stan'] === 'zamkniete' && $c['payload']['basis'] !== $this->basis($w, $c['payload']['criterion_id'])) {
+                    if ($c['payload']['stan'] === 'zamkniete' && ! SnapshotComparison::same($c['payload']['basis'], $this->basis($w, $c['payload']['criterion_id']))) {
                         $this->invalid('Zamknięcia kryteriów wymagają ponownego sprawdzenia.');
                     }
                 }

@@ -472,7 +472,7 @@ test('enms reproduces all thirteen reference assessments from its exact evidence
     expect($w->records('evidence'))->toHaveCount(18)->and($w->records('coverage'))->toHaveCount(52)->and($w->records('closure'))->toHaveCount(31)->and($w->records('assessment'))->toHaveCount(13);
 });
 
-test('enms reference declarations pass from client through consultant assessment to diagnostic documents', function () {
+test('enms reference declarations pass from client through consultant assessment to diagnostic documents', function (bool $reorderJson) {
     $fixture = enmsFixture();
     [$audit, $client, $staff, $profile, $w, $s] = $fixture;
     foreach (['6-2' => 'CELE', '5-3' => 'ROLE'] as $section => $key) {
@@ -495,6 +495,9 @@ test('enms reference declarations pass from client through consultant assessment
     }
     expect($s->readiness($cw)['missing'])->toBe([]);
     expect($s->readiness($cw)['gaps'])->toHaveCount(5);
+    if ($reorderJson) {
+        enmsReorderStoredJson($cw);
+    }
     $this->actingAs($client)->post(route('client.audits.enms.update', [$audit, $profile]), ['revision' => $cw->revision(), 'source_hash' => $s->sources($cw)['hash'], 'operation' => 'submission'])->assertSessionHasNoErrors()->assertRedirect();
     expect($s->status($cw)['submitted'])->toBeTrue();
     foreach ($reference['evidence'] as $row) {
@@ -516,8 +519,14 @@ test('enms reference declarations pass from client through consultant assessment
     foreach ($reference['closures'] as $code => $row) {
         enmsSave($w, 'closure', ['criterion_id' => $s->library->id('criterion', $code), 'stan' => $row['state'], 'uzasadnienie' => 'Rozstrzygnięcie konsultanta']);
     }
+    if ($reorderJson) {
+        enmsReorderStoredJson($w);
+    }
     foreach ($reference['assessments'] as $code => $row) {
         enmsSave($w, 'assessment', ['requirement_id' => $s->library->id('requirement', $code), 'stan' => $row['state'], 'uzasadnienie' => 'Ocena konsultanta', 'mode' => 'ciagla', 'coverage_ids' => array_map(fn ($id) => $coverage[$id], $row['sources'])]);
+    }
+    if ($reorderJson) {
+        enmsReorderStoredJson($w);
     }
     $this->actingAs($staff)->post(route('audits.enms.update', [$audit, $profile]), ['revision' => $w->revision(), 'source_hash' => $s->sources($w)['hash'], 'operation' => 'completion', 'payload' => ['text' => 'Zakończenie diagnostyki na podstawie scenariusza referencyjnego']])->assertSessionHasNoErrors()->assertRedirect();
     expect($s->status($w)['assessed'])->toBeTrue();
@@ -529,4 +538,4 @@ test('enms reference declarations pass from client through consultant assessment
         expect($draft['payload']['snapshot']['status']['assessed'])->toBeTrue();
     }
     expect($w->records('declaration'))->toHaveCount(15)->and($w->records('finding'))->toHaveCount(9);
-});
+})->with(['original JSON order' => false, 'database JSON order' => true]);

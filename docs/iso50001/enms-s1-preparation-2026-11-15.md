@@ -85,3 +85,17 @@ Nowe tabele powstają przez addytywną migrację schematu. GET nie tworzy rekord
 Dodatkowa regresja pilota obejmuje wejście obu ról, odmowę wszystkich nowych endpointów poza listą, pusty start mimo zatwierdzonej starej ankiety, zachowanie jej zapisów i dokumentów po zapisie 0.4 oraz ukrycie postępu i powiadomień po wyłączeniu pilota. Końcowy wynik: **64 testy, 559 asercji — wszystkie zaliczone** (tmp/enms-pilot-final-tests.log). W Chromium ponownie sprawdzono 11 zakładek, zapis i odczyt, pola warunkowe, sortowanie, widok mobilny oraz wejście z menu i zakładki dokumentów dla obu ról. Odczyt dużych snapshotów EnMS sortuje wersje w pamięci aplikacji, aby nie wymagać sortowania obszernych JSON w buforze MySQL.
 
 Weryfikacja wdrożenia wymaga osobnego sprawdzenia commitów web i worker na Railway, uruchomionego schematu, wejść obu ról i zachowania skrótów starych zapisów audytów 1 i 9. Sam push nie oznacza dostępności pilota. Pliki tmp/, output/ i outputs/ nie należą do commita.
+
+## Poprawka porównywania źródeł — 17.11.2026
+
+Odczyt produkcji w transakcji READ ONLY potwierdził na audycie 9, profilu 6, rewizji 18: 13 deklaracji, 3 dowody, 1 projekt Karty i osiem fałszywych blokad przekazania w a), b), g), i), l). Wszystkie zapisane cytaty miały te same wartości i typy co aktualne źródła; zakres 4.3 miał wersję 1 po obu stronach. MySQL zmienił kolejność kluczy obiektów JSON, a ścisłe porównanie tablic PHP traktowało tę kolejność jako zmianę danych. Ponowny zapis nie mógł usunąć przyczyny.
+
+`SnapshotComparison` pomija wyłącznie kolejność kluczy obiektów, rekurencyjnie. Zachowuje znaczenie kolejności list, typów, wartości, brakujących kluczy, wersji oraz stanu zatwierdzenia. Zastosowano go do cytatów, weryfikacji cytatów i podstaw zamknięcia kryteriów w ocenie, interfejsie oraz ograniczeniach dokumentów. Nie zmieniono algorytmów odcisków, danych, rewizji ani zatwierdzeń. Nie jest potrzebna migracja ani ponowny zapis istniejących odpowiedzi.
+
+Źródłowe `51_formularz.js`, funkcje `brakiObowiazku` i `gotowoscPrzekazania`, rozdzielają braki formalne od luk wdrożeniowych. „Jeszcze tego nie ma” i „częściowo” wymagają planu i terminu; brak zatwierdzonego dokumentu źródłowego sam w sobie nie blokuje przekazania. Zatwierdzenie źródła nie oznacza merytorycznej weryfikacji cytatu. Rzeczywista zmiana źródła nadal wymaga przeglądu i ponownego zapisu odpowiedzi.
+
+Regresja odtwarza zmianę kolejności kluczy przez bazę, osiem cytatów (w tym brakujące źródła), zapis i przekazanie 13 odpowiedzi, rzeczywistą zmianę wersji/treści, aktualność zamknięć i cały scenariusz referencyjny aż do raportu oraz załącznika. Przed poprawką nowe przypadki reprodukowały blokady; po poprawce ukierunkowany zestaw przeszedł: 16 testów, 86 asercji. W Chromium na osobnej bazie z danymi fabrycznymi sprawdzono przekazanie, ponowne otwarcie, stan konsultanta i wszystkie 11 jego zakładek, bez błędów JavaScript. Produkcyjnego zatwierdzenia nie wykonujemy w imieniu klienta.
+
+Istniejące projekty i wydane dokumenty zachowują zamrożone dane. Poprawka nie przepisuje ich treści; projekt zapisany z błędnym ostrzeżeniem wymaga przygotowania nowego projektu, jeśli ma przedstawiać aktualny stan.
+
+Pełna regresja EnMS i powiązanych ekranów po poprawce: **79 testów, 630 asercji — wszystkie zaliczone** (`tmp/enms-citations-regression.log`). Obejmuje dotychczasowe granice dostępu, izolację firm, pilot, wcześniejszy obieg, Excel, dokumenty i zatwierdzenia.
