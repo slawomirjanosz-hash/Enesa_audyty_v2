@@ -617,7 +617,14 @@
                 <div class="field"><label>Postęp (%)</label><input type="number" id="gantt-task-progress" min="0" max="100" value="0" required></div>
                 <div class="field"><label>Zależne od zadania</label><select id="gantt-task-dependency"><option value="">Brak — zadanie główne</option></select></div>
                 <div class="field"><label for="gantt-task-cost">Koszt etapu (PLN)</label><input id="gantt-task-cost" type="number" min="0" max="9999999999.99" step="0.01"></div>
-                <fieldset class="field full" style="min-width:0"><legend>Osoby zaangażowane</legend><div class="member-checks">@forelse($projectTeam as $member)<label class="member-check"><input type="checkbox" class="gantt-participant" value="{{$member->id}}"> {{$member->name}}</label>@empty Brak osób w zespole projektu. @endforelse</div></fieldset>
+                <div class="field full">
+                    <label id="gantt-participant-label">Osoby zaangażowane</label>
+                    @include('projects.partials.member-picker', [
+                        'users' => $projectTeam, 'selectedMembers' => [], 'pickerIncludeSuperadmins' => true,
+                        'pickerAsField' => true, 'pickerId' => 'gantt-participants',
+                        'pickerLabelId' => 'gantt-participant-label', 'pickerInputName' => 'participant_ids[]',
+                    ])
+                </div>
                 <div class="field"><label for="gantt-task-assignee">Osoba odpowiedzialna</label><select id="gantt-task-assignee"><option value="">Nieprzypisane</option>@foreach($projectTeam as $member)<option value="{{$member->id}}">{{$member->name}}</option>@endforeach</select></div>
                 <div class="field"><label>Priorytet</label><select id="gantt-task-priority"><option value="low">Niski</option><option value="medium" selected>Średni</option><option value="high">Wysoki</option></select></div>
                 <div class="field full"><label>Opis</label><textarea id="gantt-task-description" rows="3"></textarea></div>
@@ -1054,7 +1061,12 @@ function openGanttTaskModal(taskId = null, defaultType = 'task') {
     document.getElementById('gantt-task-assignee').value = task?.assigned_to || '';
     document.getElementById('gantt-task-cost').value = task?.schedule_cost ?? '';
     const participants = new Set((task?.participant_ids ?? []).map(Number));
-    document.querySelectorAll('.gantt-participant').forEach(input => input.checked = participants.has(Number(input.value)));
+    const picker = document.getElementById('gantt-participants');
+    picker.open = false;
+    picker.querySelectorAll('input[type=checkbox]').forEach(input => input.checked = participants.has(Number(input.value)));
+    const search = picker.querySelector('[data-member-search]');
+    search.value = '';
+    search.dispatchEvent(new Event('input', {bubbles:true}));
     document.getElementById('gantt-task-priority').value = task?.priority || 'medium';
     document.getElementById('gantt-task-description').value = task?.description || '';
     toggleGanttMilestoneFields();
@@ -1210,7 +1222,7 @@ document.getElementById('gantt-task-form')?.addEventListener('submit', async eve
         priority: document.getElementById('gantt-task-priority').value,
         assigned_to: document.getElementById('gantt-task-assignee').value || null,
         schedule_cost: document.getElementById('gantt-task-cost').value || null,
-        participant_ids: Array.from(document.querySelectorAll('.gantt-participant:checked'), input => Number(input.value)),
+        participant_ids: Array.from(document.querySelectorAll('#gantt-participants input[type=checkbox]:checked'), input => Number(input.value)),
         depends_on_task_id: dependency ? Number(dependency.replace('task-', '')) : null,
         description: document.getElementById('gantt-task-description').value || null,
     };

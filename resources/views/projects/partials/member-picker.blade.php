@@ -1,12 +1,12 @@
 @php($selectedMembers = array_map('intval', (array) $selectedMembers))
-@php($selectableMembers = $users->loadMissing('roles')->reject(fn ($person) => $person->hasRole('superadmin')))
+@php($selectableMembers = ($pickerIncludeSuperadmins ?? false) ? $users : $users->loadMissing('roles')->reject(fn ($person) => $person->hasRole('superadmin')))
 @foreach($users->diff($selectableMembers) as $person)
     @if(in_array((int)$person->id, $selectedMembers, true))<input type="hidden" name="member_ids[]" value="{{$person->id}}">@endif
 @endforeach
-<details class="project-member-picker @if($pickerAsField ?? false) member-picker-as-field @endif" data-member-picker>
+<details @isset($pickerId) id="{{ $pickerId }}" @endisset class="project-member-picker @if($pickerAsField ?? false) member-picker-as-field @endif" data-member-picker>
     @if($pickerAsField ?? false)
-        <summary class="field-input" aria-labelledby="offer-members-label offer-members-count">
-            <span id="offer-members-count" data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span>
+        <summary class="field-input" aria-labelledby="{{ $pickerLabelId ?? 'offer-members-label' }} {{ $pickerId ?? 'offer-members' }}-count">
+            <span id="{{ $pickerId ?? 'offer-members' }}-count" data-member-count>Wybrano: {{$selectableMembers->whereIn('id', $selectedMembers)->count()}}</span>
             <i class="ti ti-chevron-down" aria-hidden="true"></i>
         </summary>
     @else
@@ -16,7 +16,7 @@
         <input type="search" data-member-search aria-label="Szukaj użytkownika" placeholder="Szukaj po imieniu lub nazwisku…" autocomplete="off">
         <div class="project-member-options">
             @foreach($selectableMembers as $user)
-            <label class="project-member-option"><input type="checkbox" name="member_ids[]" value="{{$user->id}}" @checked(in_array((int)$user->id, $selectedMembers, true))><span>{{$user->name}}</span></label>
+            <label class="project-member-option"><input type="checkbox" name="{{ $pickerInputName ?? 'member_ids[]' }}" value="{{$user->id}}" @checked(in_array((int)$user->id, $selectedMembers, true))><span>{{$user->name}}</span></label>
             @endforeach
         </div>
         <small data-member-empty hidden>Brak pasujących użytkowników.</small>
@@ -34,6 +34,7 @@
 .project-member-picker summary:focus-visible{outline:2px solid var(--green,#1a4d3a);outline-offset:2px}
 .member-picker-as-field summary.field-input{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;font:400 13px Lato,sans-serif;color:#1a1a1a;list-style:none}
 .member-picker-as-field summary::-webkit-details-marker{display:none}
+#gantt-participants summary{min-height:42px;box-sizing:border-box;border:1px solid #d8d3c8;border-radius:7px;background:#fff}
 .member-picker-as-field summary [data-member-count]{font:inherit;color:inherit;margin:0}
 .member-picker-as-field .project-member-panel{margin-top:4px;padding:10px;border:1px solid #D0CCC0;border-radius:7px;background:#fff}
 .member-picker-as-field .project-member-option span{white-space:normal;overflow-wrap:anywhere}
