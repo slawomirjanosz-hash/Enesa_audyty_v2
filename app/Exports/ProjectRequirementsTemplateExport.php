@@ -17,7 +17,7 @@ class ProjectRequirementsTemplateExport implements FromArray, ShouldAutoSize, Wi
     {
         return [[
             'Rodzaj', 'Nazwa', 'Technologia', 'Ilość', 'Jednostka', 'Szacowany koszt łącznie', 'Potrzebne do',
-            'Status', 'Dostawca', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Osoba odpowiedzialna', 'Opis / uwagi',
+            'Status', 'Dostawca', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Osoba odpowiedzialna', 'Opis / uwagi', 'Grupa',
         ]];
     }
 
@@ -34,12 +34,12 @@ class ProjectRequirementsTemplateExport implements FromArray, ShouldAutoSize, Wi
     public function styles(Worksheet $sheet): array
     {
         $sheet->freezePane('A2');
-        $sheet->setAutoFilter('A1:M1');
+        $sheet->setAutoFilter('A1:N1');
         $sheet->getRowDimension(1)->setRowHeight(30);
-        $sheet->getStyle('A1:M1')->getFont()->setBold(true)->getColor()->setARGB('FFFFFFFF');
-        $sheet->getStyle('A1:M1')->getFill()->setFillType('solid')->getStartColor()->setARGB('FF1A4D3A');
-        $sheet->getStyle('A1:M1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A2:M200')->getFill()->setFillType('solid')->getStartColor()->setARGB('FFFAFAF6');
+        $sheet->getStyle('A1:N1')->getFont()->setBold(true)->getColor()->setARGB('FFFFFFFF');
+        $sheet->getStyle('A1:N1')->getFill()->setFillType('solid')->getStartColor()->setARGB('FF1A4D3A');
+        $sheet->getStyle('A1:N1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A2:N200')->getFill()->setFillType('solid')->getStartColor()->setARGB('FFFAFAF6');
         $sheet->getStyle('D2:D200')->getNumberFormat()->setFormatCode('#,##0.00');
         $sheet->getStyle('F2:F200')->getNumberFormat()->setFormatCode('#,##0.00');
         $sheet->getStyle('G2:G200')->getNumberFormat()->setFormatCode('yyyy-mm-dd');
@@ -62,6 +62,7 @@ class ProjectRequirementsTemplateExport implements FromArray, ShouldAutoSize, Wi
             'I1' => 'Nazwa zostanie dopasowana do dostawcy z CRM, jeśli istnieje.',
             'J1' => 'NIP pozwala dokładniej dopasować dostawcę z CRM.',
             'K1' => 'E-mail członka zespołu projektu.',
+            'N1' => 'Opcjonalna nazwa grupy, np. Armatura lub Montaż.',
         ];
         foreach ($comments as $cell => $comment) {
             $sheet->getComment($cell)->getText()->createTextRun($comment);

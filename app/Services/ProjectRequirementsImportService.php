@@ -20,11 +20,12 @@ class ProjectRequirementsImportService
 {
     private const ALIASES = [
         'name' => ['nazwa', 'nazwa pozycji', 'nazwa materialu', 'material', 'towar', 'produkt', 'asortyment', 'pozycja', 'item', 'item name', 'product', 'service name', 'opis pozycji'],
+        'group_name' => ['grupa', 'nazwa grupy', 'grupa materialow', 'group'],
         'technology' => ['technologia', 'uklad technologiczny', 'schemat technologiczny', 'oznaczenie technologiczne', 'tag technologiczny', 'obieg', 'instalacja', 'technology', 'system'],
         'type' => ['rodzaj', 'typ', 'typ pozycji', 'rodzaj pozycji', 'kategoria', 'category', 'type'],
         'quantity' => ['ilosc', 'ilosc zamawiana', 'zapotrzebowanie', 'liczba', 'qty', 'quantity'],
         'unit' => ['jednostka', 'jednostka miary', 'jm', 'j m', 'unit'],
-        'total_cost' => ['szacowany koszt', 'koszt laczny', 'koszt netto', 'wartosc laczna', 'wartosc netto', 'kwota netto', 'wartosc', 'koszt', 'total', 'total cost'],
+        'total_cost' => ['szacowany koszt lacznie', 'szacowany koszt', 'koszt laczny', 'koszt netto', 'wartosc laczna', 'wartosc netto', 'kwota netto', 'wartosc', 'koszt', 'total', 'total cost'],
         'unit_cost' => ['cena', 'cena jednostkowa', 'cena netto', 'cena jedn', 'koszt jednostkowy', 'unit price', 'price'],
         'needed_by' => ['potrzebne do', 'termin', 'termin dostawy', 'data dostawy', 'wymagane do', 'deadline', 'delivery date'],
         'status' => ['status', 'stan', 'etap', 'state'],
@@ -88,7 +89,7 @@ class ProjectRequirementsImportService
                 ->mapWithKeys(fn (string $field) => [$field => $this->findColumn($headers, self::ALIASES[$field])])
                 ->all();
             $score = collect($columns)->filter(fn ($column) => $column !== null)->count();
-            $hasSupportingColumn = collect(['technology', 'type', 'quantity', 'unit', 'total_cost', 'unit_cost', 'needed_by', 'status', 'supplier', 'supplier_nip'])
+            $hasSupportingColumn = collect(['technology', 'group_name', 'type', 'quantity', 'unit', 'total_cost', 'unit_cost', 'needed_by', 'status', 'supplier', 'supplier_nip'])
                 ->contains(fn (string $field) => $columns[$field] !== null);
             if ($columns['name'] !== null && $hasSupportingColumn && $score >= 2 && (! $best || $score > $best[2])) {
                 $best = [(int) $rowIndex, $columns, $score];
@@ -156,6 +157,7 @@ class ProjectRequirementsImportService
         return [
             'type' => $type,
             'name' => Str::limit($name, 255, ''),
+            'group_name' => Str::limit($this->text($this->cell($row, $columns['group_name'])) ?? '', 120, '') ?: null,
             'technology' => Str::limit($this->text($this->cell($row, $columns['technology'])) ?? '', 255, '') ?: null,
             'description' => $this->text($this->cell($row, $columns['description'])),
             'quantity' => round($quantity, 2),
@@ -217,7 +219,7 @@ class ProjectRequirementsImportService
                 }
 
                 $item = $project->requirements()->create([
-                    'type' => $row['type'], 'name' => $row['name'], 'technology' => $row['technology'], 'description' => $row['description'],
+                    'type' => $row['type'], 'name' => $row['name'], 'group_name' => $row['group_name'], 'technology' => $row['technology'], 'description' => $row['description'],
                     'quantity' => $row['quantity'], 'unit' => $row['unit'], 'estimated_cost' => $row['estimated_cost'],
                     'needed_by' => $row['needed_by'], 'status' => $row['status'],
                     'supplier' => $row['supplier'], 'supplier_company_id' => $supplier?->id,

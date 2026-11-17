@@ -997,6 +997,8 @@ test('requirements excel import recognizes flexible columns matches relations an
         ->assertSee('Importuj materiały i usługi z Excela')
         ->assertSee('Pobierz wzór Excel');
 
+    expect((new \App\Exports\ProjectRequirementsTemplateExport)->headings()[0])->toContain('Technologia', 'Grupa');
+
     $this->actingAs($manager)
         ->get(route('projects.requirements.template', $project))
         ->assertOk()
@@ -1008,8 +1010,8 @@ test('requirements excel import recognizes flexible columns matches relations an
         ['Zestawienie zakupów dla projektu'],
         ['Wygenerowano', '10.08.2026'],
         [],
-        ['Typ pozycji', 'Nazwa materiału / usługi', 'Technologia', 'Ilość zamawiana', 'J.m.', 'Cena', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi'],
-        ['Materiał', 'Pompa obiegowa', 'Pomiary', '2,5', 'szt.', '1 200,50 zł', '31.08.2026', 'Zamówione', 'Inna pisownia dostawcy', '123-456-78-90', $manager->email, 'Pompy do kotłowni'],
+        ['Typ pozycji', 'Nazwa materiału / usługi', 'Technologia', 'Ilość zamawiana', 'J.m.', 'Cena', 'Termin dostawy', 'Stan', 'Kontrahent', 'NIP dostawcy', 'E-mail odpowiedzialnego', 'Uwagi', 'Grupa'],
+        ['Materiał', 'Pompa obiegowa', 'Pomiary', '2,5', 'szt.', '1 200,50 zł', '31.08.2026', 'Zamówione', 'Inna pisownia dostawcy', '123-456-78-90', $manager->email, 'Pompy do kotłowni', 'Armatura'],
         ['Usługa', 'Montaż pomp', 'Pompy', 1, 'usł.', 850, '2026-09-02', 'W realizacji', 'Firma spoza CRM', null, 'brak@example.test', 'Montaż i rozruch'],
         ['Materiał', 'Filtr do wyceny', 'Uzdatnianie', 3, 'szt.', 100, '2026-09-10', 'Planowane', null, null, null, 'Budżet wstępny'],
         ['Materiał', null, 'Zawory', 5, 'szt.', 100, null, null, null, null, null, 'Wiersz bez nazwy'],
@@ -1034,6 +1036,7 @@ test('requirements excel import recognizes flexible columns matches relations an
         ->and($report['unmatched_suppliers'])->toBe(1)
         ->and($pump->supplier_company_id)->toBe($supplier->id)
         ->and($pump->technology)->toBe('Pomiary')
+        ->and($pump->group_name)->toBe('Armatura')
         ->and((float) $pump->quantity)->toBe(2.5)
         ->and((float) $pump->estimated_cost)->toBe(3001.25)
         ->and($pump->status)->toBe('ordered')
