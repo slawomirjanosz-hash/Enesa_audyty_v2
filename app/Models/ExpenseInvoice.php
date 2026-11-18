@@ -14,6 +14,11 @@ class ExpenseInvoice extends Model
 
     public const SETTLEMENT_METHODS = ['refund' => 'Zwrot pracownikowi', 'advance' => 'Zwrot zaliczki', 'none' => 'Rozliczono'];
 
+    public function isExcelImport(): bool
+    {
+        return str_contains($this->accounting_note ?? '', 'Import-ID: excel-costs-v1:');
+    }
+
     public static function pendingWorkflowCount(User $user, bool $accounting): int
     {
         return static::query()->whereIn('workflow_status', $accounting ? ['new', 'disputed'] : ['settled', 'returned'])

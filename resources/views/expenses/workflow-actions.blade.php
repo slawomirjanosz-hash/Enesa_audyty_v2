@@ -1,3 +1,4 @@
+@if(!$invoice->isExcelImport())
     @if($accounting && $invoice->owner_id && (request('tab') === 'all' || $invoice->owner_id !== auth()->id()) && (in_array($workflow,['read','disputed'],true) || ($workflow === null && !$invoice->settled_at)))
         <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false" class="exp-operation">
             @csrf
@@ -43,3 +44,4 @@
     @elseif($workflow === 'returned' && $invoice->owner_id === auth()->id())
         @isset($tab)<a class="exp-btn" href="{{ route('expenses.edit', $invoice) }}">Uzupełnij dane</a>@else<p>Uzupełnij dane i zapisz fakturę, aby wróciła do księgowości.</p>@endisset
     @endif
+@endif

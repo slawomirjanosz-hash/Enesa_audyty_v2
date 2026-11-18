@@ -125,7 +125,7 @@ class ExpenseInvoiceController extends Controller
         abort_unless($this->visible($request->user())->whereKey($invoice->id)->exists(), 404);
 
         $accountingView = $request->input('tab') === 'all';
-        if ($request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && ($accountingView || $invoice->owner_id !== $request->user()->id) && ! $request->session()->has('support_user_preview')
+        if (!$invoice->isExcelImport() && $request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && ($accountingView || $invoice->owner_id !== $request->user()->id) && ! $request->session()->has('support_user_preview')
             && ! str_contains($request->header('Sec-Purpose', '').$request->header('Purpose', ''), 'prefetch')) {
             DB::transaction(function () use ($request, &$invoice, $accountingView): void {
                 $invoice = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
@@ -278,6 +278,7 @@ class ExpenseInvoiceController extends Controller
             $data['is_unassigned'] = false;
         }
         if ($data['payment_status'] === 'settled') {
+            abort_if($invoice?->isExcelImport(), 409, 'Faktura z Excela jest poza obiegiem rozliczenia.');
             abort_unless($this->accounting($request->user()), 403);
             abort_if($invoice && ($invoice->owner_id === $request->user()->id || ($data['owner_id'] ?? null) === $request->user()->id), 403);
             if (! $invoice || $invoice->workflow_status !== null) {
@@ -324,6 +325,11 @@ class ExpenseInvoiceController extends Controller
             abort_if($current->settled_at, 403, 'Rozliczona faktura jest zamknięta do edycji.');
             abort_unless($this->accounting($request->user()) || ($current->owner_id === $request->user()->id && ! $current->settled_at && ! $current->is_unassigned), 403);
             $data = $this->data($request, $current);
+            if ($current->isExcelImport() && array_key_exists('accounting_note', $data)
+                && preg_match('/Import-ID: excel-costs-v1:[^\s]+/', $current->accounting_note, $marker)
+                && ! str_contains($data['accounting_note'] ?? '', $marker[0])) {
+                $data['accounting_note'] = trim(($data['accounting_note'] ?? '')."\n".$marker[0]);
+            }
             abort_unless($current->revision === (int) $request->input('revision'), 409, 'Faktura została zmieniona. Odśwież stronę.');
             abort_if($current->settled_at && (($data['owner_id'] ?? $current->owner_id) !== $current->owner_id || ($data['is_unassigned'] ?? false)), 422, 'Rozliczonej faktury nie można ponownie publikować ani przypisywać.');
             $current->fill($data);
@@ -358,6 +364,7 @@ class ExpenseInvoiceController extends Controller
         DB::transaction(function () use ($invoice, $request): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
             abort_if($current->owner_id === $request->user()->id, 403);
+            abort_if($current->isExcelImport(), 409, 'Faktura z Excela jest poza obiegiem rozliczenia.');
             abort_unless($current->workflow_status === null, 409, 'Użyj nowego obiegu rozliczenia.');
             abort_unless($current->owner_id && ! $current->is_unassigned && ! $current->settled_at && $current->revision === (int) $request->input('revision'), 409, 'Faktura jest nieprzypisana, rozliczona lub została zmieniona.');
             abort_unless($current->gross_amount !== null && $current->payment_status !== 'unknown' && $current->payment_method !== 'unknown' && $current->payment_source !== 'unknown' && filled($current->paid_by), 422, 'Uzupełnij kwotę brutto, status i sposób płatności, źródło środków oraz osobę płacącą.');
@@ -384,6 +391,7 @@ class ExpenseInvoiceController extends Controller
 
         DB::transaction(function () use ($invoice, $user, $action, $forAccounting, $data, $accountingView): void {
             $current = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
+            abort_if($current->isExcelImport(), 409, 'Faktura z Excela jest poza obiegiem rozliczenia.');
             abort_unless($forAccounting ? ($accountingView || $current->owner_id !== $user->id) : $current->owner_id === $user->id, 403);
             abort_unless($current->revision === (int) $data['revision'], 409, 'Faktura została zmieniona. Odśwież stronę.');
             abort_unless($action === 'read' || ($current->owner_id && ! $current->is_unassigned), 409, 'Najpierw przypisz fakturę do pracownika.');

@@ -496,6 +496,20 @@ test('an accountant processes their own invoice as accounting and confirms it as
     $this->assertSoftDeleted('expense_invoices', ['id' => $invoice->id, 'deleted_by' => $finance->id]);
 });
 
+test('excel imports stay outside settlement while allowing editing and deletion', function () {
+    $finance = expenseUser(true);
+    $owner = expenseUser();
+    $invoice = expenseRecord($owner, ['accounting_note' => 'Import-ID: excel-costs-v1:example', 'revision' => 1]);
+    $this->actingAs($finance)->get(route('expenses.index', ['tab' => 'all']))
+        ->assertOk()->assertDontSee('Wybierz działanie')->assertSee('Usuń fakturę');
+    $this->get(route('expenses.edit', $invoice))->assertOk()->assertDontSee('Wybierz działanie');
+    $this->post(route('expenses.workflow', $invoice), ['action' => 'settled', 'revision' => 1, 'settlement_method' => 'none'])->assertStatus(409);
+    $this->post(route('expenses.settle', $invoice), ['confirm' => 1, 'revision' => 1])->assertStatus(409);
+    $this->put(route('expenses.update', $invoice), expenseData(['revision' => 1, 'description' => 'Poprawiony opis']))->assertSessionHasNoErrors();
+    expect($invoice->fresh()->description)->toBe('Poprawiony opis');
+    $this->delete(route('expenses.destroy', $invoice), ['confirm' => 1, 'revision' => 2])->assertSessionHas('success');
+});
+
 test('administrators can delete closed invoices within their register access', function () {
     $admin = expenseUser();
     $admin->assignRole(Role::findOrCreate('admin'));

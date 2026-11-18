@@ -16,6 +16,7 @@
 <td>{{ $invoice->cost_center ?: '—' }}</td>
 <td>{{ $invoice->payment_label }}</td>
 <td><span @class(['exp-badge', 'exp-badge-success' => $accounting && $invoice->workflow_status === 'closed'])>{{ $workflowLabels[$invoice->workflow_status] ?? '—' }}</span></td><td><div class="exp-row-actions">
+@if(!$invoice->isExcelImport())
 @if($accounting && ($tab === 'all' || $invoice->owner_id !== auth()->id()) && $invoice->workflow_status === 'new')
     <form method="POST" action="{{ route('expenses.workflow', $invoice) }}" data-form-draft="false">
         @csrf
@@ -27,6 +28,7 @@
     </form>
 @elseif(($accounting && $invoice->owner_id && ($tab === 'all' || $invoice->owner_id !== auth()->id()) && (in_array($invoice->workflow_status, ['read', 'disputed'], true) || ($invoice->workflow_status === null && !$invoice->settled_at))) || ($invoice->owner_id === auth()->id() && in_array($invoice->workflow_status, ['settled', 'returned'], true)))
     @include('expenses.workflow-actions', ['workflow' => $invoice->workflow_status, 'methods' => \App\Models\ExpenseInvoice::SETTLEMENT_METHODS])
+@endif
 @endif
 @php($preview = $invoice->settled_at || (!$accounting && $invoice->owner_id !== auth()->id()))
 <a class="exp-btn exp-icon-btn" href="{{ route('expenses.edit', ['invoice' => $invoice, 'tab' => $tab]) }}" aria-label="{{ $preview ? 'Podgląd' : 'Edytuj' }}" title="{{ $preview ? 'Podgląd' : 'Edytuj' }}">
