@@ -22,7 +22,11 @@ if (!$requirement['normative'] && ($requirement['dopuszczaNiedotyczy'] ?? false)
 @if($field['typ']==='odwolanie')
 @php($citation=$sources['citations'][$field['zrodlo']['obiekt']])
 <div class="enms-source"><strong>Punkt {{ $field['zrodlo']['punkt'] }}</strong> · {{ $citation['source_id']?'Odczyt potwierdzony':'Brak zapisu w punkcie źródłowym' }} · {{ $citation['approved']?'Aktualny, zatwierdzony dokument':'Brak aktualnego zatwierdzonego dokumentu' }}
-<pre>{{ $citation['value'] ? json_encode($citation['value'], JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) : 'Nie podano — uzupełnij punkt źródłowy.' }}</pre>
+@if($citation['value']===null || $citation['value']===[] || $citation['value']==='')
+<p>Nie podano — uzupełnij punkt źródłowy.</p>
+@else
+@include('audits.enms.source-content',['content'=>app(\App\Services\Enms\SourcePreview::class)->content($citation,$field['zrodlo']['obiekt'])])
+@endif
 <p>Wersja źródła: {{ $citation['source_version']??'—' }}. Zapis odpowiedzi utrwali odczyt. Ocena merytoryczna należy do audytora.</p></div>
 @elseif($field['typ']==='wybor')<select name="payload[pola][{{ $field['klucz'] }}]"><option value="">Wybierz</option>@foreach($field['opcje'] as $option)<option @selected(($answer['pola'][$field['klucz']]??'')===$option)>{{ $option }}</option>@endforeach</select>
 @elseif($field['typ']==='data')<input type="date" name="payload[pola][{{ $field['klucz'] }}]" value="{{ $answer['pola'][$field['klucz']]??'' }}">

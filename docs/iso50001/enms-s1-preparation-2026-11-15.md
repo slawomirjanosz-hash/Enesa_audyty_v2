@@ -99,3 +99,9 @@ Regresja odtwarza zmianę kolejności kluczy przez bazę, osiem cytatów (w tym 
 Istniejące projekty i wydane dokumenty zachowują zamrożone dane. Poprawka nie przepisuje ich treści; projekt zapisany z błędnym ostrzeżeniem wymaga przygotowania nowego projektu, jeśli ma przedstawiać aktualny stan.
 
 Pełna regresja EnMS i powiązanych ekranów po poprawce: **79 testów, 630 asercji — wszystkie zaliczone** (`tmp/enms-citations-regression.log`). Obejmuje dotychczasowe granice dostępu, izolację firm, pilot, wcześniejszy obieg, Excel, dokumenty i zatwierdzenia.
+
+## Czytelny podgląd źródeł — 18.11.2026
+
+Surowy JSON w odwołaniach ankiety 5.1 zastąpiono opisami, nazwanymi polami i listami w istniejącym panelu źródła. Etykiety, kolejność pól i nazwy wyborów pochodzą z ankiet źródłowych; obsługiwane są zakres 4.3, cele, SEU, EnPI, EnB, role z matrycą i wyniki monitorowania. Zachowano nowe wiersze tekstu, zero i oznaczenie braków; treść jest escapowana przez Blade. Wersja, odczyt, zatwierdzenie źródła i warunkowa widoczność pozostają bez zmian. Nie zmieniono zapisu cytatów, odcisków, zatwierdzeń, wydanych PDF ani danych produkcyjnych.
+
+Wzorzec: `51_formularz.js`, `kontrolkaOdwolania` z wydania referencyjnego 15.11.2026 — czytelna cytowana treść i informacja o źródle, z odczytem rzeczywistych danych na platformie. Regresja: **80 testów, 670 asercji**. Chromium: 11 zakładek audytora, 8 klienta, źródła, widoczność warunkowa i układ 390 px; kontrola zrzutów desktop/mobile. Test odczytu obu ról potwierdza zachowanie treści i stanu zapisów.
