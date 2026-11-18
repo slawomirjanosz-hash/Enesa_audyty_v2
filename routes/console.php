@@ -16,16 +16,6 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command('tasks:send-overdue-reminders')->weekdays()->at('08:00')->timezone('Europe/Warsaw')->withoutOverlapping();
 Schedule::command('hr:send-vehicle-reminders')->dailyAt('08:00')->timezone('Europe/Warsaw')->withoutOverlapping();
 
-Artisan::command('accounts:block-inactive', function () {
-    User::whereNull('security_block_reason')->where('is_active', true)->chunkById(200, function ($users) {
-        foreach ($users as $user) {
-            app(AccountSecurityService::class)->checkInactivity($user);
-        }
-    });
-    $this->info('Sprawdzono nieaktywne konta.');
-});
-Schedule::command('accounts:block-inactive')->dailyAt('03:00')->timezone('Europe/Warsaw')->withoutOverlapping();
-
 Artisan::command('accounts:reset-authenticator {email} {--force}', function () {
     $user = User::where('email', $this->argument('email'))->firstOrFail();
     if (! $user->hasRole('superadmin')) {

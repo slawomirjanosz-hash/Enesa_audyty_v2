@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Models\User;
 use App\Services\AccountSecurityService;
 use App\Services\DocumentQuotaService;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
@@ -19,12 +20,16 @@ function securedUser(string $role = 'admin'): User
     return $user->fresh();
 }
 
-test('inactive and dormant accounts cannot log in and admin can unlock', function () {
+test('long absence does not disable an active account and admin can disable it explicitly', function () {
     $user = securedUser('auditor');
     $user->forceFill(['security_activity_at' => now()->subMonthsNoOverflow(2)->subDay()])->save();
+    $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertSessionHasNoErrors();
+    $this->assertAuthenticatedAs($user);
+    expect($user->fresh()->security_block_reason)->toBeNull();
+    $this->post('/logout');
+    $user->forceFill(['is_active' => false])->save();
     $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertSessionHasErrors('email');
     $this->assertGuest();
-    expect($user->fresh()->security_block_reason)->toBe('inactivity');
     $admin = securedUser();
     $this->actingAs($admin)->post(route('settings.users.unlock', $user))->assertRedirect();
     expect($user->fresh()->security_block_reason)->toBeNull()->and($user->fresh()->security_activity_at->isToday())->toBeTrue();
@@ -167,13 +172,18 @@ test('disabled account loses an existing session and correct password does not b
     $this->assertGuest();
 });
 
-test('scheduled inactivity block preserves files and can be recovered from operator console', function () {
+test('migration removes only automatic inactivity blocks and preserves admin disabled accounts', function () {
     $user = securedUser('superadmin');
-    $user->forceFill(['security_activity_at' => now()->subMonthsNoOverflow(3)])->save();
-    $this->artisan('accounts:block-inactive')->assertSuccessful();
-    expect($user->fresh()->security_block_reason)->toBe('inactivity');
-    $this->artisan('accounts:unlock', ['email' => $user->email, '--force' => true])->assertSuccessful();
+    $user->forceFill(['security_block_reason' => 'inactivity', 'security_blocked_at' => now()])->save();
+    $disabled = securedUser();
+    $disabled->forceFill(['is_active' => false, 'security_block_reason' => 'inactivity'])->save();
+    $migration = require database_path('migrations/2026_11_18_120000_remove_automatic_inactivity_blocks.php');
+    $migration->up();
     expect($user->fresh()->security_block_reason)->toBeNull();
+    expect($disabled->fresh()->is_active)->toBeFalse();
+    expect(app(AccountSecurityService::class)->blocked($disabled->fresh()))->toBeTrue();
+    $commands = Artisan::all();
+    expect(array_key_exists('accounts:block-inactive', $commands))->toBeFalse();
 });
 
 test('Turnstile rejects tokens issued for a different domain', function () {

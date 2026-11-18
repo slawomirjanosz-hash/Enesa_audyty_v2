@@ -8,18 +8,8 @@ use Illuminate\Support\Str;
 
 class AccountSecurityService
 {
-    public function checkInactivity(User $user): void
-    {
-        $last = $user->security_activity_at ?? $user->created_at;
-        if ($user->is_active && ! $user->security_block_reason && $last && $last->lte(now()->subMonthsNoOverflow(2))) {
-            $user->forceFill(['security_block_reason' => 'inactivity', 'security_blocked_at' => now(), 'session_version' => $user->session_version + 1, 'remember_token' => Str::random(60)])->save();
-        }
-    }
-
     public function blocked(User $user): bool
     {
-        $this->checkInactivity($user);
-
         return ! $user->is_active || $user->security_block_reason !== null || ($user->login_locked_until?->isFuture() ?? false);
     }
 

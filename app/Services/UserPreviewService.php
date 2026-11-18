@@ -11,7 +11,6 @@ class UserPreviewService
     public function eligible(User $user): bool
     {
         return $user->is_active && ! $user->trashed() && ! $user->hasRole('superadmin')
-            && ! (($user->security_activity_at ?? $user->created_at)?->lte(now()->subMonthsNoOverflow(2)) ?? false)
             && ! $user->security_block_reason && ! ($user->login_locked_until?->isFuture() ?? false);
     }
 
