@@ -106,14 +106,14 @@ test('Monday missing data is filtered per column including service book and regi
         columnAssign($column, [$first->id]);
     }
     columnAssign('fuel_card_number', [$second->id]);
-    columnAssign('service_book_entry_at', [$second->id]);
+
     columnAssign('registration_document', [$second->id]);
     HrVehicle::create(['type' => 'company', 'name' => 'Braki', 'registration_number' => 'MISSING-COL']);
     $groups = app(HrVehicleReminderSelection::class)->groups();
     $firstText = $groups[$first->id]->first()['message'];
     $secondText = $groups[$second->id]->first()['message'];
     expect($firstText)->not->toContain(HrVehicle::COLUMNS['fuel_card_number'], 'Książka serwisowa — status', 'Dowód rejestracyjny — dostępny');
-    expect($secondText)->toContain(HrVehicle::COLUMNS['fuel_card_number'], 'Książka serwisowa — status', 'Dowód rejestracyjny — dostępny')->not->toContain(HrVehicle::COLUMNS['insurer']);
+    expect($secondText)->toContain(HrVehicle::COLUMNS['fuel_card_number'], 'Dowód rejestracyjny — dostępny')->not->toContain(HrVehicle::COLUMNS['insurer'], 'Książka serwisowa', 'Książka ewidencji');
     expect($groups[$first->id]->count())->toBe(1)->and($groups[$second->id]->count())->toBe(1);
     $this->travelTo(Carbon::parse('2026-10-27 08:00', 'Europe/Warsaw'));
     expect(app(HrVehicleReminderSelection::class)->groups())->toBeEmpty();

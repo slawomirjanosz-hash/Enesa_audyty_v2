@@ -71,7 +71,7 @@ test('vehicle choices reuse inactive values without leaking other private vehicl
     $vehicle = HrVehicle::where('registration_number', 'NEW')->firstOrFail();
     expect($vehicle->registration_document_present)->toBeFalse()->and($vehicle->registration_document)->toBe('Oryginał w biurze');
     $choices = HrVehicle::choicesFor($owner);
-    expect($choices['fuel_card_number'])->toBe(['001234567890123456789'])->and($choices['usage_location'])->toBe(['Baza Knurów'])->and($choices['insurer'])->toBe(['Warta']);
+    expect($choices['fuel_card_number'])->toBe(['001234567890123456789', 'Nie dotyczy'])->and($choices['usage_location'])->toBe(['Baza Knurów', 'Nie dotyczy'])->and($choices['insurer'])->toBe(['Warta']);
     $this->get(route('hr.vehicles.edit', $vehicle))->assertOk()->assertSee('Baza Knurów')->assertSee('001234567890123456789')->assertDontSee('Hidden location')->assertDontSee('Hidden insurer')->assertDontSee('000987654321');
     $this->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertSee('data-sort-label="Nr rejestracyjny"', false)->assertSee('Nr rej.')->assertSee('Osoba odp.')->assertSee('Koniec ubezp.');
     $this->put(route('hr.vehicles.update', $vehicle), ['name' => 'New', 'registration_number' => 'NEW', 'registration_document_present' => 'maybe'])->assertSessionHasErrorsIn('vehicle', ['registration_document_present']);
@@ -92,4 +92,17 @@ test('company vehicle can be opened and removed by HR manager but not a reader',
     expect($vehicle->fresh()->is_active)->toBeFalse();
     $this->get(route('hr.index', ['tab' => 'vehicles']))->assertOk()->assertDontSee('Służbowy do edycji');
     $this->get(route('hr.vehicles.edit', $vehicle))->assertNotFound();
+});
+
+test('not applicable card and location are saved and excluded from missing fields', function () {
+    $owner = vehicleRegisterUser();
+    $this->actingAs($owner)->post(route('hr.vehicles.store'), [
+        'type' => 'private', 'name' => 'Auto', 'registration_number' => 'NA-TEST',
+        'fuel_card_number' => 'Nie dotyczy', 'usage_location' => 'Nie dotyczy',
+    ])->assertSessionHas('success');
+    $car = HrVehicle::where('registration_number', 'NA-TEST')->sole();
+    expect($car->missingFields())->not->toHaveKeys(['fuel_card_number', 'usage_location', 'logbook_entry_at', 'service_book_entry_at', 'service_book_status']);
+    $this->patch(route('hr.vehicles.location', $car), ['usage_location' => 'Nie dotyczy'])->assertSessionHas('success');
+    $this->get(route('hr.vehicles.edit', $car))->assertOk()->assertSee('Nr karty flotowej')
+        ->assertDontSee('name="logbook_entry_at"', false)->assertDontSee('name="service_book_status"', false);
 });

@@ -50,12 +50,11 @@
 @php
     $value = $vehicle->$key;
     $deadline = match($key){'insurance_expires_at'=>$insuranceState,'inspection_due_at'=>$inspectionState,default=>''};
-    $dateField = in_array($key,['insurance_expires_at','inspection_due_at','logbook_entry_at','service_book_entry_at']);
+    $dateField = in_array($key,['insurance_expires_at','inspection_due_at']);
     $boolField = in_array($key,['vat_26','gps']);
     $display = match(true){
         $key==='registration_document' && $vehicle->registration_document_present!==null=>$vehicle->registration_document_present?'Tak':'Nie',
         $key==='type'=>$value==='private'?'Prywatny':'Służbowy',
-        $key==='service_book_entry_at' && $vehicle->service_book_status==='missing'=>'Brak książki',
         $dateField=>$value?->format('d.m.Y') ?? '—',
         $boolField=>$value===null?'—':($value?'Tak':'Nie'),
         in_array($key,['vat_percent','cit_percent'])=>$value===null?'—':rtrim(rtrim(number_format((float)$value,2,',',' '),'0'),',').'%',
@@ -69,7 +68,8 @@
 <form method="POST" action="{{route('hr.vehicles.location',$vehicle)}}">@csrf @method('PATCH')
 <select name="usage_location" aria-label="Lokalizacja {{$vehicle->name}}" onchange="this.form.submit()" style="width:100%;font:inherit"><option value="">Nie podano</option>
 @foreach($vehicleLocations as $location)<option value="{{$location->name}}" @selected($value===$location->name)>{{$location->name}}</option>@endforeach
-@if($value && !$vehicleLocations->contains('name',$value))<option value="{{$value}}" selected>{{$value}} (dotychczasowa)</option>@endif
+<option value="Nie dotyczy" @selected($value==='Nie dotyczy')>Nie dotyczy</option>
+@if($value && $value !== 'Nie dotyczy' && !$vehicleLocations->contains('name',$value))<option value="{{$value}}" selected>{{$value}} (dotychczasowa)</option>@endif
 </select><noscript><button type="submit">Zapisz</button></noscript></form>
 @elseif($key==='name' && $editable)<a class="vehicle-name-link" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj samochód">{{$display}}</a>@elseif($dateField && $value && $display!=='Brak książki')<time datetime="{{$value->format('Y-m-d')}}">{{$display}}</time>@else{{$display}}@endif
 @if($key==='registration_document' && $vehicle->registration_document_present!==null && $value)<small style="display:block" title="{{$value}}">{{$value}}</small>@endif

@@ -36,7 +36,6 @@ class HrVehicleColumnResponsibility extends Model
         return match ($field) {
             'responsible_user_id' => 'responsible_person',
             'registration_document_present' => 'registration_document',
-            'service_book_status' => 'service_book_entry_at',
             default => $field,
         };
     }

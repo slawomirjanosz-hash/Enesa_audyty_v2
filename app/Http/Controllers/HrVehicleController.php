@@ -48,7 +48,7 @@ class HrVehicleController extends Controller
     {
         abort_unless($vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true), 403);
         abort_unless($vehicle->is_active, 404);
-        $data = $request->validate(['usage_location' => ['nullable', 'string', 'exists:hr_vehicle_locations,name']]);
+        $data = $request->validate(['usage_location' => ['nullable', 'string', Rule::when($request->input('usage_location') !== 'Nie dotyczy', 'exists:hr_vehicle_locations,name')]]);
         $vehicle->update(['usage_location' => $data['usage_location'] ?? null]);
 
         return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Lokalizacja samochodu została zapisana.');
@@ -131,9 +131,6 @@ class HrVehicleController extends Controller
             'vat_26' => ['nullable', 'boolean'],
             'cit_percent' => ['nullable', 'numeric', 'between:0,100'],
             'gps' => ['nullable', 'boolean'],
-            'logbook_entry_at' => ['nullable', 'date_format:Y-m-d'],
-            'service_book_entry_at' => ['nullable', 'date_format:Y-m-d'],
-            'service_book_status' => ['nullable', Rule::in(['available', 'missing'])],
             'inspection_due_at' => ['nullable', 'date_format:Y-m-d'],
             'registration_document' => ['nullable', 'string', 'max:255'],
             'registration_document_present' => ['nullable', 'boolean'],
@@ -149,7 +146,7 @@ class HrVehicleController extends Controller
             }
         }
         $data = $request->validateWithBag('vehicle', $rules);
-        if (! empty($data['usage_location']) && $data['usage_location'] !== $vehicle?->usage_location) {
+        if (! empty($data['usage_location']) && $data['usage_location'] !== 'Nie dotyczy' && $data['usage_location'] !== $vehicle?->usage_location) {
             validator($data, ['usage_location' => ['exists:hr_vehicle_locations,name']])->validateWithBag('vehicle');
         }
         if (($vehicle?->type ?? ($data['type'] ?? null)) === 'private' && ! empty($data['responsible_user_id'])) {

@@ -15,13 +15,14 @@
     @if($canField('usage_location'))    <div class="hr-field"><label for="vehicle-usage_location">Lokalizacja</label><select id="vehicle-usage_location" name="usage_location"><option value="">Nie podano</option>
     @php $locationValue = old('usage_location', $vehicle->usage_location); @endphp
     @foreach(\App\Models\HrVehicleLocation::orderBy('name')->pluck('name') as $location)<option value="{{$location}}" @selected($locationValue===$location)>{{$location}}</option>@endforeach
-    @if($locationValue && !\App\Models\HrVehicleLocation::where('name',$locationValue)->exists())<option value="{{$locationValue}}" selected>{{$locationValue}} (dotychczasowa)</option>@endif
+    <option value="Nie dotyczy" @selected($locationValue==='Nie dotyczy')>Nie dotyczy</option>
+    @if($locationValue && $locationValue !== 'Nie dotyczy' && !\App\Models\HrVehicleLocation::where('name',$locationValue)->exists())<option value="{{$locationValue}}" selected>{{$locationValue}} (dotychczasowa)</option>@endif
     </select>@error('usage_location','vehicle')<small class="vehicle-error">{{$message}}</small>@enderror</div>@endif
     @if($canField('responsible_person'))    <div class="hr-field"><label for="vehicle-responsible-user">Osoba odpowiedzialna — użytkownik</label><select id="vehicle-responsible-user" name="responsible_user_id"><option value="">Osoba spoza bazy — wpiszę ręcznie</option>
     @foreach(\App\Models\HrVehicle::eligibleResponsibleUsers()->orderBy('name')->get(['id','name']) as $person)<option value="{{$person->id}}" @selected((string)old('responsible_user_id',$vehicle->responsible_user_id)===(string)$person->id)>{{$person->name}}</option>@endforeach
     </select><small>Wybrany użytkownik otrzyma powiadomienia o swoim aucie służbowym. Auto prywatne: można wskazać tylko siebie.</small>@error('responsible_user_id','vehicle')<small class="vehicle-error">{{$message}}</small>@enderror</div>@endif
     @if($canField('responsible_person'))    <div class="hr-field"><label for="vehicle-responsible-person">Osoba odpowiedzialna — wpis ręczny</label><input id="vehicle-responsible-person" name="responsible_person" maxlength="255" value="{{old('responsible_person',$vehicle->responsible_person)}}"><small>Wpis ręczny nie powoduje wysyłki maili. Wybór użytkownika ma pierwszeństwo.</small></div>@endif
-    @foreach(['fuel_card_number'=>'Nr karty Orlen', 'insurer'=>'Ubezpieczyciel'] as $field=>$label) @continue(!$canField($field))
+    @foreach(['fuel_card_number'=>'Nr karty flotowej', 'insurer'=>'Ubezpieczyciel'] as $field=>$label) @continue(!$canField($field))
     @php
         $choiceValue = (string) old($field, $vehicle->$field);
         $choices = collect($vehicleChoices[$field])->push($choiceValue)->filter(fn($value) => $value !== '')->unique()->values();
@@ -42,10 +43,9 @@
     @foreach(['vat_26'=>'VAT 26','gps'=>'GPS','registration_document_present'=>'Dowód rejestracyjny — dostępny'] as $field=>$label) @continue(!$canField($field))
     <div class="hr-field"><label for="vehicle-{{$field}}">{{$label}}</label><select id="vehicle-{{$field}}" name="{{$field}}"><option value="">Nie podano</option><option value="1" @selected((string)old($field,$vehicle->$field===null?'':(int)$vehicle->$field)==='1')>Tak</option><option value="0" @selected((string)old($field,$vehicle->$field===null?'':(int)$vehicle->$field)==='0')>Nie</option></select></div>
     @endforeach
-    @foreach(['insurance_expires_at'=>'Koniec ubezpieczenia','inspection_due_at'=>'Data kolejnego przeglądu','logbook_entry_at'=>'Książka ewidencji pojazdu — data ostatniego wpisu','service_book_entry_at'=>'Książka serwisowa — data ostatniego wpisu'] as $field=>$label) @continue(!$canField($field))
+    @foreach(['insurance_expires_at'=>'Koniec ubezpieczenia','inspection_due_at'=>'Data kolejnego przeglądu'] as $field=>$label) @continue(!$canField($field))
     <div class="hr-field"><label for="vehicle-{{$field}}">{{$label}}</label><input id="vehicle-{{$field}}" type="date" name="{{$field}}" value="{{old($field,$vehicle->$field?->format('Y-m-d'))}}">@error($field,'vehicle')<small class="vehicle-error">{{$message}}</small>@enderror</div>
     @endforeach
-    @if($canField('service_book_status'))    <div class="hr-field"><label for="vehicle-service-book">Książka serwisowa</label><select id="vehicle-service-book" name="service_book_status"><option value="">Nie podano</option><option value="available" @selected(old('service_book_status',$vehicle->service_book_status)==='available')>Jest</option><option value="missing" @selected(old('service_book_status',$vehicle->service_book_status)==='missing')>Brak książki</option></select></div>@endif
 </div>
 <script>
 document.querySelectorAll('[data-vehicle-choice]').forEach(field=>{
