@@ -340,7 +340,11 @@ class ExpenseInvoiceController extends Controller
             $current->save();
         });
 
-        return redirect()->route('expenses.edit', $invoice)->with('success', 'Dane zostały zapisane.');
+        $tabs = $this->accounting($request->user()) ? ['own', 'pool', 'all'] : ['own', 'pool'];
+        $tab = $request->input('tab', 'own');
+
+        return redirect()->route('expenses.index', ['tab' => in_array($tab, $tabs, true) ? $tab : 'own'])
+            ->with('success', 'Dane zostały zapisane.');
     }
 
     public function claim(Request $request, ExpenseInvoice $invoice)
