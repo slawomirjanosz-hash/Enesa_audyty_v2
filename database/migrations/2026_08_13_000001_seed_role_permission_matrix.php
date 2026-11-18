@@ -17,7 +17,8 @@ return new class extends Migration
             Permission::findOrCreate($name, 'web');
         }
 
-        $all = RolePermissionCatalog::names();
+        // Restrictive read-only mode is opt-in, including on fresh installations.
+        $all = array_values(array_diff(RolePermissionCatalog::names(), ['system.full_read_only']));
         $staff = collect($all)->reject(fn (string $name) => in_array($name, ['settings.company.manage', 'activity_log.view', 'projects.delete'], true))->values()->all();
         $auditor = [
             'dashboard.view', 'crm.view', 'offers.view', 'offers.prices.view',

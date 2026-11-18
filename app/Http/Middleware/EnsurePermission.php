@@ -13,6 +13,9 @@ class EnsurePermission
     public function handle(Request $request, Closure $next, string ...$permissions): Response
     {
         $user = $request->user();
+        if ($user?->hasFullReadOnlyAccess() && $request->isMethodSafe()) {
+            return $next($request);
+        }
 
         $sensitive = ['settings.company.manage', 'settings.roles.manage', 'settings.users.manage', 'activity_log.view'];
         $fullAccessAllowed = count(array_intersect($permissions, $sensitive)) === 0;

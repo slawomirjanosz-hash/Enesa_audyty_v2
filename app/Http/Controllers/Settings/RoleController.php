@@ -15,7 +15,9 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $this->ensureRoleManager();
+        if (! auth()->user()->hasFullReadOnlyAccess()) {
+            $this->ensureRoleManager();
+        }
 
         $roles = Role::query()->withCount('users')->with('permissions')->get()
             ->sortBy(fn (Role $role) => sprintf(

@@ -449,7 +449,7 @@
         $layoutAvailablePermissionNames = app(\Spatie\Permission\PermissionRegistrar::class)
             ->getPermissions()
             ->pluck('name');
-        $layoutHasFullAccess = $layoutUser->hasRole('superadmin') || $layoutPermissionNames->contains('system.full_access');
+        $layoutHasFullAccess = $layoutUser->hasRole('superadmin') || $layoutPermissionNames->contains('system.full_access') || $layoutUser->hasFullReadOnlyAccess();
         $layoutCanAccessCrmTasks = $layoutHasFullAccess || $layoutPermissionNames->intersect(['crm.tasks.own.manage', 'crm.tasks.team.manage'])->isNotEmpty();
         $canAccessModule = fn (string $permission): bool => $layoutAvailablePermissionNames->contains($permission)
             && ($layoutHasFullAccess || $layoutPermissionNames->contains($permission));
@@ -602,7 +602,7 @@
                     <span class="arrow">▶</span>
                 </span>
                 <ul class="nav-sub">
-                    @if(auth()->user()->hasRole('superadmin') || auth()->user()->can('settings.company.manage'))
+                    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasFullReadOnlyAccess() || auth()->user()->can('settings.company.manage'))
                     <li><a href="{{ url('/settings/company') }}" class="nav-link">Dane firmy</a></li>
                     @endif
                     <li><a href="{{ url('/settings/users') }}" class="nav-link {{ request()->routeIs('settings.users.*', 'settings.roles.*') ? 'active' : '' }}">Użytkownicy i role</a></li>
@@ -632,7 +632,7 @@
             </li>
             @endif
 
-            @if($layoutUser->hasRole('superadmin') || $layoutPermissionNames->contains('activity_log.view'))
+            @if($layoutUser->hasRole('superadmin') || $layoutUser->hasFullReadOnlyAccess() || $layoutPermissionNames->contains('activity_log.view'))
             <li class="nav-item">
                 <a href="{{ route('activity-log.index') }}" class="nav-link {{ request()->routeIs('activity-log.*') ? 'active' : '' }}">
                     <i class="ti ti-history"></i> Lista zmian
@@ -1223,5 +1223,8 @@ document.addEventListener('keydown', function (event) {
 @include('partials.table-sorting')
 @include('partials.field-validation')
 @include('partials.form-drafts')
+@if(auth()->user()?->hasFullReadOnlyAccess())
+    @include('partials.full-read-only')
+@endif
 </body>
 </html>

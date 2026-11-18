@@ -53,7 +53,7 @@ class BoardAccessService
 
     public function visible(User $user): Builder
     {
-        $full = app(AuditorAccessService::class)->hasFullAccess($user);
+        $full = app(AuditorAccessService::class)->hasFullViewAccess($user);
 
         return BoardTask::query()->where(function ($q) use ($user, $full) {
             $q->whereRaw('1=0');

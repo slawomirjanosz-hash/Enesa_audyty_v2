@@ -20,7 +20,7 @@ class FinancialPlanAccess
 
     public function departments(User $user): Builder
     {
-        return FinancialDepartment::query()->when(! $user->hasRole('superadmin'), fn ($query) => $query
+        return FinancialDepartment::query()->when(! $user->hasRole('superadmin') && ! $user->hasFullReadOnlyAccess(), fn ($query) => $query
             ->where(fn ($scope) => $scope->where('owner_id', $user->id)->orWhereHas('planners', fn ($users) => $users->whereKey($user->id))));
     }
 
@@ -32,7 +32,7 @@ class FinancialPlanAccess
     public function projects(User $user): Builder
     {
         $query = Project::query();
-        $fullAccess = app(AuditorAccessService::class)->hasFullAccess($user);
+        $fullAccess = app(AuditorAccessService::class)->hasFullViewAccess($user);
         $priceAccess = $user->hasRole('superadmin') || ($user->can('projects.requirements.material_prices.view') && $user->can('projects.requirements.service_prices.view'));
         if (! CompanySettings::moduleIsEnabled('projects') || ! $priceAccess
             || (! $fullAccess && (! $user->can('projects.view') || ! $user->canAny(['projects.finances.view', 'projects.finances.manage'])))) {

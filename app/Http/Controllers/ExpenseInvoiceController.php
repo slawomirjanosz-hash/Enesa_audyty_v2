@@ -125,7 +125,7 @@ class ExpenseInvoiceController extends Controller
         abort_unless($this->visible($request->user())->whereKey($invoice->id)->exists(), 404);
 
         $accountingView = $request->input('tab') === 'all';
-        if (!$invoice->isExcelImport() && $request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && ($accountingView || $invoice->owner_id !== $request->user()->id) && ! $request->session()->has('support_user_preview')
+        if (! $invoice->isExcelImport() && $request->isMethod('GET') && $invoice->workflow_status === 'new' && $this->accounting($request->user()) && ($accountingView || $invoice->owner_id !== $request->user()->id) && ! $request->session()->has('support_user_preview')
             && ! str_contains($request->header('Sec-Purpose', '').$request->header('Purpose', ''), 'prefetch')) {
             DB::transaction(function () use ($request, &$invoice, $accountingView): void {
                 $invoice = ExpenseInvoice::lockForUpdate()->findOrFail($invoice->id);
@@ -158,7 +158,7 @@ class ExpenseInvoiceController extends Controller
         if (! CompanySettings::moduleIsEnabled('projects')) {
             return $query->whereRaw('1 = 0');
         }
-        if (app(AuditorAccessService::class)->hasFullAccess($user)) {
+        if (app(AuditorAccessService::class)->hasFullViewAccess($user)) {
             return $query;
         }
 

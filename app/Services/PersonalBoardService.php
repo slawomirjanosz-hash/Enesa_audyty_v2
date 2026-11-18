@@ -17,7 +17,7 @@ class PersonalBoardService
     public function crm(User $user): Builder
     {
         $query = Task::crm();
-        $full = app(AuditorAccessService::class)->hasFullAccess($user);
+        $full = app(AuditorAccessService::class)->hasFullViewAccess($user);
         if (! CompanySettings::moduleIsEnabled('crm') || (! $full && ! $user->canAny(['crm.view', 'crm.tasks.own.manage', 'crm.tasks.team.manage']))) {
             return $query->whereRaw('1=0');
         }

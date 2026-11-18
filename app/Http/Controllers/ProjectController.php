@@ -29,7 +29,7 @@ class ProjectController extends Controller
             ])
             ->orderByDesc('created_at');
 
-        if (! app(AuditorAccessService::class)->hasFullAccess($user)) {
+        if (! app(AuditorAccessService::class)->hasFullViewAccess($user)) {
             $query->where(fn ($q) => $q->where('manager_id', $user->id)
                 ->orWhereHas('members', fn ($members) => $members->whereKey($user->id)));
         }

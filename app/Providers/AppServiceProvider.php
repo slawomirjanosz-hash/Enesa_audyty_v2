@@ -15,6 +15,7 @@ use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -34,6 +35,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::before(function (User $user, string $ability): ?bool {
+            if (! $user->hasFullReadOnlyAccess() || str_contains($ability, '.')) {
+                return null;
+            }
+
+            return in_array($ability, ['view', 'viewAny', 'viewPrices'], true) ? null : false;
+        });
         Paginator::defaultView('pagination.compact');
         if (config('app.canonical_url')) {
             URL::forceRootUrl(config('app.canonical_url'));

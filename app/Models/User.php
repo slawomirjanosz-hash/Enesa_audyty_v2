@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Support\RolePermissionCatalog;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,11 +25,23 @@ class User extends Authenticatable
 
     public function hasPermissionTo($permission, $guardName = null): bool
     {
+        if ($this->hasFullReadOnlyAccess()) {
+            $name = is_string($permission) ? $permission : ($permission->name ?? null);
+
+            return $name === 'system.full_read_only' || in_array($name, RolePermissionCatalog::readOnlyNames(), true);
+        }
+
         // Migrated accounts use only their own grants; legacy/bootstrap records
         // retain compatibility until UserPermissions initializes their snapshot.
         return $this->individual_permissions
             ? $this->hasDirectPermission($this->filterPermission($permission, $guardName))
             : $this->inheritedHasPermissionTo($permission, $guardName);
+    }
+
+    public function hasFullReadOnlyAccess(): bool
+    {
+        return ! $this->hasAnyRole(['superadmin', 'client_admin', 'client_user'])
+            && $this->getAllPermissions()->contains('name', 'system.full_read_only');
     }
 
     public function getPermissionsViaRoles(): Collection

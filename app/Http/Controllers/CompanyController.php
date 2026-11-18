@@ -133,7 +133,7 @@ class CompanyController extends Controller
             $relations[] = 'audits.manager';
         }
 
-        if ($access->hasFullAccess($user)) {
+        if ($access->hasFullViewAccess($user)) {
             $relations[] = 'users.roles';
         }
 
@@ -142,7 +142,7 @@ class CompanyController extends Controller
         if (! $auditsEnabled || ! $access->canViewCompany($user, $company->id, 'can_view_audits')) {
             $company->setRelation('audits', collect());
         }
-        if (! $access->hasFullAccess($user)) {
+        if (! $access->hasFullViewAccess($user)) {
             $company->setRelation('users', collect());
         }
 
@@ -157,7 +157,7 @@ class CompanyController extends Controller
             $projectsQuery = Project::with(['manager', 'members'])
                 ->where('company_id', $company->id)
                 ->orderByDesc('created_at');
-            if (! $access->hasFullAccess($user)) {
+            if (! $access->hasFullViewAccess($user)) {
                 $projectsQuery->where(fn ($query) => $query
                     ->where('manager_id', $user->id)
                     ->orWhereHas('members', fn ($members) => $members->whereKey($user->id)));

@@ -3,6 +3,7 @@
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckAccountSecurity;
 use App\Http\Middleware\CommitFormDraft;
+use App\Http\Middleware\EnforceReadOnlyAccess;
 use App\Http\Middleware\EnsureAppModuleEnabled;
 use App\Http\Middleware\EnsureClientAdmin;
 use App\Http\Middleware\EnsureClientRole;
@@ -28,7 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
         $middleware->append(SecurityHeaders::class);
-        $middleware->web(append: [CheckAccountSecurity::class, LogDocumentDownloads::class, PreviewUser::class, CommitFormDraft::class]);
+        $middleware->web(append: [CheckAccountSecurity::class, LogDocumentDownloads::class, PreviewUser::class, EnforceReadOnlyAccess::class, CommitFormDraft::class]);
+        $middleware->prependToPriorityList(SubstituteBindings::class, EnforceReadOnlyAccess::class);
         $middleware->prependToPriorityList(SubstituteBindings::class, CheckAccountSecurity::class);
         $middleware->prependToPriorityList(SubstituteBindings::class, LogDocumentDownloads::class);
         $middleware->prependToPriorityList(SubstituteBindings::class, PreviewUser::class);

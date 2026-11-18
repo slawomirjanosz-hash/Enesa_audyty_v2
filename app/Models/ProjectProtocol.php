@@ -46,7 +46,7 @@ class ProjectProtocol extends Model
     {
         $clean = fn ($value) => trim(preg_replace('/[^A-Za-z0-9 ._-]+/', '-', Str::ascii((string) $value)), ' .-');
         $number = $clean($this->number) ?: 'Protokol';
-        $title = $clean(preg_replace('/\s+/u', ' ', (string) $this->title));
+        $title = $clean(preg_replace('/\s+/u', ' ', (string) $this->getAttribute('title')));
 
         return substr($number, 0, 65).($title !== '' ? ' - '.rtrim(substr($title, 0, 120), ' .-') : '').'.pdf';
     }

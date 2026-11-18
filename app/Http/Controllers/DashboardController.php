@@ -41,7 +41,7 @@ class DashboardController extends Controller
         if ($projectsEnabled) {
             $relations['projects'] = function ($query) use ($access, $user) {
                 $query->withCount(['tasks as overdue_tasks_count' => fn ($tasks) => $tasks->overdue()]);
-                if (! $access->hasFullAccess($user)) {
+                if (! $access->hasFullViewAccess($user)) {
                     $query->where(fn ($projects) => $projects
                         ->where('manager_id', $user->id)
                         ->orWhereHas('members', fn ($members) => $members->whereKey($user->id)));
@@ -82,7 +82,7 @@ class DashboardController extends Controller
         }
 
         $activeProjectsQuery = Project::where('status', 'active');
-        if (! $access->hasFullAccess($user)) {
+        if (! $access->hasFullViewAccess($user)) {
             $activeProjectsQuery->where(fn ($query) => $query
                 ->where('manager_id', $user->id)
                 ->orWhereHas('members', fn ($members) => $members->whereKey($user->id)));

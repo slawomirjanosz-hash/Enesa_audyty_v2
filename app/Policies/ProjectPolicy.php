@@ -10,9 +10,9 @@ class ProjectPolicy
 {
     public function view(User $user, Project $project): bool
     {
-        return (app(AuditorAccessService::class)->hasFullAccess($user) || $user->can('projects.view'))
+        return (app(AuditorAccessService::class)->hasFullViewAccess($user) || $user->can('projects.view'))
             && (
-                app(AuditorAccessService::class)->hasFullAccess($user)
+                app(AuditorAccessService::class)->hasFullViewAccess($user)
                 || $project->manager_id === $user->id
                 || $project->members()->whereKey($user->id)->exists()
             );

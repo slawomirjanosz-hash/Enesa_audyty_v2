@@ -118,6 +118,7 @@ class RolePermissionCatalog
             ]],
             'advanced' => ['label' => 'Uprawnienia nadrzędne', 'permissions' => [
                 'system.full_access' => 'Pełny dostęp operacyjny (pomija szczegółowe ograniczenia)',
+                'system.full_read_only' => 'Pełny dostęp tylko do odczytu (wszystkie dane bez możliwości zmian)',
             ]],
         ];
     }
@@ -128,6 +129,12 @@ class RolePermissionCatalog
             ->flatMap(fn (array $group) => array_keys($group['permissions']))
             ->values()
             ->all();
+    }
+
+    public static function readOnlyNames(): array
+    {
+        return array_values(array_filter(self::names(), fn (string $name): bool => str_ends_with($name, '.view')
+            || in_array($name, ['hr.leaves.accounting', 'expenses.use', 'expenses.accounting'], true)));
     }
 
     public static function roleLabel(string $role): string

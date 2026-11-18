@@ -36,7 +36,8 @@ class CompanyReliabilityController extends Controller
         if ($lookup && data_get($lookup, 'nip') !== Company::normalizeNip($company->nip)) {
             $lookup = null;
         }
-        $autoLookup = ! $lookup || abs(now()->diffInMinutes(Carbon::parse($lookup['checked_at']))) >= 15;
+        $autoLookup = ! $request->user()->hasFullReadOnlyAccess()
+            && (! $lookup || abs(now()->diffInMinutes(Carbon::parse($lookup['checked_at']))) >= 15);
         $finances = [];
         foreach (CompanyReliabilityFile::where('company_id', $company->id)->whereNotNull('parsed_finances')->latest('updated_at')->latest('id')->cursor() as $file) {
             if (data_get($file->parsed_finances, 'nip') !== Company::normalizeNip($company->nip)) {
