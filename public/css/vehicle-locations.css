@@ -1,0 +1,18 @@
+
+.vehicle-table .vehicle-location-trigger,.vehicle-location-trigger{display:block;box-sizing:border-box;width:100%;max-width:100%;padding:5px 3px;border:1px solid #cad6d0;border-radius:6px;background:#fff;color:var(--green,#1a4d3a);font:inherit;text-align:left;white-space:normal;overflow-wrap:anywhere;cursor:pointer}
+.vehicle-location-trigger:hover{background:#eef6f1}.vehicle-location-trigger:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+#vehicle-location-modal{position:fixed;inset:0;z-index:9000;background:#0008;display:flex;align-items:center;justify-content:center;padding:18px}
+#vehicle-location-modal[hidden]{display:none}
+#vehicle-location-modal .hr-modal-card{background:#fff;border-radius:14px;width:min(950px,100%);max-height:92vh;overflow:auto;padding:20px}
+#vehicle-location-modal .hr-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#vehicle-location-modal h2{font-size:19px}
+#vehicle-location-modal .hr-btn{border:0;border-radius:7px;padding:9px 13px;background:var(--green);color:#fff;font-weight:700;cursor:pointer}
+#vehicle-location-modal .hr-btn.danger{background:#fee2e2;color:#991b1b}
+#vehicle-location-modal .hr-input{padding:9px 10px;border:1px solid #cec8bc;border-radius:7px;background:#fff}
+#vehicle-location-modal .hr-actions{display:flex;gap:10px;flex-wrap:wrap}
+#vehicle-location-modal .hr-table{width:100%;min-width:0;border-collapse:collapse;font-size:13px}
+#vehicle-location-modal .hr-table th,#vehicle-location-modal .hr-table td{padding:10px;text-align:left;border-bottom:1px solid #eee}
+#vehicle-location-modal .hr-table th{background:#fafaf6}
+.location-plan-fields{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}.location-plan-fields label{display:grid;gap:6px;font-size:12px}.location-plan-fields input{width:100%;min-width:0;box-sizing:border-box}
+@media(max-width:700px){.location-plan-fields{grid-template-columns:1fr}}
+.location-plan-fields label[hidden]{display:none}
