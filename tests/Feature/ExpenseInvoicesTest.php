@@ -521,3 +521,20 @@ test('administrators can delete closed invoices within their register access', f
     $this->delete(route('expenses.destroy', $closed), ['confirm' => 1, 'revision' => $closed->revision])->assertSessionHas('success');
     $this->assertSoftDeleted('expense_invoices', ['id' => $closed->id, 'deleted_by' => $admin->id]);
 });
+
+test('amount date and project filters combine before pagination and preserve invoice privacy', function () {
+    $owner = expenseUser();
+    $other = expenseUser();
+    $company = Company::create(['name' => 'Filtry']);
+    $project = Project::create(['company_id' => $company->id, 'number' => 'FILTER', 'name' => 'Projekt filtrów', 'status' => 'active']);
+    expenseRecord($owner, ['invoice_number' => 'MATCH-EXACT', 'gross_amount' => 123.45, 'purchase_date' => '2026-11-02', 'project_id' => $project->id]);
+    expenseRecord($owner, ['invoice_number' => 'MATCH-RANGE', 'gross_amount' => 150, 'purchase_date' => '2026-11-03', 'project_id' => $project->id]);
+    expenseRecord($other, ['invoice_number' => 'PRIVATE-FILTER', 'gross_amount' => 123.45, 'purchase_date' => '2026-11-02', 'project_id' => $project->id]);
+    $url = route('expenses.index');
+    $this->actingAs($owner)->get($url.'?amount_from=123.45&date_from=2026-11-02&project_id='.$project->id)
+        ->assertOk()->assertSee('MATCH-EXACT')->assertDontSee('MATCH-RANGE')->assertDontSee('PRIVATE-FILTER');
+    $this->get($url.'?amount_to=150&date_to=2026-11-03')->assertOk()->assertSee('MATCH-RANGE')->assertDontSee('MATCH-EXACT');
+    $this->withHeader('X-Expense-Results', '1')->get($url.'?amount_from=123.45&amount_to=150&date_from=2026-11-02&date_to=2026-11-03&table_sort=gross_amount&table_direction=asc')
+        ->assertOk()->assertSeeInOrder(['MATCH-EXACT', 'MATCH-RANGE'])->assertDontSee('PRIVATE-FILTER');
+    $this->get($url.'?amount_from=200&amount_to=100')->assertSessionHasErrors('amount_to');
+});

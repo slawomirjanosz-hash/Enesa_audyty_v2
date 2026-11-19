@@ -50,7 +50,36 @@ class ExpenseInvoiceController extends Controller
         } elseif ($tab === 'pool') {
             $query->where('is_unassigned', true)->whereNull('owner_id');
         }
-        $filters = $request->validate(['month' => ['nullable', 'date_format:Y-m'], 'search' => ['nullable', 'string', 'max:100'], 'workflow' => ['nullable', Rule::in([...array_keys(ExpenseInvoice::WORKFLOW), 'pending'])]]);
+        $filters = $request->validate([
+            'amount_from' => ['nullable', 'numeric', 'min:0', 'max:999999999999.99'],
+            'amount_to' => ['nullable', 'numeric', 'min:0', 'max:999999999999.99'],
+            'date_from' => ['nullable', 'date_format:Y-m-d'],
+            'date_to' => ['nullable', 'date_format:Y-m-d'],
+            'project_id' => ['nullable', 'integer', 'min:1'],
+            'month' => ['nullable', 'date_format:Y-m'], 'search' => ['nullable', 'string', 'max:100'], 'workflow' => ['nullable', Rule::in([...array_keys(ExpenseInvoice::WORKFLOW), 'pending'])]]);
+        foreach (['gross_amount' => 'amount', 'purchase_date' => 'date'] as $column => $prefix) {
+            $from = $filters[$prefix.'_from'] ?? null;
+            $to = $filters[$prefix.'_to'] ?? null;
+            if ($from !== null && $to !== null) {
+                if ($from > $to) {
+                    throw ValidationException::withMessages([$prefix.'_to' => 'Wartoœæ koñcowa nie mo¿e byæ mniejsza od pocz¹tkowej.']);
+                }
+                if ($prefix === 'date') {
+                    $query->whereDate($column, '>=', $from)->whereDate($column, '<=', $to);
+                } else {
+                    $query->whereBetween($column, [$from, $to]);
+                }
+            } elseif ($from !== null || $to !== null) {
+                if ($prefix === 'date') {
+                    $query->whereDate($column, $from ?? $to);
+                } else {
+                    $query->where($column, $from ?? $to);
+                }
+            }
+        }
+        if (! empty($filters['project_id'])) {
+            $query->where('project_id', $filters['project_id']);
+        }
         if (! empty($filters['workflow'])) {
             $query->whereIn('workflow_status', $filters['workflow'] === 'pending'
                 ? ($accounting ? ['new', 'disputed'] : ['settled', 'returned'])
@@ -98,9 +127,14 @@ class ExpenseInvoiceController extends Controller
             return view('expenses.results', compact('invoices', 'accounting', 'tab', 'workflowLabels'));
         }
 
+        $filterProjects = Project::query()->whereIn('id', $this->visible($request->user())
+            ->when($tab === 'own', fn ($q) => $q->where('owner_id', $request->user()->id))
+            ->when($tab === 'pool', fn ($q) => $q->where('is_unassigned', true)->whereNull('owner_id'))
+            ->select('project_id'))->orderBy('number')->get(['id', 'number', 'name']);
+
         $poolCount = ExpenseInvoice::where('is_unassigned', true)->whereNull('owner_id')->count();
 
-        return view('expenses.index', compact('invoices', 'accounting', 'tab', 'workflowLabels', 'poolCount'));
+        return view('expenses.index', compact('invoices', 'accounting', 'tab', 'workflowLabels', 'poolCount', 'filterProjects'));
     }
 
     public function create(Request $request)

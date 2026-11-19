@@ -33,8 +33,7 @@
         request?.abort();
         timer = setTimeout(search, 300);
     };
-    form.elements.namedItem('search').addEventListener('input', schedule);
-    form.elements.namedItem('month').addEventListener('change', schedule);
-    form.elements.namedItem('workflow').addEventListener('change', schedule);
+    form.addEventListener('input', schedule);
+    form.addEventListener('change', schedule);
     form.addEventListener('submit', event => { event.preventDefault(); clearTimeout(timer); search(); });
 })();
