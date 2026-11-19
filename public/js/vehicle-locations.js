@@ -12,7 +12,24 @@
             row.querySelectorAll('[data-location-field]').forEach(input => input.name = 'periods[' + i + '][' + input.dataset.locationField + ']'));
         const add = (data = {}) => {
             const row = root.querySelector('#location-period-template').content.firstElementChild.cloneNode(true);
+            const locationSelect = row.querySelector('[data-location-select]'), customLocation = row.querySelector('[data-custom-location]');
+            if (data.location && ![...locationSelect.options].some(option => option.value === data.location)) {
+                const option = document.createElement('option');
+                option.value = data.location; option.textContent = data.location;
+                locationSelect.insertBefore(option, locationSelect.querySelector('[data-custom-option]'));
+            }
             row.querySelectorAll('[data-location-field]').forEach(input => input.value = data[input.dataset.locationField] ?? '');
+            const syncLocation = () => {
+                const custom = locationSelect.selectedOptions[0]?.hasAttribute('data-custom-option');
+                customLocation.hidden = !custom; customLocation.disabled = !custom; customLocation.required = !!custom;
+                const active = custom ? customLocation : locationSelect, inactive = custom ? locationSelect : customLocation;
+                inactive.removeAttribute('data-location-field'); inactive.removeAttribute('name');
+                active.dataset.locationField = 'location';
+                locationSelect.required = !custom;
+                renumber();
+                if (custom) customLocation.focus();
+            };
+            locationSelect.addEventListener('change', syncLocation);
             const permanent = row.querySelector('[data-permanent]'), end = row.querySelector('[data-location-field="ends_on"]'), start = row.querySelector('[data-location-field="starts_on"]');
             if (!data.starts_on) { start.value = config.start; end.value = config.end; }
             const sync = () => { end.disabled = permanent.checked; end.required = !permanent.checked; end.closest('label').hidden = permanent.checked; start.closest('label').hidden = permanent.checked; };

@@ -24,11 +24,19 @@
 <div id="location-periods"></div>
 <div class="hr-actions"><button class="hr-btn" type="button" id="add-location-period">+ Dodaj okres</button><button class="hr-btn" type="submit">Zapisz przypisania</button></div>
 </form>
-<datalist id="vehicle-location-choices">@foreach(\App\Models\HrVehicleLocation::orderBy('name')->pluck('name') as $name)<option value="{{$name}}"></option>@endforeach<option value="Nie dotyczy"></option></datalist>
+
 <template id="location-period-template">
 <fieldset style="border:1px solid #cad6d0;border-radius:8px;padding:14px;margin:12px 0">
 <div class="hr-grid location-plan-fields">
-<label>Lokalizacja <input class="hr-input" data-location-field="location" list="vehicle-location-choices" maxlength="255" required></label>
+<label>Lokalizacja
+<select class="hr-input" data-location-select data-location-field="location" required>
+<option value="">Wybierz lokalizację</option>
+@foreach(\App\Models\HrVehicleLocation::orderBy('name')->pluck('name') as $name)<option value="{{$name}}">{{$name}}</option>@endforeach
+<option value="Nie dotyczy">Nie dotyczy</option>
+<option value="__custom__" data-custom-option>+ Wpisz inną lokalizację…</option>
+</select>
+<input class="hr-input" data-custom-location hidden disabled maxlength="255" placeholder="Wpisz lokalizację" aria-label="Inna lokalizacja">
+</label>
 <label>Od <input class="hr-input" data-location-field="starts_on" type="date" required></label>
 <label>Do <input class="hr-input" data-location-field="ends_on" type="date" required></label>
 </div>

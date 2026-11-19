@@ -6,5 +6,5 @@
 </style>
 @include('hr.partials.location-plan-content')
 @endsection
-@push('styles')<link rel="stylesheet" href="{{asset('css/vehicle-locations.css')}}">@endpush
-@push('scripts')<script src="{{asset('js/vehicle-locations.js')}}" defer></script>@endpush
+@push('styles')<link rel="stylesheet" href="{{asset('css/vehicle-locations.css')}}?v=2">@endpush
+@push('scripts')<script src="{{asset('js/vehicle-locations.js')}}?v=2" defer></script>@endpush

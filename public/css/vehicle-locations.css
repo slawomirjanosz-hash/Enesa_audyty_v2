@@ -16,3 +16,8 @@
 .location-plan-fields{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}.location-plan-fields label{display:grid;gap:6px;font-size:12px}.location-plan-fields input{width:100%;min-width:0;box-sizing:border-box}
 @media(max-width:700px){.location-plan-fields{grid-template-columns:1fr}}
 .location-plan-fields label[hidden]{display:none}
+
+.location-plan-fields select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.location-plan-fields [data-custom-location][hidden]{display:none}
+#vehicle-location-modal .hr-modal-card{box-sizing:border-box;min-width:0}
+#vehicle-location-modal .hr-card{min-width:0}

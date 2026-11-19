@@ -99,7 +99,9 @@ test('location dialog loads a fragment and saves without leaving the vehicle tab
     $car = HrVehicle::create(['name' => 'Dialog', 'registration_number' => 'MODAL', 'type' => 'company']);
     $this->actingAs($user)->withHeader('X-Vehicle-Location-Modal', '1')
         ->get(route('hr.vehicles.location-plan', $car))->assertOk()->assertSee('data-location-plan-content', false)
-        ->assertSee('data-close-location-modal', false)->assertDontSee('<html', false);
+        ->assertSee('data-close-location-modal', false)->assertDontSee('<html', false)
+        ->assertSee('data-location-select', false)->assertSee('data-custom-location', false)
+        ->assertDontSee('<datalist', false);
     $this->putJson(route('hr.vehicles.location-plan.save', $car), ['revision' => 0, 'periods' => [
         ['location' => 'Baza', 'starts_on' => '2026-11-01', 'ends_on' => '2026-11-30'],
     ]])->assertOk()->assertJsonPath('location', 'Baza');
