@@ -29,7 +29,7 @@ class HrVehicleReminderSelection
             // does not silently subscribe other managers when its users lose access.
             return $managerIds->contains($id) && ($assigned === [] || in_array($id, $assigned, true));
         };
-        foreach (HrVehicle::with('responsibleUser')->where('is_active', true)->get() as $vehicle) {
+        foreach (HrVehicle::with(['responsibleUser', 'locationPeriods'])->where('is_active', true)->get() as $vehicle) {
             $recipients = $vehicle->type === 'company' ? $managerIds->all() : [];
             $ownerId = null;
             if ($vehicle->type === 'company' && $vehicle->responsible_user_id) {
@@ -52,6 +52,10 @@ class HrVehicleReminderSelection
                 $stage = $days < 0 ? 'overdue:'.$today->toDateString() : ($days <= 7 ? 'urgent' : 'soon');
                 $events[] = ['field' => $field, 'identity' => $field.':'.$date->toDateString().':'.$stage,
                     'message' => HrVehicle::COLUMNS[$field].': '.$date->format('d.m.Y').' — '.($days < 0 ? 'po terminie ('.abs($days).' dni)' : ($days === 0 ? 'termin dzisiaj' : 'pozostało '.$days.' dni'))];
+            }
+            if ((int) $vehicle->location_revision > 0 && !$vehicle->usage_location) {
+                $events[] = ['field' => 'usage_location', 'identity' => 'location_missing:'.$today->toDateString(),
+                    'message' => 'Lokalizacja nieokreślona — przypisanie wygasło lub brak okresu na dzisiaj.'];
             }
             $missing = $today->isMonday() ? $vehicle->missingFields() : [];
             foreach (array_unique($recipients) as $id) {

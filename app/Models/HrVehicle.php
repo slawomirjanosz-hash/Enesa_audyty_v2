@@ -10,6 +10,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class HrVehicle extends Model
 {
+    public function locationPeriods(): HasMany
+    {
+        return $this->hasMany(HrVehicleLocationPeriod::class);
+    }
+
+    public function getUsageLocationAttribute($value): ?string
+    {
+        if (!(int) $this->location_revision) {
+            return $value;
+        }
+        $today = now('Europe/Warsaw')->toDateString();
+        $period = $this->locationPeriods->first(fn ($p) => $p->starts_on->toDateString() <= $today
+            && ($p->ends_on === null || $p->ends_on->toDateString() >= $today));
+
+        return $period?->location;
+    }
+
     public function serviceEntries(): HasMany
     {
         return $this->hasMany(HrVehicleServiceEntry::class);

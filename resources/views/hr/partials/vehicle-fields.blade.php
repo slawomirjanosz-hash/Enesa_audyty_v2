@@ -12,12 +12,16 @@
     @foreach(['name'=>'Nazwa', 'registration_number'=>'Nr rejestracyjny', 'make_model'=>'Marka / model', 'registration_document'=>'Dowód rejestracyjny — gdzie się znajduje / uwagi'] as $field=>$label) @continue(!$canField($field))
     <div class="hr-field"><label for="vehicle-{{$field}}">{{$label}}{{in_array($field,['name','registration_number'])?' *':''}}</label><input id="vehicle-{{$field}}" name="{{$field}}" value="{{old($field,$vehicle->$field)}}" maxlength="{{ match($field) { 'registration_number'=>30, 'fuel_card_number'=>50, 'insurer'=>150, default=>255 } }}" @required(in_array($field,['name','registration_number'])) @if($field==='fuel_card_number') inputmode="numeric" @endif>@error($field,'vehicle')<small class="vehicle-error">{{$message}}</small>@enderror</div>
     @endforeach
+    @if($vehicle->exists)
+    <div class="hr-field"><label>Lokalizacja</label><a href="{{route('hr.vehicles.location-plan',$vehicle)}}">{{$vehicle->usage_location ?: 'Nieokreślona'}} — przypisania i historia</a></div>
+    @else
     @if($canField('usage_location'))    <div class="hr-field"><label for="vehicle-usage_location">Lokalizacja</label><select id="vehicle-usage_location" name="usage_location"><option value="">Nie podano</option>
     @php $locationValue = old('usage_location', $vehicle->usage_location); @endphp
     @foreach(\App\Models\HrVehicleLocation::orderBy('name')->pluck('name') as $location)<option value="{{$location}}" @selected($locationValue===$location)>{{$location}}</option>@endforeach
     <option value="Nie dotyczy" @selected($locationValue==='Nie dotyczy')>Nie dotyczy</option>
     @if($locationValue && $locationValue !== 'Nie dotyczy' && !\App\Models\HrVehicleLocation::where('name',$locationValue)->exists())<option value="{{$locationValue}}" selected>{{$locationValue}} (dotychczasowa)</option>@endif
     </select>@error('usage_location','vehicle')<small class="vehicle-error">{{$message}}</small>@enderror</div>@endif
+    @endif
     @if($canField('responsible_person'))    <div class="hr-field"><label for="vehicle-responsible-user">Osoba odpowiedzialna — użytkownik</label><select id="vehicle-responsible-user" name="responsible_user_id"><option value="">Osoba spoza bazy — wpiszę ręcznie</option>
     @foreach(\App\Models\HrVehicle::eligibleResponsibleUsers()->orderBy('name')->get(['id','name']) as $person)<option value="{{$person->id}}" @selected((string)old('responsible_user_id',$vehicle->responsible_user_id)===(string)$person->id)>{{$person->name}}</option>@endforeach
     </select><small>Wybrany użytkownik otrzyma powiadomienia o swoim aucie służbowym. Auto prywatne: można wskazać tylko siebie.</small>@error('responsible_user_id','vehicle')<small class="vehicle-error">{{$message}}</small>@enderror</div>@endif

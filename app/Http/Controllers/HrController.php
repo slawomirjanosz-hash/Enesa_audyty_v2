@@ -63,7 +63,7 @@ class HrController extends Controller
         });
 
         $attendances = $canAttendance ? HrAttendance::with('user')->when(! $canTeam, fn ($q) => $q->where('user_id', $user->id))->when($canTeam && $request->integer('user_id'), fn ($q) => $q->where('user_id', $selectedUserId))->latest('work_date')->get() : collect();
-        $vehicles = $canDelegations ? HrVehicle::with('user')->where('is_active', true)->visibleTo($user)->orderBy('type')->orderBy('name')->get() : collect();
+        $vehicles = $canDelegations ? HrVehicle::with(['user', 'locationPeriods'])->where('is_active', true)->visibleTo($user)->orderBy('type')->orderBy('name')->get() : collect();
         $rateOwnerId = $canTeam ? $selectedUserId : $user->id;
         $hrSettings = CompanySettings::query()->first(['hr_km_rate', 'hr_diet_rate']);
         $defaultKmRate = (float) ($hrSettings?->hr_km_rate ?? 0);

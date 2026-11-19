@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\HrVehicle;
 use App\Models\HrVehicleColumnResponsibility;
 use App\Models\User;
+use App\Services\HrVehicleLocationPlan;
 use App\Support\HrAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class HrVehicleController extends Controller
@@ -44,11 +46,49 @@ class HrVehicleController extends Controller
             : [];
     }
 
+    public function locationPlan(Request $request, HrVehicle $vehicle): View
+    {
+        abort_unless($vehicle->type === 'private' ? $vehicle->canEdit($request->user()) :
+            HrVehicle::visibleTo($request->user())->whereKey($vehicle->id)->exists(), 403);
+        abort_unless($vehicle->is_active, 404);
+        $canEditLocation = $vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true);
+
+        return view('hr.vehicle-locations', compact('vehicle', 'canEditLocation'));
+    }
+
+    public function saveLocationPlan(Request $request, HrVehicle $vehicle): RedirectResponse
+    {
+        abort_unless($vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true), 403);
+        abort_unless($vehicle->is_active, 404);
+        $data = $request->validate([
+            'revision' => ['required', 'integer', 'min:0'],
+            'periods' => ['sometimes', 'array', 'max:100'],
+            'periods.*.id' => ['nullable', 'integer'],
+            'periods.*.location' => ['required', 'string', 'max:255'],
+            'periods.*.starts_on' => ['required', 'date_format:Y-m-d'],
+            'periods.*.ends_on' => ['nullable', 'date_format:Y-m-d'],
+        ]);
+        $periods = array_values($data['periods'] ?? []);
+        usort($periods, fn ($a, $b) => strcmp($a['starts_on'], $b['starts_on']));
+        $lastEnd = null;
+        foreach ($periods as $i => $period) {
+            if ((! empty($period['ends_on']) && $period['ends_on'] < max($period['starts_on'], now('Europe/Warsaw')->toDateString()))
+                || ($i > 0 && ($lastEnd === null || $period['starts_on'] <= $lastEnd))) {
+                throw ValidationException::withMessages(['periods' => 'Daty muszą być uporządkowane i nie mogą się nakładać.']);
+            }
+            $lastEnd = $period['ends_on'] ?? null;
+        }
+        app(HrVehicleLocationPlan::class)->save($vehicle, $periods, (int) $data['revision']);
+
+        return redirect()->route('hr.vehicles.location-plan', $vehicle)->with('success', 'Zapisano przypisania lokalizacji.');
+    }
+
     public function location(Request $request, HrVehicle $vehicle): RedirectResponse
     {
         abort_unless($vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true), 403);
         abort_unless($vehicle->is_active, 404);
         $data = $request->validate(['usage_location' => ['nullable', 'string', Rule::when($request->input('usage_location') !== 'Nie dotyczy', 'exists:hr_vehicle_locations,name')]]);
+        abort_if((int) $vehicle->location_revision > 0, 422, 'Zmień lokalizację w planie przypisań.');
         $vehicle->update(['usage_location' => $data['usage_location'] ?? null]);
 
         return redirect()->route('hr.index', ['tab' => 'vehicles'])->with('success', 'Lokalizacja samochodu została zapisana.');
@@ -93,6 +133,9 @@ class HrVehicleController extends Controller
         abort_if($editableColumns === [], 403);
         abort_unless($vehicle->is_active, 404);
         $data = $this->vehicleData($request, $vehicle, $editableColumns);
+        if ((int) $vehicle->location_revision > 0) {
+            unset($data['usage_location']);
+        }
         // Changing ownership/type of an existing record could expose private data.
         unset($data['type']);
         if (array_key_exists('responsible_user_id', $data)) {
