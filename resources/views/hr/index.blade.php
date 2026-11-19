@@ -113,3 +113,6 @@ setupPlaceSuggestions('trip-origin','trip-origin-suggestions');setupPlaceSuggest
 </script>
 <script src="{{asset('js/hr-leave-submit.js')}}?v={{filemtime(public_path('js/hr-leave-submit.js'))}}"></script>
 @endsection
+
+@push('styles')<link rel="stylesheet" href="{{asset('css/vehicle-locations.css')}}">@endpush
+@push('scripts')<script src="{{asset('js/vehicle-locations.js')}}" defer></script>@endpush

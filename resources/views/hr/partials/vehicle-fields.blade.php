@@ -13,7 +13,7 @@
     <div class="hr-field"><label for="vehicle-{{$field}}">{{$label}}{{in_array($field,['name','registration_number'])?' *':''}}</label><input id="vehicle-{{$field}}" name="{{$field}}" value="{{old($field,$vehicle->$field)}}" maxlength="{{ match($field) { 'registration_number'=>30, 'fuel_card_number'=>50, 'insurer'=>150, default=>255 } }}" @required(in_array($field,['name','registration_number'])) @if($field==='fuel_card_number') inputmode="numeric" @endif>@error($field,'vehicle')<small class="vehicle-error">{{$message}}</small>@enderror</div>
     @endforeach
     @if($vehicle->exists)
-    <div class="hr-field"><label>Lokalizacja</label><a href="{{route('hr.vehicles.location-plan',$vehicle)}}">{{$vehicle->usage_location ?: 'Nieokreślona'}} — przypisania i historia</a></div>
+    <div class="hr-field"><label>Lokalizacja</label><button type="button" class="vehicle-location-trigger" data-vehicle-location-open="{{route('hr.vehicles.location-plan',$vehicle)}}">{{$vehicle->usage_location ?: 'Nieokreślona'}} — przypisania i historia</button></div>
     @else
     @if($canField('usage_location'))    <div class="hr-field"><label for="vehicle-usage_location">Lokalizacja</label><select id="vehicle-usage_location" name="usage_location"><option value="">Nie podano</option>
     @php $locationValue = old('usage_location', $vehicle->usage_location); @endphp

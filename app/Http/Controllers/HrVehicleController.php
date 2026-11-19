@@ -53,10 +53,12 @@ class HrVehicleController extends Controller
         abort_unless($vehicle->is_active, 404);
         $canEditLocation = $vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true);
 
-        return view('hr.vehicle-locations', compact('vehicle', 'canEditLocation'));
+        $modal = $request->header('X-Vehicle-Location-Modal') === '1';
+
+        return view($modal ? 'hr.partials.location-plan-content' : 'hr.vehicle-locations', compact('vehicle', 'canEditLocation', 'modal'));
     }
 
-    public function saveLocationPlan(Request $request, HrVehicle $vehicle): RedirectResponse
+    public function saveLocationPlan(Request $request, HrVehicle $vehicle): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         abort_unless($vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true), 403);
         abort_unless($vehicle->is_active, 404);
@@ -79,6 +81,10 @@ class HrVehicleController extends Controller
             $lastEnd = $period['ends_on'] ?? null;
         }
         app(HrVehicleLocationPlan::class)->save($vehicle, $periods, (int) $data['revision']);
+
+        if ($request->expectsJson()) {
+            return response()->json(['location' => $vehicle->fresh()->usage_location]);
+        }
 
         return redirect()->route('hr.vehicles.location-plan', $vehicle)->with('success', 'Zapisano przypisania lokalizacji.');
     }

@@ -65,7 +65,7 @@
 @endphp
 <td class="{{$deadline?'deadline-'.$deadline:''}}" data-sort-value="{{$key==='type'?$display:$sortValue}}" @if($deadline) title="{{$label}}: {{ match($deadline) { 'overdue'=>'termin minął', 'urgent'=>'do 7 dni', default=>'do 14 dni' } }}" @endif>
 @if($key==='usage_location')
-<a class="hr-btn" href="{{route('hr.vehicles.location-plan',$vehicle)}}" title="Przypisania i historia lokalizacji">{{$value ?: 'Nieokreślona'}}</a>
+<button type="button" class="vehicle-location-trigger" data-vehicle-location-open="{{route('hr.vehicles.location-plan',$vehicle)}}" title="Przypisania i historia lokalizacji">{{$value ?: 'Nieokreślona'}}</button>
 @elseif($key==='name' && $editable)<a class="vehicle-name-link" href="{{route('hr.vehicles.edit',$vehicle)}}" title="Edytuj samochód">{{$display}}</a>@elseif($dateField && $value && $display!=='Brak książki')<time datetime="{{$value->format('Y-m-d')}}">{{$display}}</time>@else{{$display}}@endif
 @if($key==='registration_document' && $vehicle->registration_document_present!==null && $value)<small style="display:block" title="{{$value}}">{{$value}}</small>@endif
 </td>

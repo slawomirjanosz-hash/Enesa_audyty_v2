@@ -13,3 +13,6 @@
     <button type="submit" title="Usuń samochód" style="border:1px solid #fecaca;border-radius:7px;padding:10px 16px;background:#fff;color:#b91c1c;cursor:pointer"><i class="ti ti-trash"></i> Usuń samochód</button>
 </form>@endif</div>
 @endsection
+
+@push('styles')<link rel="stylesheet" href="{{asset('css/vehicle-locations.css')}}">@endpush
+@push('scripts')<script src="{{asset('js/vehicle-locations.js')}}" defer></script>@endpush

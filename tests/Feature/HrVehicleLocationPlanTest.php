@@ -93,3 +93,17 @@ test('a planned future move preserves the current location until the move and de
     expect($car->fresh()->usage_location)->toBeNull();
     expect($car->fresh()->locationPeriods->firstWhere('location', 'A')->ends_on->toDateString())->toBe('2026-11-09');
 });
+
+test('location dialog loads a fragment and saves without leaving the vehicle table', function () {
+    $user = locationPlanPerson();
+    $car = HrVehicle::create(['name' => 'Dialog', 'registration_number' => 'MODAL', 'type' => 'company']);
+    $this->actingAs($user)->withHeader('X-Vehicle-Location-Modal', '1')
+        ->get(route('hr.vehicles.location-plan', $car))->assertOk()->assertSee('data-location-plan-content', false)
+        ->assertSee('data-close-location-modal', false)->assertDontSee('<html', false);
+    $this->putJson(route('hr.vehicles.location-plan.save', $car), ['revision' => 0, 'periods' => [
+        ['location' => 'Baza', 'starts_on' => '2026-11-01', 'ends_on' => '2026-11-30'],
+    ]])->assertOk()->assertJsonPath('location', 'Baza');
+    $this->putJson(route('hr.vehicles.location-plan.save', $car), ['revision' => 1, 'periods' => [
+        ['location' => 'Baza', 'starts_on' => '2026-11-30', 'ends_on' => '2026-11-01'],
+    ]])->assertUnprocessable()->assertJsonValidationErrors('periods');
+});
