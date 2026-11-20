@@ -1006,7 +1006,7 @@
                             </td>
                             <td data-sort-value="{{$audit->created_at->toIso8601String()}}" style="color:#7a8a80;font-size:12px;">{{ $audit->created_at->format('d.m.Y') }}</td>
                             <td><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a href="{{route('audits.show',$audit)}}" class="btn-action btn-secondary-action"><i class="ti ti-eye"></i> Otwórz</a>
-                            @if(auth()->user()->hasAnyRole(['admin','superadmin']))<form method="POST" action="{{route('audits.destroy',$audit)}}" onsubmit="return confirm('Usunąć ten audyt z aktywnej listy? Jego zadania przestaną być aktywne. Dane i pliki zostaną zachowane.')">@csrf @method('DELETE')<input type="hidden" name="confirm_delete" value="1"><button type="submit" class="btn-action btn-secondary-action" style="color:#b42318;border-color:#efb8b4;cursor:pointer"><i class="ti ti-trash"></i> Usuń audyt</button></form>@endif
+                            @if(auth()->user()->hasRole('superadmin'))<form method="POST" action="{{route('audits.destroy',$audit)}}" onsubmit="return confirm('Usunąć ten audyt z aktywnej listy? Jego zadania przestaną być aktywne. Dane i pliki zostaną zachowane.')">@csrf @method('DELETE')<input type="hidden" name="confirm_delete" value="1"><button type="submit" class="btn-action btn-secondary-action" style="color:#b42318;border-color:#efb8b4;cursor:pointer" title="Usuń audyt" aria-label="Usuń audyt"><i class="ti ti-trash" aria-hidden="true"></i></button></form>@endif
                             </div></td>
                         </tr>
                     @endforeach

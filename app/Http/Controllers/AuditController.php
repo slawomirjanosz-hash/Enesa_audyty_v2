@@ -109,9 +109,11 @@ class AuditController extends Controller
         $this->ensureAccess($request, $audit);
         abort_unless($this->canManage($request), 403);
         $data = $request->validateWithBag('auditCopy', [
+            'confirm_copy' => ['required', 'accepted'],
             'number' => ['required', 'string', 'max:80', 'unique:audits,number'],
             'title' => ['required', 'string', 'max:255'],
         ]);
+        unset($data['confirm_copy']);
         $copy = DB::transaction(function () use ($request, $audit, $data) {
             $audit->load(['members', 'tasks', 'surveys']);
             $copy = $audit->replicate(['public_gantt_token']);
@@ -146,7 +148,7 @@ class AuditController extends Controller
 
     public function destroy(Request $request, Audit $audit): RedirectResponse
     {
-        abort_unless($request->user()->hasAnyRole(['admin', 'superadmin']), 403);
+        abort_unless($request->user()->hasRole('superadmin'), 403);
         $this->ensureAccess($request, $audit);
         $request->validate(['confirm_delete' => ['required', 'accepted']]);
         DB::transaction(function () use ($audit, $request) {

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-test('only platform administrators can remove audits and tasks while keeping their records', function (string $role) {
+test('only superadmins can remove audits and tasks while keeping their records', function (string $role) {
     Storage::fake('local');
     $user = User::factory()->create();
     $user->assignRole(Role::findOrCreate($role));
@@ -19,7 +19,7 @@ test('only platform administrators can remove audits and tasks while keeping the
     $task = Task::create(['audit_id' => $audit->id, 'company_id' => $company->id, 'title' => 'Zaległe', 'due_date' => '2020-01-01', 'status' => 'todo']);
     Storage::disk('local')->put('audits/example.txt', 'Dokument');
     $document = Document::create(['company_id' => $company->id, 'audit_id' => $audit->id, 'type' => 'other', 'original_filename' => 'example.txt', 'stored_path' => 'audits/example.txt', 'mime_type' => 'text/plain', 'size' => 8, 'uploaded_by' => $user->id]);
-    $allowed = in_array($role, ['admin', 'superadmin']);
+    $allowed = $role === 'superadmin';
     $page = $this->actingAs($user)->get(route('companies.show', $company))->assertOk();
     if ($allowed) {
         $page->assertSee(route('audits.destroy', $audit), false)->assertSee('Usuń audyt');
