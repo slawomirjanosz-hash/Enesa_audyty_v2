@@ -1,4 +1,4 @@
-@once<link rel="stylesheet" href="{{asset('css/iso-questionnaire-overview.css')}}">@endonce
+@once<link rel="stylesheet" href="{{asset('css/iso-questionnaire-overview.css')}}?v={{filemtime(public_path('css/iso-questionnaire-overview.css'))}}">@endonce
 <div><table class="plant-profile-table"><thead><tr><th data-sortable="false">Lp.</th><th>Profil zakładu</th><th>Status</th><th>Osoba odpowiedzialna</th><th data-sortable="false">Akcje</th></tr></thead><tbody>
 @forelse($profileList as $listedProfile)
 @php($profileName=$listedProfile->answers['site.name']['value']??'Zakład')

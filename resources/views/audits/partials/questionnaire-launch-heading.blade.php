@@ -1,4 +1,3 @@
-@once<link rel="stylesheet" href="{{ asset('css/iso-questionnaire-overview.css') }}">@endonce
 <div data-questionnaire-launch-heading class="iso-profile-entry-heading">
     <span class="iso-profile-number">{{ $launchNumber ?? ($loop->iteration ?? 1) }}</span>
     <div><strong>{{ $launchName }}</strong>@if(!empty($launchStatus)) · {{ $launchStatus }}@endif</div>

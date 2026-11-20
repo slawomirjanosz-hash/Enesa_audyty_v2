@@ -31,6 +31,8 @@ test('latest 4.1 source is selected while the previous source and persistence co
 test('each clause page uses the source page and actual profile chooser instead of demo progress', function (string $section) {
     $html = app(IsoHtmlQuestionnaire::class)->point($section, '<div>REAL-PROFILES</div>', 'test-channel', 'Rzeczywisty klient', false);
     expect($html)->toContain('REAL-PROFILES', 'Rzeczywisty klient', 'Specyfikacja dla Sławka')->not->toContain('ENESA_PROFILE_CARDS');
+    expect($html)->toContain('.iso-profile-entry-heading{', '.iso-profile-entry:nth-of-type(even)', 'style-src \'unsafe-inline\'')
+        ->not->toContain('style-src https:', 'style-src *');
 })->with(array_merge(['4-1', '4-2'], array_keys(IsoSystemReview::TITLES)));
 
 test('HTML editor round trips stable answers through every system questionnaire', function (string $section) {

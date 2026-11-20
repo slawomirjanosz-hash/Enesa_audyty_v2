@@ -1,6 +1,7 @@
 @extends($clientView ? 'layouts.client' : 'layouts.app')
 @section('page-title',request('tab',$clientView?'iso50001':'overview')==='iso50001'?'ISO 50001':$audit->title)
 @push('styles')
+<link rel="stylesheet" href="{{asset('css/iso-questionnaire-overview.css')}}?v={{filemtime(public_path('css/iso-questionnaire-overview.css'))}}">
 @include('audits.schedule-styles')
 <link rel="stylesheet" href="{{asset('css/audit-workspace.css')}}">
 <style>

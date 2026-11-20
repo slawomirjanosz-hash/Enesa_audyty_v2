@@ -1,5 +1,4 @@
-<link rel="stylesheet" href="{{asset('css/iso-questionnaire-overview.css')}}">
-<div class="ankbox" data-profile-cards><h3>{{$htmlTitle}}</h3>
+<div class="ankbox" data-profile-cards>@include('audits.partials.questionnaire-point-heading',['pointTitle'=>$htmlTitle,'pointHelp'=>'ENESA_SOURCE_QUESTIONNAIRE_HELP'])
 @forelse($htmlCards as $card)
 <div class="iso-profile-entry">
 @include('audits.partials.questionnaire-launch-heading', ['launchName'=>$card['name'], 'launchStatus'=>$card['status'], 'launchLabel'=>'Otwórz ankietę', 'launchProfileId'=>$card['profile_id']])

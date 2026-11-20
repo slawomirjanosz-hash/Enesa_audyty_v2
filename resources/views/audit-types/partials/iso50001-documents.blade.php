@@ -34,7 +34,7 @@
 <div class="iso-docs" id="iso-documents-{{ $sectionId }}">
     @if($sectionId === 'intro' && $isAuditContext)
         <div style="padding:20px;border:1px solid #dce5df;border-radius:12px;background:#f5f9f6;margin-bottom:20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-            <div><h3 style="margin:0 0 5px">Profil zakładu</h3><p style="margin:0;font-size:14px">Dane zakładu, energia, instalacje i organizacja pracy. Wypełnij profil i przekaż go do zatwierdzenia.</p></div>
+            @include('audits.partials.questionnaire-point-heading',['pointTitle'=>'Profil zakładu','pointHelp'=>'Dane zakładu, energia, instalacje i organizacja pracy. Wypełnij profil i przekaż go do zatwierdzenia.'])
             @php
                 $profilePrefix=($clientView??false)?'client.audits.plant-profile.':'audits.plant-profile.';
                 $profilesCanWrite=($clientView??false)||auth()->user()->can('audits.manage');

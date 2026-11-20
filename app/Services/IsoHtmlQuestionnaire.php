@@ -47,7 +47,9 @@ class IsoHtmlQuestionnaire
         $xpath = new \DOMXPath($document);
         $box = $xpath->query('.//*[contains(concat(" ", normalize-space(@class), " "), " ankbox ")]', $page)->item(0);
         $title = $box?->getElementsByTagName('h3')->item(0)?->textContent ?? $document->getElementById('t_ankieta')?->textContent ?? 'Ankieta';
+        $help = $box?->getElementsByTagName('p')->item(0)?->textContent ?? 'Wybierz zakład, aby otworzyć jego ankietę. Wypełnienie i status zatwierdzenia dotyczą danej lokalizacji.';
         $cards = str_replace('ENESA_SOURCE_QUESTIONNAIRE_TITLE', e($title), $cards);
+        $cards = str_replace('ENESA_SOURCE_QUESTIONNAIRE_HELP', e($help), $cards);
         $placeholder = $document->createElement('div', 'ENESA_PROFILE_CARDS');
         if ($box) {
             $box->parentNode->replaceChild($placeholder, $box);
@@ -64,6 +66,8 @@ class IsoHtmlQuestionnaire
         }
         $spec = $document->getElementById('w_spec');
         $style = $document->getElementsByTagName('style')->item(0)->textContent;
+        // The source frame deliberately permits only inline styles, never network CSS.
+        $style .= "\n".file_get_contents(public_path('css/iso-questionnaire-overview.css'));
         $body = $document->saveHTML($header).str_replace('<div>ENESA_PROFILE_CARDS</div>', $cards, $document->saveHTML($page));
         if (! $client && $spec) {
             $body .= $document->saveHTML($spec);
