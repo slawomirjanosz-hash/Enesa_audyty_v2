@@ -13,9 +13,10 @@ test('enms pilot entry is visible for both roles only in an enabled audit', func
             ->assertOk()->assertSee('Otwórz ankietę 5.1')->assertSee(route($prefix.'enms.show', [$audit, $profile]), false)
             ->assertDontSee(route($prefix.'system.show', [$audit, $profile, '5-1']), false);
         expect(substr_count($response->getContent(), '>Otwórz ankietę 5.1</a>'))->toBe(1);
-        $this->get(route($prefix.'enms.show', [$audit, $profile]))->assertOk()->assertSee('wersja 0.4 · pilotaż');
+        $this->get(route($prefix.'enms.show', [$audit, $profile]))->assertOk()->assertDontSee('wersja 0.4 · pilotaż')->assertDontSee('wersja 0.3');
         $this->get(route($prefix.'enms.show', [$audit, $profile, 'tab' => 'historia']))->assertOk()
-            ->assertSee('Otwórz ankietę 5.1 — wersja 0.3')->assertSee(route($prefix.'system.show', [$audit, $profile, '5-1']), false);
+            ->assertDontSee('wersja 0.3')->assertDontSee(route($prefix.'system.show', [$audit, $profile, '5-1']), false);
+        $this->get(route($prefix.'system.show', [$audit, $profile, '5-1']))->assertRedirect(route($prefix.'enms.show', [$audit, $profile]));
     }
     expect(DB::table('enms_workspaces')->count())->toBe(0);
     config(['enms.audit_ids' => []]);

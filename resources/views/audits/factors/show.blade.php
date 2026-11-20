@@ -17,8 +17,7 @@
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź zaznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if(!$ready)<div class="plant-notice">Ankieta korzysta z zatwierdzonego profilu zakładu. Najpierw zatwierdź profil jako klient i audytor. <a href="{{route($client?'client.audits.plant-profile.show':'audits.plant-profile.show',[$audit,$profile])}}">Otwórz profil zakładu →</a></div>@endif
 @if($stale)<div class="plant-notice">Profil zakładu zmienił się. Zachowano niezależne decyzje, a czynniki zależne od zmienionych danych wymagają ponownego potwierdzenia. Dotychczasowe zatwierdzenia ankiety nie są już aktualne.</div>@endif
-<div class="plant-summary"><strong id="factor-progress" role="status">Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong><span>{{\App\Models\IsoPlantProfile::STATUSES[$stale?'editing':$review->status]}}</span></div>
-@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])
+<div class="plant-summary iso-questionnaire-summary"><strong id="factor-progress" role="status">Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong>@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])</div>
 @if($review->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{$review->review_note}}</p></div>@endif
 @if($review->status==='auditor_corrected')<div class="plant-notice">Sprawdź oznaczone na niebiesko korekty audytora i ponownie zatwierdź ankietę.</div>@elseif(!$client && $review->status==='submitted')<div class="plant-notice">Ankieta oczekuje na Twój przegląd. Zmiana odpowiedzi klienta wymaga jego ponownego zatwierdzenia. Analizę konsultanta zatwierdza audytor.</div>@endif
 @include('audits.partials.iso-chapter-four-tabs', ['clauseSection'=>'4-1'])

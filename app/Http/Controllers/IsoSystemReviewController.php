@@ -9,6 +9,7 @@ use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\IsoSystemReview;
 use App\Services\AuditorAccessService;
+use App\Services\Enms\Rollout;
 use App\Services\IsoChapterFourReport;
 use App\Services\IsoExecutionQuestionnaire;
 use App\Services\IsoHtmlState;
@@ -55,6 +56,9 @@ class IsoSystemReviewController extends Controller
     public function show(Request $request, Audit $audit, IsoPlantProfile $profile, string $section)
     {
         $client = $this->access($request, $audit, $profile, $section);
+        if ($section === '5-1' && Rollout::enabled($audit->id)) {
+            return redirect()->route($client ? 'client.audits.enms.show' : 'audits.enms.show', [$audit, $profile]);
+        }
         $sources = $this->questionnaire->sources($profile, $section);
         $review = IsoSystemReview::firstOrNew(['audit_id' => $audit->id, 'site_id' => $profile->site_id, 'section' => $section], ['status' => 'editing', 'lock_version' => 0]);
         $answers = old('answers', $review->answers ?? $this->questionnaire->seed($section, $sources));

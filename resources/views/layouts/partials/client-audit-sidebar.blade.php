@@ -10,7 +10,7 @@
 <nav class="sidebar-nav" data-client-audit-menu>
     <a href="{{ route('client.dashboard') }}" class="nav-link exit-app"><i class="ti ti-arrow-left"></i> Wyjdź do aplikacji</a>
     <div class="audit-nav-title">Audyt ISO 50001</div>
-    <div class="audit-nav-name">{{ $audit->title }}</div>
+    <div class="audit-nav-name">{{ $audit->number }}</div>
     <ul>
         @foreach(['overview'=>['Podgląd','ti ti-layout-dashboard'],'schedule'=>['Harmonogram','ti ti-calendar'],'tasks'=>['Zadania','ti ti-layout-kanban'],'documents'=>['Dokumenty','ti ti-files']] as $tab=>$item)
             <li class="nav-item"><a href="{{ $auditRoute($tab) }}" class="nav-link {{ $activeTab === $tab ? 'active' : '' }}"><i class="{{ $item[1] }}"></i> {{ $item[0] }}</a></li>

@@ -170,6 +170,12 @@ class QuestionnaireCompletion
                 return ['review' => $review, 'stale' => ! $sources['ready'] || ($review && $review->source_hash !== $sources['hash']), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $service->progress($section, $review?->answers ?? $service->seed($section, $sources), $sources), 'status' => $status];
             });
         }
+        $profilesById = $profiles->keyBy('id');
+        foreach ($result as $key => $cards) {
+            if ($key !== 'plants' && $cards instanceof Collection) {
+                $result[$key] = $cards->map(fn ($card) => $card + ['responsible_name' => $profilesById->get($card['profile_id'])?->responsibleUser?->name]);
+            }
+        }
         request()->attributes->set($cacheKey, $result);
 
         return $result;

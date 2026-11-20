@@ -1,0 +1,1 @@
+@include('audits.partials.questionnaire-status', ['statusRecord'=>null, 'statusStale'=>false, 'questionnaireStatusFlags'=>['W trakcie opracowania'=>!$leadershipStatus['submitted'], 'Zaakceptowane przez klienta'=>$leadershipStatus['submitted'], 'Ocena audytora zakończona'=>$leadershipStatus['assessed']]])

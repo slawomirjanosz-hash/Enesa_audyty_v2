@@ -1,8 +1,10 @@
-<div data-questionnaire-launch-heading style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+@once<link rel="stylesheet" href="{{ asset('css/iso-questionnaire-overview.css') }}">@endonce
+<div data-questionnaire-launch-heading class="iso-profile-entry-heading">
+    <span class="iso-profile-number">{{ $launchNumber ?? ($loop->iteration ?? 1) }}</span>
     <div><strong>{{ $launchName }}</strong>@if(!empty($launchStatus)) · {{ $launchStatus }}@endif</div>
     @if(isset($launchUrl))
-        <a href="{{ $launchUrl }}" class="iso-action-btn primary" style="display:inline-block;text-decoration:none;white-space:nowrap" title="{{ $launchLabel }} — {{ $launchName }}">{{ $launchLabel }}</a>
+        <a href="{{ $launchUrl }}" class="iso-action-btn primary iso-profile-open" title="{{ $launchLabel }} — {{ $launchName }}">{{ $launchLabel }}</a>
     @else
-        <button type="button" class="prim" data-profile="{{ $launchProfileId }}" style="white-space:nowrap" title="{{ $launchLabel }} — {{ $launchName }}">{{ $launchLabel }}</button>
+        <button type="button" class="prim iso-profile-open" data-profile="{{ $launchProfileId }}" title="{{ $launchLabel }} — {{ $launchName }}">{{ $launchLabel }}</button>
     @endif
 </div>

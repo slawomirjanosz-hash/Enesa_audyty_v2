@@ -1,10 +1,11 @@
+<link rel="stylesheet" href="{{asset('css/iso-questionnaire-overview.css')}}">
 <div class="ankbox" data-profile-cards><h3>{{$htmlTitle}}</h3>
 @forelse($htmlCards as $card)
-<div style="padding:14px 0">
+<div class="iso-profile-entry">
 @include('audits.partials.questionnaire-launch-heading', ['launchName'=>$card['name'], 'launchStatus'=>$card['status'], 'launchLabel'=>'Otwórz ankietę', 'launchProfileId'=>$card['profile_id']])
+<div class="iso-profile-meta">@include('audits.partials.questionnaire-status',['statusRecord'=>$card['review'],'statusStale'=>$card['stale']])<span class="iso-profile-responsible">Odpowiedzialny: {{$card['responsible_name']??'Nieprzypisana'}}</span></div>
 <p class="op">Wypełnienie: {{$card['progress']['percent']}}%</p>
 <div class="tor"><div style="width:{{$card['progress']['percent']}}%"></div></div>
-@include('audits.partials.questionnaire-status',['statusRecord'=>$card['review'],'statusStale'=>$card['stale']])
 </div>
 @empty
 <p class="op">{{$htmlAudit?'Najpierw utwórz profil zakładu we Wstępie do ISO.':'Podgląd ankiety i specyfikacji bez zakładania klienta.'}}</p>
