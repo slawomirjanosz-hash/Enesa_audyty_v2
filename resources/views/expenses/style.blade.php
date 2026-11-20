@@ -24,14 +24,15 @@
 .exp-row-actions,.exp-operation{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .exp-operation{min-width:0}
 .exp-delete-form{display:inline-block}
-.exp-filters{align-items:flex-end}
-.exp-filters>label:not(:nth-of-type(2)){flex:1;min-width:min(180px,100%)}
+.exp-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:end;gap:12px 16px}
+.exp-filters>label{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:12px}.exp-filters input,.exp-filters select{min-width:0;width:100%;box-sizing:border-box;font-size:14px}.exp-filter-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px}
 .exp-filters .exp-btn{min-height:42px}
 .exp-field{display:flex;flex-direction:column;gap:6px;font-size:13px}
 .exp-field[hidden]{display:none}
 .exp-field input,.exp-field select,.exp-field textarea,.exp-filters input,.exp-filters select,.exp-operation select{
     box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:inherit;font:inherit
 }
+.exp-filters input,.exp-filters select{font-size:14px}
 .exp-operation select{width:auto;max-width:100%;padding:5px}
 .exp-message{margin-bottom:16px;padding:14px;border-radius:8px}
 .exp-message.error{background:#fef2f2;color:#991b1b}
@@ -46,6 +47,7 @@
 .exp-note-dialog .exp-actions{justify-content:flex-end;margin:12px 0 0}
 .exp-note-dialog .exp-btn{font-size:inherit}
 @media(max-width:900px){.exp-table th,.exp-table td{padding-inline:4px}.exp-filters .exp-btn{padding:8px 12px}}
+@media(max-width:900px){.exp-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.exp-filters{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:767px){.exp-head h1{font-size:22px}.exp-card{padding:16px}.exp-table th:last-child{width:29%}}
 </style>
 @endpush
