@@ -12,13 +12,9 @@ use App\Models\User;
 use App\Services\TaskReminderSelection;
 use Carbon\Carbon;
 use Illuminate\Contracts\Mail\Mailer;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
-use Tests\TestCase;
-
-pest()->extend(TestCase::class)->use(RefreshDatabase::class);
 
 beforeEach(function () {
     config(['mail.default' => 'smtp', 'mail.from.address' => 'reminders@test.invalid']);
