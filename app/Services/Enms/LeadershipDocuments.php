@@ -4,6 +4,7 @@ namespace App\Services\Enms;
 
 use App\Models\Audit;
 use App\Models\IsoSectionDocument;
+use App\Services\IsoDocumentNaming;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -69,14 +70,19 @@ final class LeadershipDocuments
             $this->workflow->invalid('Ocena konsultanta wymaga aktualizacji.');
         }
         $bytes = $this->render($p, true);
-        $title = self::TYPES[$p['type']][0].' — '.self::TYPES[$p['type']][1];
-        $document = IsoSectionDocument::create(['audit_id' => $w->audit->id, 'section_id' => '5-1', 'scope' => 'client', 'title' => $title, 'description' => 'Zakład: '.$p['snapshot']['site'].'. Wydanie kontrolowane '.$p['version'].'. Zatwierdzenie i wejście w życie rejestrowane osobno.', 'document_year' => now()->year, 'version_number' => $p['version'], 'original_filename' => self::TYPES[$p['type']][0].'-'.$p['version'].'.pdf', 'stored_path' => 'iso50001/client/'.$w->audit->id.'/5-1/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($bytes), 'content_base64' => base64_encode($bytes), 'uploaded_by' => $w->actor->id]);
+        $title = IsoDocumentNaming::title($p['snapshot']['site'], self::TYPES[$p['type']][0].' — '.self::TYPES[$p['type']][1]);
+        $document = IsoSectionDocument::create(['audit_id' => $w->audit->id, 'section_id' => '5-1', 'scope' => 'client', 'title' => $title, 'description' => 'Zakład: '.$p['snapshot']['site'].'. Wydanie kontrolowane '.$p['version'].'. Zatwierdzenie i wejście w życie rejestrowane osobno.', 'document_year' => now()->year, 'version_number' => $p['version'], 'original_filename' => $this->filename($p), 'stored_path' => 'iso50001/client/'.$w->audit->id.'/5-1/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($bytes), 'content_base64' => base64_encode($bytes), 'uploaded_by' => $w->actor->id]);
         $p += ['file_hash' => hash('sha256', $bytes), 'file_size' => strlen($bytes), 'document_id' => $document->id, 'draft_id' => $draft['id'], 'issued_at' => now()->toIso8601String()];
 
         $record = $w->append($w->revision(), 'document', null, self::TYPES[$p['type']][0].'/'.$p['version'], $p, config('enms.library'), $draft['scope_version'], $grantId);
         DB::table('enms_document_files')->insert(['record_id' => $record['id'], 'content_base64' => base64_encode($bytes)]);
 
         return $record;
+    }
+
+    public function filename(array $document): string
+    {
+        return IsoDocumentNaming::filename(IsoDocumentNaming::title($document['snapshot']['site'] ?? null, self::TYPES[$document['type']][0].' — '.self::TYPES[$document['type']][1].' — '.$document['version']));
     }
 
     public function render(array $document, bool $issued = false): string

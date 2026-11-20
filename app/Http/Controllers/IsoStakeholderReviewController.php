@@ -11,6 +11,7 @@ use App\Models\IsoSectionDocument;
 use App\Models\IsoStakeholderReview;
 use App\Services\AuditorAccessService;
 use App\Services\IsoChapterFourReport;
+use App\Services\IsoDocumentNaming;
 use App\Services\IsoFactorQuestionnaire;
 use App\Services\IsoHtmlState;
 use App\Services\IsoPlatformRelease;
@@ -252,7 +253,7 @@ class IsoStakeholderReviewController extends Controller
         $data = $request->validate(['lock_version' => 'required|integer', 'preview' => 'nullable|boolean', 'extract' => 'nullable|boolean']);
         $extract = (bool) ($data['extract'] ?? false);
         $title = $extract ? IsoStakeholderReview::COMPLIANCE_TITLE : IsoStakeholderReview::DOCUMENT_TITLE;
-        $contents = DB::transaction(function () use ($request, $audit, $profile, $data, $extract, $title) {
+        $result = DB::transaction(function () use ($request, $audit, $profile, $data, $extract, $title) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $profile = IsoPlantProfile::whereKey($profile->id)->lockForUpdate()->firstOrFail();
             $this->access($request, $audit, $profile);
@@ -262,20 +263,22 @@ class IsoStakeholderReviewController extends Controller
             abort_unless($review->status === 'approved' && $review->client_approval && $review->auditor_approval, 403);
             $field = $extract ? 'compliance_document_id' : 'document_id';
             $document = $review->$field ? IsoSectionDocument::find($review->$field) : null;
+            $documentTitle = IsoDocumentNaming::title($profile, $title);
+            $filename = $document?->original_filename ?? IsoDocumentNaming::filename($documentTitle);
             $parties = $this->questionnaire->parties($profile, $factors);
             $register = $this->questionnaire->register($review->answers, $parties, $review->consultant ?? []);
             $contents = $document?->contents() ?: Pdf::loadView('audits.stakeholders.pdf', compact('review', 'profile', 'parties', 'register', 'extract', 'title'))->setPaper('a4', 'landscape')->output();
             if (! ($data['preview'] ?? false) && ! $document) {
-                $document = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => '4-2', 'scope' => 'client', 'title' => $title, 'description' => 'Zakład: '.($profile->answers['site.name']['value'] ?? '').'. Zatwierdzony przez klienta i audytora.', 'document_year' => now()->year, 'version_number' => '1.0', 'original_filename' => $title.'.pdf', 'stored_path' => 'iso50001/client/'.$audit->id.'/4-2/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
+                $document = IsoSectionDocument::create(['audit_id' => $audit->id, 'section_id' => '4-2', 'scope' => 'client', 'title' => $documentTitle, 'description' => 'Zakład: '.($profile->answers['site.name']['value'] ?? '').'. Zatwierdzony przez klienta i audytora.', 'document_year' => now()->year, 'version_number' => '1.0', 'original_filename' => $filename, 'stored_path' => 'iso50001/client/'.$audit->id.'/4-2/'.Str::uuid().'.pdf', 'mime_type' => 'application/pdf', 'size' => strlen($contents), 'content_base64' => base64_encode($contents), 'uploaded_by' => $request->user()->id]);
                 $review->$field = $document->id;
                 $review->save();
             }
             ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'download', 'auditable_type' => Audit::class, 'auditable_id' => $audit->id, 'subject_label' => $title, 'route_name' => $request->route()->getName()]);
 
-            return $contents;
+            return [$contents, $filename];
         });
         if ($data['preview'] ?? false) {
-            return response($contents, 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => HeaderUtils::makeDisposition('inline', $title.'.pdf', Str::ascii($title).'.pdf'), 'Cache-Control' => 'private, no-store']);
+            return response($result[0], 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => HeaderUtils::makeDisposition('inline', $result[1], Str::ascii($result[1])), 'Cache-Control' => 'private, no-store']);
         }
 
         return redirect()->route($this->prefix($client).'show', [$audit, $profile])->with('success', 'PDF zapisano w Dokumentacji punktu 4.2.');

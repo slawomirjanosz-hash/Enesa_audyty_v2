@@ -8,6 +8,7 @@ use App\Models\CompanySettings;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Services\AuditorAccessService;
+use App\Services\IsoDocumentNaming;
 use App\Services\IsoHtmlState;
 use App\Services\IsoPlantCalculations;
 use App\Services\IsoPlantElaboration;
@@ -55,19 +56,17 @@ class IsoPlantProfileController extends Controller
     {
         $client = $this->access($request, $audit);
 
-        return view('audits.plant-profile.index', [
-            'audit' => $audit, 'client' => $client, 'prefix' => $this->prefix($client),
-            'canWrite' => $client || $request->user()->can('audits.manage'),
-            'sites' => DB::table('iso_plant_sites')->where('company_id', $audit->company_id)->orderBy('name')->get(),
-            'profiles' => IsoPlantProfile::where('audit_id', $audit->id)->with('responsibleUser')->get()->sortByDesc('id'),
-            'responsibleUsers' => $audit->company->users()->orderBy('name')->get(),
+        return redirect()->route($client ? 'client.audits.show' : 'audits.show', [
+            $audit, 'tab' => 'iso50001', 'section' => 'intro',
+            'add_profile' => ($client || $request->user()->can('audits.manage')) ? 1 : null,
         ]);
     }
 
     public function create(Request $request, Audit $audit)
     {
         $client = $this->access($request, $audit, true);
-        $data = $request->validate(['site_id' => 'nullable|integer', 'name' => 'required_without:site_id|nullable|string|max:200', 'copy_latest' => 'nullable|boolean', 'responsible_user_id' => ['nullable', 'integer', Rule::in($audit->company->users()->pluck('users.id')->all())]]);
+        $overview = $request->input('return_to') === 'overview';
+        $data = $request->validateWithBag($overview ? 'plantCreate' : 'default', ['return_to' => ['nullable', Rule::in(['overview'])], 'site_id' => $overview ? 'prohibited' : 'nullable|integer', 'name' => ($overview ? 'required' : 'required_without:site_id|nullable').'|string|max:200', 'copy_latest' => $overview ? 'prohibited' : 'nullable|boolean', 'responsible_user_id' => ['nullable', 'integer', Rule::in($audit->company->users()->pluck('users.id')->all())]]);
         $profile = DB::transaction(function () use ($audit, $data, $request) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             if (! empty($data['site_id'])) {
@@ -96,6 +95,10 @@ class IsoPlantProfileController extends Controller
 
             return $profile;
         });
+
+        if ($overview) {
+            return redirect()->route($client ? 'client.audits.show' : 'audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro'])->with('success', 'Dodano profil zakładu: '.$profile->answers['site.name']['value'].'.');
+        }
 
         return redirect()->route($this->prefix($client).'show', [$audit, $profile]);
     }
@@ -330,8 +333,8 @@ class IsoPlantProfileController extends Controller
             $documentField = $elaboration ? 'elaboration_document_id' : 'document_id';
             $document = $current->$documentField ? IsoSectionDocument::where('audit_id', $audit->id)->find($current->$documentField) : null;
             $contents = $document?->contents();
-            $title = $elaboration ? IsoPlantProfile::ELABORATION_TITLE : IsoPlantProfile::DOCUMENT_TITLE;
-            $filename = $title.'.pdf';
+            $title = IsoDocumentNaming::title($current, $elaboration ? IsoPlantProfile::ELABORATION_TITLE : IsoPlantProfile::DOCUMENT_TITLE);
+            $filename = $document?->original_filename ?? IsoDocumentNaming::filename($title);
             if (! $contents) {
                 $contents = $elaboration
                     ? Pdf::loadView('audits.plant-profile.elaboration-pdf', ['profile' => $current, 'report' => app(IsoPlantElaboration::class)->build($current), 'author' => $request->user()->name, 'generatedAt' => now(), 'audit' => $audit])->setPaper('a4')->output()

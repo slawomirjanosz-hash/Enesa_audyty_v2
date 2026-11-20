@@ -100,6 +100,7 @@ test('scope and system approvals documents and source invalidation work end to e
         $this->post($pdfUrl, ['lock_version' => $review->lock_version])->assertRedirect()->assertSessionHasNoErrors();
         $document = IsoSectionDocument::findOrFail($review->fresh()->document_id);
         expect($document->section_id)->toBe($section)->and($document->contents())->toStartWith('%PDF');
+        expect($document->title)->toBe('Zakład — '.IsoSystemReview::TITLES[$section])->and($document->original_filename)->toBe($document->title.'.pdf');
         if (getenv('ISO_SYSTEM_QA')) {
             file_put_contents(base_path('tmp/iso-'.$section.'.pdf'), $document->contents());
             file_put_contents(base_path('tmp/iso-'.$section.'.html'), $this->get(route('audits.system.show', [$audit, $profile, $section]))->getContent());

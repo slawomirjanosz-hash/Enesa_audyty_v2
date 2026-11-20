@@ -67,7 +67,8 @@ test('plant copies keep source data but require independent approvals and respon
         ->and($copy->client_approval)->toBeNull()->and($copy->auditor_approval)->toBeNull()
         ->and($copy->responsible_user_id)->toBeNull()->and($copy->status)->toBe('editing')
         ->and($source->fresh()->status)->toBe('approved');
-    $this->get(route('client.audits.plant-profile.index', $audit))->assertOk()->assertSee('Zakład A — kopia')->assertSee('Podgląd profilu')->assertSee('Kopiuj profil do nowego zakładu');
+    $this->get(route('client.audits.plant-profile.index', $audit))->assertRedirect(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro', 'add_profile' => 1]));
+    $this->get(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro']))->assertOk()->assertSee('Zakład A — kopia')->assertSee('Podgląd profilu')->assertSee('Kopiuj profil do nowego zakładu');
     $this->get(route('client.audits.plant-profile.show', [$audit, $copy, 'preview' => 1]))->assertOk()->assertSee('<fieldset disabled', false)->assertDontSee('value="save"', false);
 });
 
@@ -193,7 +194,7 @@ test('plant profile has 65 uniquely named questions and renders client and staff
     [$audit, $client, $staff] = plantFixture();
     $questions = app(IsoPlantQuestionnaire::class)->questions(app(IsoPlantQuestionnaire::class)->definition());
     expect($questions)->toHaveCount(65)->and(array_unique(array_column($questions, 'key')))->toHaveCount(65);
-    $this->actingAs($client)->get(route('client.audits.plant-profile.index', $audit))->assertOk()->assertSee('data-sortable="false"', false)->assertSee('type="module"', false);
+    $this->actingAs($client)->get(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro']))->assertOk()->assertSee('data-sortable="false"', false)->assertSee('table-sort.js');
     $this->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła'])->assertRedirect();
     $profile = IsoPlantProfile::firstOrFail();
     $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('Zatwierdź jako klient')->assertSee('name="answers[energy.carriers][value][]"', false)->assertDontSee('Zatwierdź jako audytor');
@@ -274,7 +275,8 @@ test('plant profile approval PDF and new version preserve immutable history', fu
     $this->post($pdfUrl, ['lock_version' => 2])->assertRedirect();
     $this->post($pdfUrl, ['lock_version' => 2])->assertRedirect();
     $doc = IsoSectionDocument::firstOrFail();
-    expect($doc->original_filename)->toBe('1 Wstęp ISO Profil zakładu.pdf')->and($doc->title)->toBe('1 Wstęp ISO Profil zakładu');
+    $expectedTitle = $profile->fresh()->answers['site.name']['value'].' — 1 Wstęp ISO Profil zakładu';
+    expect($doc->original_filename)->toBe($expectedTitle.'.pdf')->and($doc->title)->toBe($expectedTitle);
     $this->get(route('audits.show', ['audit' => $audit, 'tab' => 'iso50001', 'section' => 'intro']))->assertOk()
         ->assertSee('✓ Wygenerowano dokument')->assertSee('Kopiuj do Dokumentów')->assertSee($doc->title);
     expect(IsoSectionDocument::count())->toBe(1)->and($doc->section_id)->toBe('intro')->and($doc->scope)->toBe('client')->and(substr($doc->contents(), 0, 4))->toBe('%PDF');

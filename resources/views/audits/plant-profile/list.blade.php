@@ -2,7 +2,7 @@
 <div><table class="plant-profile-table"><thead><tr><th data-sortable="false">Lp.</th><th>Profil zakładu</th><th>Status</th><th>Osoba odpowiedzialna</th><th data-sortable="false">Akcje</th></tr></thead><tbody>
 @forelse($profileList as $listedProfile)
 @php($profileName=$listedProfile->answers['site.name']['value']??'Zakład')
-<tr><td class="iso-profile-number">{{$loop->iteration}}</td><td class="profile-name-cell" data-sort-value="{{$profileName}}"><div class="profile-identity"><strong>{{$profileName}}</strong><small style="display:block">Wersja {{$listedProfile->revision}}</small></div><div class="profile-completion">@include('partials.questionnaire-progress',['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($listedProfile->definition,$listedProfile->answers,$profileList->unique('site_id')->count())])</div></td>
+<tr><td class="iso-profile-number" data-sort-value="{{$loop->iteration}}">{{$loop->iteration}}</td><td class="profile-name-cell" data-sort-value="{{$profileName}}"><div class="profile-identity"><strong>{{$profileName}}</strong><small style="display:block">Wersja {{$listedProfile->revision}}</small></div><div class="profile-completion">@include('partials.questionnaire-progress',['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($listedProfile->definition,$listedProfile->answers,$profileList->unique('site_id')->count())])</div></td>
 <td class="profile-status-cell" data-sort-value="{{\App\Models\IsoPlantProfile::STATUSES[$listedProfile->status]}}">@include('audits.plant-profile.status',['profile'=>$listedProfile])</td>
 <td class="profile-responsible-cell" data-sort-value="{{$listedProfile->responsibleUser?->name??''}}">
 @if($profilesCanWrite)

@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Audit;
 use App\Models\CompanySettings;
 use App\Models\IsoPlantProfile;
+use App\Models\IsoSectionDocument;
 use App\Services\Enms\AuthorizedActions;
 use App\Services\Enms\LeadershipDocuments;
 use App\Services\Enms\LeadershipWorkbook;
 use App\Services\Enms\LeadershipWorkflow;
 use App\Services\Enms\Workspace;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 final class EnmsLeadershipController extends Controller
 {
@@ -117,8 +120,10 @@ final class EnmsLeadershipController extends Controller
         abort_if($w->client && $r['kind'] !== 'document', 403);
         $service = app(LeadershipDocuments::class);
         $bytes = $r['kind'] === 'document' ? $service->bytes($r) : $service->render($r['payload']);
+        $filename = $r['kind'] === 'document' ? IsoSectionDocument::where('audit_id', $audit->id)->find($r['payload']['document_id'])?->original_filename : null;
+        $filename ??= $service->filename($r['payload']);
 
-        return response($bytes, 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'inline; filename="'.LeadershipDocuments::TYPES[$r['payload']['type']][0].'.pdf"', 'Cache-Control' => 'private, no-store']);
+        return response($bytes, 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => HeaderUtils::makeDisposition('inline', $filename, Str::ascii($filename)), 'Cache-Control' => 'private, no-store']);
     }
 
     public function excel(Request $request, Audit $audit, IsoPlantProfile $profile)

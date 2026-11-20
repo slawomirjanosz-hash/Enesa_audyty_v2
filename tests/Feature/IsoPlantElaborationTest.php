@@ -67,6 +67,8 @@ test('auditor saves a separate reusable elaboration while retaining questionnair
     expect($id)->not->toBeNull()->and($profile->fresh()->document_id)->toBeNull();
     $this->get(route('audits.plant-profile.show', [$audit, $profile]))->assertSee('data-questionnaire-status="3" data-reached="true"', false);
     expect(IsoSectionDocument::find($id)->contents())->toStartWith('%PDF');
+    $elaboration = IsoSectionDocument::findOrFail($id);
+    expect($elaboration->title)->toBe($profile->answers['site.name']['value'].' — '.IsoPlantProfile::ELABORATION_TITLE)->and($elaboration->original_filename)->toBe($elaboration->title.'.pdf');
     $this->post($url, $payload)->assertRedirect();
     expect(IsoSectionDocument::count())->toBe(1);
     $this->post($url, ['lock_version' => 2])->assertRedirect();

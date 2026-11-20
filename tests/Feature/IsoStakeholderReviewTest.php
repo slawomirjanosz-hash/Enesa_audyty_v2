@@ -95,6 +95,9 @@ test('stakeholder workflow requires consultant decisions before client approval 
         $this->post(route('audits.stakeholders.pdf', [$audit, $profile]), ['lock_version' => 4, 'extract' => $extract])->assertRedirect();
     }
     expect(IsoSectionDocument::where('section_id', '4-2')->count())->toBe(2);
+    foreach (IsoSectionDocument::where('section_id', '4-2')->get() as $document) {
+        expect($document->title)->toStartWith('Zakład — ')->and($document->original_filename)->toBe($document->title.'.pdf');
+    }
     $this->actingAs($client)->post(route('client.audits.stakeholders.pdf', [$audit, $profile]), ['lock_version' => 4, 'preview' => 1, 'extract' => 1])->assertOk()->assertHeader('Content-Type', 'application/pdf');
     $input['operation'] = 'save';
     $input['lock_version'] = 4;

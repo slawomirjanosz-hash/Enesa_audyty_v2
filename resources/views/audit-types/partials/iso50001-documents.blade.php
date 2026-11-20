@@ -38,10 +38,11 @@
             @php
                 $profilePrefix=($clientView??false)?'client.audits.plant-profile.':'audits.plant-profile.';
                 $profilesCanWrite=($clientView??false)||auth()->user()->can('audits.manage');
+                $profileUsers=$audit->company->users()->orderBy('name')->get();
             @endphp
-            @if($profilesCanWrite)<a href="{{route($profilePrefix.'index',$audit)}}#add-profile" style="background:var(--green,#1a4d3a);color:white;padding:11px 18px;border-radius:8px;text-decoration:none;font-weight:700;white-space:nowrap">Dodaj profil zakładu</a>@endif
+            @if($profilesCanWrite)@include('audits.plant-profile.create-modal')@endif
             <div style="width:100%">
-                @include('audits.plant-profile.list',['profileList'=>$plantEntries->pluck('profile'),'profileUsers'=>$audit->company->users()->orderBy('name')->get(),'profilesCanWrite'=>$profilesCanWrite,'profilePrefix'=>$profilePrefix])
+                @include('audits.plant-profile.list',['profileList'=>$plantEntries->pluck('profile'),'profileUsers'=>$profileUsers,'profilesCanWrite'=>$profilesCanWrite,'profilePrefix'=>$profilePrefix])
             </div>
         </div>
     @endif

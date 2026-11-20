@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\IsoSectionDocument;
 use App\Models\IsoSystemReview;
 use App\Services\Enms\AuthorizedActions;
 use App\Services\Enms\LeadershipDocuments;
@@ -281,6 +282,9 @@ test('enms document draft issue approval and effective date preserve exact issue
     expect($w->records('document'))->toBe([]);
     $actions->apply($w, $w->revision(), $s->sources($w)['hash'], 'issue_document', $draft['id'], $reporting['id'], ['evidence_id' => $e['id'], 'text' => 'Wydanie kontrolowane']);
     $doc = array_values($w->records('document'))[0];
+    $stored = IsoSectionDocument::findOrFail($doc['payload']['document_id']);
+    expect($stored->title)->toBe('Zakład — D-EnMS-PRZ-01 — Karta przywództwa i zaangażowania kierownictwa')
+        ->and($stored->original_filename)->toBe($stored->title.' — 1.0.pdf');
     $bytes = $docs->bytes($doc);
     expect($bytes)->toStartWith('%PDF')->and($actions->documentState($w, $doc)['approved'])->toBeFalse();
     $approval = ['evidence_id' => $e['id'], 'text' => 'Dowód obejmuje tę wersję', 'document_hash' => $doc['payload']['file_hash']];

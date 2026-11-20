@@ -45,6 +45,7 @@ test('SWOT is written only by staff after client approval and included in docume
     }
     $this->post(route('audits.factors.pdf', [$audit, $profile]), ['lock_version' => 3])->assertRedirect();
     $document = IsoSectionDocument::findOrFail($review->fresh()->document_id);
+    expect($document->title)->toBe('Zakład — '.IsoFactorReview::DOCUMENT_TITLE)->and($document->original_filename)->toBe($document->title.'.pdf');
     $payload['lock_version'] = 3;
     $payload['swot']['threats'] = 'Przerwy w dostawach energii';
     $this->post($url, $payload)->assertSessionHasNoErrors();
