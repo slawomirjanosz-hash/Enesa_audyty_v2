@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "test:tables": "node --test tests/js/table-sort.test.mjs tests/js/table-actions.test.mjs",
+        "test:tables": "node --test tests/js/table-sort.test.mjs tests/js/table-actions.test.mjs tests/js/dashboard-priority.test.mjs",
         "test:questionnaires": "node --test tests/js/questionnaire-navigation.test.mjs tests/js/iso-plant-energy.test.mjs tests/js/iso-factor-approval.test.mjs",
         "build": "vite build",
         "dev": "vite"

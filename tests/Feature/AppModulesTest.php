@@ -347,3 +347,23 @@ test('admin saves the priority order of dashboard clients', function () {
         ->assertSeeInOrder(['Drugi klient', 'Pierwszy klient'])
         ->assertSee('Priorytet');
 });
+
+test('dashboard client priority is unavailable to readers and rejects incomplete orders', function () {
+    $first = Company::create(['name' => 'Pierwszy klient', 'company_type' => 'client', 'status' => 'active', 'show_in_dashboard' => true, 'dashboard_position' => 1]);
+    $second = Company::create(['name' => 'Drugi klient', 'company_type' => 'client', 'status' => 'active', 'show_in_dashboard' => true, 'dashboard_position' => 2]);
+    $reader = User::factory()->create(['individual_permissions' => true]);
+    $reader->assignRole(Role::findOrCreate('supervisory_board'));
+    $reader->givePermissionTo(Permission::findOrCreate('system.full_read_only'));
+
+    $this->actingAs($reader)->get(route('dashboard'))->assertOk()
+        ->assertDontSee('aria-label="Zmień kolejność:', false);
+    $this->patchJson(route('dashboard.companies.order'), ['company_ids' => [$second->id, $first->id]])->assertForbidden();
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+    $this->actingAs($admin)->get(route('dashboard'))->assertOk()
+        ->assertSee('aria-label="Zmień kolejność: Pierwszy klient"', false);
+    $this->patchJson(route('dashboard.companies.order'), ['company_ids' => [$second->id]])->assertStatus(422);
+    expect($first->refresh()->dashboard_position)->toBe(1)
+        ->and($second->refresh()->dashboard_position)->toBe(2);
+});

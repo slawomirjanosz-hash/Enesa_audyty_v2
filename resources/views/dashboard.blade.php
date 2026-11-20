@@ -172,6 +172,9 @@
     }
     .priority-drag-handle { margin-left:auto;display:inline-flex;align-items:center;gap:5px;border:1px solid #DED9CE;border-radius:999px;background:#FAFAF6;color:#766F62;padding:3px 8px;font:700 10px 'Manrope',sans-serif;cursor:grab;user-select:none; }
     .priority-drag-handle:active { cursor:grabbing; }
+    .companies-table .priority-drag-handle { margin:0 8px 0 0;vertical-align:middle; }
+    .companies-table tr.dashboard-dragging { opacity:.45; }
+    .companies-table tr.dashboard-drag-target { outline:2px solid var(--green);outline-offset:-2px; }
     .client-tile.dashboard-dragging { opacity:.45;transform:scale(.98); }
     .client-tile.dashboard-drag-target { box-shadow:0 0 0 2px var(--green); }
     .status-dot-tile {
@@ -731,8 +734,9 @@
                     $relatedSearchData,
                 ]));
             @endphp
-            <tr data-company-search="{{ $searchData }}">
-                <td>
+            <tr data-company-id="{{ $company->id }}" data-company-search="{{ $searchData }}">
+                <td data-sort-value="{{ $company->name }}">
+                    @if($canPrioritizeCompanies)<button type="button" class="priority-drag-handle" title="Przeciągnij, aby ustawić priorytet klienta" aria-label="Zmień kolejność: {{ $company->name }}"><i class="ti ti-grip-vertical" aria-hidden="true"></i></button>@endif
                     <strong>{{ $company->name }}</strong>
                     @if($company->pending_questionnaires)<div class="questionnaire-pending">Do wykonania: przegląd ankiety
                     @foreach($company->pending_questionnaires as $action)<a href="{{$action['url']}}">{{$action['audit_title']}} · punkt {{$action['section']}} →</a>@endforeach
@@ -932,49 +936,19 @@
 @push('scripts')
 <script>
     @if($canPrioritizeCompanies)
-    const dashboardGrid = document.getElementById('clientsGrid');
-    let draggedCompanyTile = null;
-    dashboardGrid?.querySelectorAll('.client-tile').forEach(tile => {
-        const handle = tile.querySelector('.priority-drag-handle');
-        handle?.addEventListener('pointerdown', () => tile.draggable = true);
-        handle?.addEventListener('pointerup', () => tile.draggable = false);
-        tile.addEventListener('dragstart', event => {
-            if (! tile.draggable) {
-                event.preventDefault();
-                return;
-            }
-            draggedCompanyTile = tile;
-            tile.classList.add('dashboard-dragging');
-            event.dataTransfer.effectAllowed = 'move';
+    import('/js/dashboard-priority.js').then(({enableDashboardPriority}) => {
+        enableDashboardPriority({
+            containers: [document.getElementById('clientsGrid'), document.getElementById('companies-table-tbody')],
+            save: async companyIds => {
+                const response = await fetch(@json(route('dashboard.companies.order')), {
+                    method: 'PATCH',
+                    headers: {'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
+                    body: JSON.stringify({company_ids: companyIds.map(Number)}),
+                });
+                if (!response.ok) throw new Error('Nie zapisano kolejności');
+            },
+            onError: () => window.alert('Nie udało się zapisać kolejności klientów. Przywrócono poprzednią kolejność. Spróbuj ponownie.'),
         });
-        tile.addEventListener('dragend', () => {
-            tile.draggable = false;
-            tile.classList.remove('dashboard-dragging');
-            dashboardGrid.querySelectorAll('.dashboard-drag-target').forEach(item => item.classList.remove('dashboard-drag-target'));
-            draggedCompanyTile = null;
-        });
-    });
-    dashboardGrid?.addEventListener('dragover', event => {
-        if (! draggedCompanyTile) return;
-        event.preventDefault();
-        const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('.client-tile');
-        dashboardGrid.querySelectorAll('.dashboard-drag-target').forEach(item => item.classList.remove('dashboard-drag-target'));
-        if (! target || target === draggedCompanyTile) return;
-        target.classList.add('dashboard-drag-target');
-        const bounds = target.getBoundingClientRect();
-        const insertAfter = event.clientY > bounds.top + bounds.height / 2
-            || (Math.abs(event.clientY - (bounds.top + bounds.height / 2)) < bounds.height / 3 && event.clientX > bounds.left + bounds.width / 2);
-        dashboardGrid.insertBefore(draggedCompanyTile, insertAfter ? target.nextSibling : target);
-    });
-    dashboardGrid?.addEventListener('drop', async event => {
-        event.preventDefault();
-        const companyIds = [...dashboardGrid.querySelectorAll('.client-tile')].map(tile => Number(tile.dataset.companyId));
-        const response = await fetch(@json(route('dashboard.companies.order')), {
-            method: 'PATCH',
-            headers: {'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
-            body: JSON.stringify({company_ids: companyIds}),
-        });
-        if (! response.ok) window.location.reload();
     });
     @endif
 
