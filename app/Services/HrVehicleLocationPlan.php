@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\HrVehicle;
 use App\Models\HrVehicleLocationPeriod;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HrVehicleLocationPlan
@@ -31,7 +32,7 @@ class HrVehicleLocationPlan
                 if ($old->starts_on->toDateString() < $today) {
                     $replacement = collect($periods)->first(fn ($p) => (int) ($p['id'] ?? 0) === $old->id);
                     $cutoff = $replacement && $replacement['starts_on'] > $today
-                        ? \Carbon\Carbon::parse($replacement['starts_on'])->subDay()->toDateString() : $yesterday;
+                        ? Carbon::parse($replacement['starts_on'])->subDay()->toDateString() : $yesterday;
                     $old->update(['ends_on' => $old->ends_on ? min($cutoff, $old->ends_on->toDateString()) : $cutoff]);
                 } else {
                     $old->delete();

@@ -35,12 +35,11 @@ class ExpenseInvoice extends Model
             return $this->owner_id === $user->id || ($this->is_unassigned && $this->owner_id === null);
         }
 
-        return (
+        return
             (int) $this->created_by === $user->id
             && $this->owner_id === $user->id
             && ! $this->is_unassigned
-            && ! $this->settled_at
-        );
+            && ! $this->settled_at;
     }
 
     public function recordWorkflow(string $status, User $actor, ?string $note = null): void

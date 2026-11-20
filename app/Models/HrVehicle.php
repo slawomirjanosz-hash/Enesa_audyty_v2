@@ -17,7 +17,7 @@ class HrVehicle extends Model
 
     public function getUsageLocationAttribute($value): ?string
     {
-        if (!(int) $this->location_revision) {
+        if (! (int) $this->location_revision) {
             return $value;
         }
         $today = now('Europe/Warsaw')->toDateString();
@@ -42,6 +42,7 @@ class HrVehicle extends Model
         $fields = self::COLUMNS;
         unset($fields['type']);
         $fields['registration_document_present'] = 'Dowód rejestracyjny — dostępny';
+
         return array_filter($fields, function ($label, $field) {
             if ($field === 'responsible_person' && $this->responsibleUser) {
                 return false;

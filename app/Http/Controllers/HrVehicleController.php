@@ -7,6 +7,7 @@ use App\Models\HrVehicleColumnResponsibility;
 use App\Models\User;
 use App\Services\HrVehicleLocationPlan;
 use App\Support\HrAccess;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +59,7 @@ class HrVehicleController extends Controller
         return view($modal ? 'hr.partials.location-plan-content' : 'hr.vehicle-locations', compact('vehicle', 'canEditLocation', 'modal'));
     }
 
-    public function saveLocationPlan(Request $request, HrVehicle $vehicle): RedirectResponse|\Illuminate\Http\JsonResponse
+    public function saveLocationPlan(Request $request, HrVehicle $vehicle): RedirectResponse|JsonResponse
     {
         abort_unless($vehicle->canEdit($request->user()) || in_array('usage_location', $this->delegatedColumns($request, $vehicle), true), 403);
         abort_unless($vehicle->is_active, 404);

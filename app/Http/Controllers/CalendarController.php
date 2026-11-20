@@ -15,6 +15,7 @@ use App\Services\CrmTaskCreator;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class CalendarController extends Controller
@@ -72,7 +73,7 @@ class CalendarController extends Controller
             ? array_map('intval', $validated['user_ids'] ?? array_filter([$validated['user_id'] ?? null]))
             : [];
         if (array_diff($selectedUserIds, $users->pluck('id')->all())) {
-            throw \Illuminate\Validation\ValidationException::withMessages(['user_ids' => 'Wybierz osoby z listy zespołu.']);
+            throw ValidationException::withMessages(['user_ids' => 'Wybierz osoby z listy zespołu.']);
         }
         $calendarUserIds = $scope === 'mine' ? [$user->id] : $selectedUserIds;
         $showUnassigned = $scope === 'team' && $request->boolean('unassigned');

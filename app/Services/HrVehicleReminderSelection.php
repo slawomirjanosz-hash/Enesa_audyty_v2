@@ -53,7 +53,7 @@ class HrVehicleReminderSelection
                 $events[] = ['field' => $field, 'identity' => $field.':'.$date->toDateString().':'.$stage,
                     'message' => HrVehicle::COLUMNS[$field].': '.$date->format('d.m.Y').' — '.($days < 0 ? 'po terminie ('.abs($days).' dni)' : ($days === 0 ? 'termin dzisiaj' : 'pozostało '.$days.' dni'))];
             }
-            if ((int) $vehicle->location_revision > 0 && !$vehicle->usage_location) {
+            if ((int) $vehicle->location_revision > 0 && ! $vehicle->usage_location) {
                 $events[] = ['field' => 'usage_location', 'identity' => 'location_missing:'.$today->toDateString(),
                     'message' => 'Lokalizacja nieokreślona — przypisanie wygasło lub brak okresu na dzisiaj.'];
             }

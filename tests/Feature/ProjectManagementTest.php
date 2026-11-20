@@ -2,6 +2,7 @@
 
 use App\Exports\ProjectGanttExport;
 use App\Exports\ProjectRequirementsListExport;
+use App\Exports\ProjectRequirementsTemplateExport;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Document;
@@ -997,7 +998,7 @@ test('requirements excel import recognizes flexible columns matches relations an
         ->assertSee('Importuj materiały i usługi z Excela')
         ->assertSee('Pobierz wzór Excel');
 
-    expect((new \App\Exports\ProjectRequirementsTemplateExport)->headings()[0])->toContain('Technologia', 'Grupa');
+    expect((new ProjectRequirementsTemplateExport)->headings()[0])->toContain('Technologia', 'Grupa');
 
     $this->actingAs($manager)
         ->get(route('projects.requirements.template', $project))
