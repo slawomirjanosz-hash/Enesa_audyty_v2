@@ -1,7 +1,9 @@
 <fieldset @disabled(!$editable)><section class="plant-card"><label>Stan danych na dzień<input type="date" name="as_of_date" value="{{ old('as_of_date',$profile->as_of_date->format('Y-m-d')) }}" required></label></section>
 @foreach($profile->definition['groups'] as $group)<section class="plant-card" id="group-{{ $loop->index }}"><h2>{{ $group['title'] }}</h2>@if(isset($group['owner']))<p class="plant-help">Dział / osoba wspierająca wypełnienie: {{$group['owner']}}</p>@endif
 @foreach($group['questions'] as $q)
+@continue($q['key']==='FAKT_LOKALIZACJE')
 @php
+    if ($q['key']==='FAKT_CIEPLO_PALIWO') $q['options'] = $questionnaire->heatOptions();
     $answer = $answers[$q['key']] ?? [];
     $name = 'answers['.$q['key'].']';
     $id = 'q-'.str_replace('.','-',$q['key']);

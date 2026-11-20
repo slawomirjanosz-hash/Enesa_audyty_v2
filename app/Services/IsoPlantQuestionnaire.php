@@ -16,7 +16,28 @@ class IsoPlantQuestionnaire
 
     public function questions(array $definition): array
     {
-        return array_merge(...array_column($definition['groups'], 'questions'));
+        $questions = array_merge(...array_column($definition['groups'], 'questions'));
+        foreach ($questions as &$question) {
+            if ($question['key'] === 'FAKT_CIEPLO_PALIWO') {
+                $question['options'] += $this->heatOptions();
+            }
+        }
+
+        return $questions;
+    }
+
+    public function heatOptions(): array
+    {
+        return ['gaz ziemny' => 'gaz ziemny', 'olej' => 'olej opałowy', 'węgiel' => 'węgiel', 'biomasa' => 'biomasa', 'biogaz' => 'biogaz', 'pompa ciepła' => 'pompa ciepła', 'energia elektryczna' => 'energia elektryczna', 'LPG' => 'LPG', 'olej napędowy' => 'olej napędowy', 'benzyna' => 'benzyna', 'CNG' => 'CNG', 'ciepło sieciowe' => 'ciepło sieciowe', 'inny' => 'inny'];
+    }
+
+    public function heatChoices(array $answers): array
+    {
+        $rows = $answers['FAKT_NOSNIKI']['value'] ?? [];
+        $carriers = ($answers['FAKT_NOSNIKI']['unknown'] ?? false) ? [] : array_filter(array_column(is_array($rows) ? $rows : [], 'c0'), 'is_string');
+        $keys = array_map(fn ($carrier) => $carrier === 'olej opałowy' ? 'olej' : $carrier, $carriers);
+
+        return array_intersect_key($this->heatOptions(), array_flip([...$keys, 'pompa ciepła']));
     }
 
     /** Stable identifiers for later questionnaires; inactive/unknown values are never facts. */
@@ -104,6 +125,9 @@ class IsoPlantQuestionnaire
             }
             if ($q['type'] === 'multi') {
                 $rules['value.*'] = ['required', Rule::in(array_keys($q['options'])), 'distinct'];
+                if ($q['key'] === 'FAKT_CIEPLO_PALIWO' && $this->visible($q, $input)) {
+                    $rules['value.*'] = ['required', Rule::in(array_keys($this->heatChoices($input))), 'distinct'];
+                }
             }
             if ($q['type'] === 'rows') {
                 $rules['value.*'] = 'array:'.implode(',', ['id', ...array_keys($q['fields'])]);

@@ -4,9 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IsoPlantProfile extends Model
 {
+    public function responsibleUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'responsible_user_id');
+    }
+
     /** Select current profiles without filesorting large JSON payloads in MySQL. */
     public function scopeLatestPerSite(Builder $query): Builder
     {

@@ -2,10 +2,13 @@
 @section('content')
 @php
     $answers = $questionnaire->formAnswers(old('answers', $exampleAnswers ?? $profile->answers), $profile->definition);
+    $answers['FAKT_LOKALIZACJE'] = ['value'=>\App\Models\IsoPlantProfile::where('audit_id',$audit->id)->distinct()->count('site_id')];
     $editable = $canWrite && ($isLatest ?? true) && (!$client || in_array($profile->status,['editing','returned','auditor_corrected']));
     $operations = ['create'=>'Utworzono profil','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie klienta','revise'=>'Utworzono nową wersję','before_correction'=>'Wersja przed korektą audytora','auditor_correction'=>'Poprawiony przez audytora — wymagane ponowne zatwierdzenie klienta'];
     $operations['schema_upgrade'] = 'Rozszerzono profil według ankiety audytorów — odpowiedzi zachowane';
     $operations['elaborate'] = 'Opracowano charakterystykę zakładu i podstawy wdrożenia EnMS';
+    $operations['copy'] = 'Utworzono kopię profilu do sprawdzenia';
+    $operations['assign'] = 'Zmieniono osobę odpowiedzialną';
 @endphp
 @include('audits.partials.questionnaire-excel')
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'plant-form'])
@@ -22,6 +25,7 @@
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="plant-form" @if($profile->lock_version > 0) data-highlight-unanswered @endif method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@csrf<input type="hidden" name="lock_version" value="{{ old('lock_version',$profile->lock_version) }}">
 <script type="application/json" id="plant-energy-factors">@json(\App\Services\IsoPlantCalculations::factors())</script>
 @include('audits.plant-profile.fields')
+<input type="hidden" name="answers[FAKT_LOKALIZACJE][value]" value="{{$answers['FAKT_LOKALIZACJE']['value']}}">
 @if($editable)<div class="plant-actions"><span id="plant-save-state" role="status">Zapisz odpowiedzi przed wyjściem.</span><button name="operation" value="save" class="primary">Zapisz</button>@if($canClientApprove)<button name="operation" value="submit" data-confirm="Potwierdzasz dane tej wersji profilu i przekazujesz je do przeglądu audytora?">Zatwierdź jako klient</button>@elseif($client)<small>Zatwierdza administrator klienta.</small>@endif</div>@endif
 <input type="hidden" name="complete_form" value="1"></form>
 @if(!empty($profile->definition['legacy_groups']))

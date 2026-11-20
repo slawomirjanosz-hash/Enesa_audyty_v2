@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\IsoPlantProfile;
 use App\Models\IsoSectionDocument;
 use App\Models\User;
+use App\Services\IsoFactorQuestionnaire;
 use App\Services\IsoPlantQuestionnaire;
 use App\Services\QuestionnaireCompletion;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,54 @@ function plantAnswers(): array
 
     return $answers;
 }
+
+test('plant copies keep source data but require independent approvals and responsibility', function () {
+    [$audit, $client] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład A', 'responsible_user_id' => $client->id])->assertRedirect();
+    $source = IsoPlantProfile::firstOrFail();
+    $source->update(['status' => 'approved', 'document_id' => null, 'client_approval' => ['name' => 'Klient'], 'auditor_approval' => ['name' => 'Audytor']]);
+    $this->post(route('client.audits.plant-profile.copy', [$audit, $source]))->assertRedirect();
+    $copy = IsoPlantProfile::latest('id')->firstOrFail();
+    expect($copy->id)->not->toBe($source->id)
+        ->and($copy->site_id)->not->toBe($source->site_id)
+        ->and($copy->answers['site.name']['value'])->toBe('Zakład A — kopia')
+        ->and($copy->client_approval)->toBeNull()->and($copy->auditor_approval)->toBeNull()
+        ->and($copy->responsible_user_id)->toBeNull()->and($copy->status)->toBe('editing')
+        ->and($source->fresh()->status)->toBe('approved');
+    $this->get(route('client.audits.plant-profile.index', $audit))->assertOk()->assertSee('Zakład A — kopia')->assertSee('Podgląd profilu')->assertSee('Kopiuj profil do nowego zakładu');
+    $this->get(route('client.audits.plant-profile.show', [$audit, $copy, 'preview' => 1]))->assertOk()->assertSee('<fieldset disabled', false)->assertDontSee('value="save"', false);
+});
+
+test('plant responsibility and copying stay within the client company', function () {
+    [$audit, $client] = plantFixture();
+    $outsider = User::factory()->create();
+    $outsider->assignRole(Role::findOrCreate('client_admin'));
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład A']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $url = route('client.audits.plant-profile.responsible', [$audit, $profile]);
+    $this->patch($url, ['responsible_user_id' => $outsider->id])->assertSessionHasErrors('responsible_user_id');
+    $this->patch($url, ['responsible_user_id' => $client->id])->assertSessionHasNoErrors();
+    expect($profile->fresh()->responsible_user_id)->toBe($client->id);
+    $this->actingAs($outsider)->post(route('client.audits.plant-profile.copy', [$audit, $profile]))->assertNotFound();
+    $this->patch($url, ['responsible_user_id' => null])->assertNotFound();
+    expect(IsoPlantProfile::count())->toBe(1)->and($profile->fresh()->responsible_user_id)->toBe($client->id);
+});
+
+test('location count comes from distinct sites rather than a manually supplied number', function () {
+    app()->instance(IsoPlantQuestionnaire::class, new IsoPlantQuestionnaire);
+    [$audit, $client] = plantFixture();
+    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład A']);
+    $profile = IsoPlantProfile::firstOrFail();
+    $this->post(route('client.audits.plant-profile.copy', [$audit, $profile]));
+    $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()
+        ->assertDontSee('Ile lokalizacji obejmie system zarządzania energią?');
+    $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), [
+        'operation' => 'save', 'lock_version' => 0, 'complete_form' => 1, 'as_of_date' => '2026-11-20',
+        'answers' => ['site.name' => ['value' => 'Zakład A'], 'FAKT_LOKALIZACJE' => ['value' => 999]],
+    ])->assertSessionHasNoErrors();
+    expect((int) $profile->fresh()->answers['FAKT_LOKALIZACJE']['value'])->toBe(2)
+        ->and(app(IsoFactorQuestionnaire::class)->facts($profile->fresh())['FAKT_LOKALIZACJE'])->toBe(2);
+});
 
 test('progress selects only latest profiles per audit and site without sorting JSON in SQL', function () {
     [$audit, $client] = plantFixture();

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profil zakładu · ISO 50001</title>
 <link rel="stylesheet" href="{{ asset('css/iso-plant-profile.css') }}"><style>:root{--brand:{{ $appBrand?->primaryColor() ?: '#1a4d3a' }}}</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 </head><body>
 <header class="plant-header"><div><small>ISO 50001 · Wstęp</small><h1>Profil zakładu</h1><span>{{ $audit->company->name }} · {{ $client ? 'Strefa klienta' : 'Panel audytora' }}</span></div><a href="{{ route($client?'client.audits.show':'audits.show', ['audit'=>$audit,'tab'=>'iso50001','section'=>'intro']) }}">← Wróć do audytu</a></header>
 <main class="plant-main">

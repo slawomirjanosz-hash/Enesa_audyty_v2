@@ -197,3 +197,18 @@ test('workbooks cannot be imported into another installation even with a shared 
             ->toThrow(ValidationException::class);
     });
 });
+
+test('plant workbooks keep original heat option rows importable after adding carriers', function () {
+    [, $profile] = workbookFixture();
+    $book = app(IsoQuestionnaireWorkbook::class)->export($profile, 'plant');
+    $choices = $book->getSheetByName('Wybory');
+    $original = collect($profile->definition['groups'])->flatMap(fn ($group) => $group['questions'])->firstWhere('key', 'FAKT_CIEPLO_PALIWO')['options'];
+    for ($row = $choices->getHighestDataRow(); $row >= 2; $row--) {
+        if ($choices->getCell('A'.$row)->getValue() === 'FAKT_CIEPLO_PALIWO' && ! array_key_exists((string) $choices->getCell('C'.$row)->getValue(), $original)) {
+            $choices->removeRow($row);
+        }
+    }
+    workbookUpload($book, function ($file, $path) use ($profile) {
+        expect(app(IsoQuestionnaireWorkbook::class)->read($path, $profile, 'plant')['answers'])->toBeArray();
+    });
+});

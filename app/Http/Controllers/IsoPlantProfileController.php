@@ -59,14 +59,15 @@ class IsoPlantProfileController extends Controller
             'audit' => $audit, 'client' => $client, 'prefix' => $this->prefix($client),
             'canWrite' => $client || $request->user()->can('audits.manage'),
             'sites' => DB::table('iso_plant_sites')->where('company_id', $audit->company_id)->orderBy('name')->get(),
-            'profiles' => IsoPlantProfile::where('audit_id', $audit->id)->get()->sortByDesc('id'),
+            'profiles' => IsoPlantProfile::where('audit_id', $audit->id)->with('responsibleUser')->get()->sortByDesc('id'),
+            'responsibleUsers' => $audit->company->users()->orderBy('name')->get(),
         ]);
     }
 
     public function create(Request $request, Audit $audit)
     {
         $client = $this->access($request, $audit, true);
-        $data = $request->validate(['site_id' => 'nullable|integer', 'name' => 'required_without:site_id|nullable|string|max:200', 'copy_latest' => 'nullable|boolean']);
+        $data = $request->validate(['site_id' => 'nullable|integer', 'name' => 'required_without:site_id|nullable|string|max:200', 'copy_latest' => 'nullable|boolean', 'responsible_user_id' => ['nullable', 'integer', Rule::in($audit->company->users()->pluck('users.id')->all())]]);
         $profile = DB::transaction(function () use ($audit, $data, $request) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             if (! empty($data['site_id'])) {
@@ -90,6 +91,7 @@ class IsoPlantProfileController extends Controller
                 $definition['legacy_groups'] = $previous->definition['groups'];
             }
             $profile = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $site->id, 'revision' => 1, 'lock_version' => 0, 'status' => 'editing', 'as_of_date' => $previous?->as_of_date ?? today(), 'definition' => $definition, 'answers' => $previous?->answers ?? $answers]);
+            $profile->update(['responsible_user_id' => $data['responsible_user_id'] ?? null]);
             $this->record($request, $profile, 'create');
 
             return $profile;
@@ -108,13 +110,44 @@ class IsoPlantProfileController extends Controller
 
         return view('audits.plant-profile.show', [
             'audit' => $audit, 'profile' => $profile, 'client' => $client, 'prefix' => $this->prefix($client),
-            'canWrite' => $client || $request->user()->can('audits.manage'),
+            'canWrite' => ! $request->boolean('preview') && ($client || $request->user()->can('audits.manage')),
             'canClientApprove' => $client && $request->user()->hasRole('client_admin'),
             'isLatest' => ! IsoPlantProfile::where('audit_id', $audit->id)->where('site_id', $profile->site_id)->where('revision', '>', $profile->revision)->exists(),
             'questionnaire' => $this->questionnaire,
             'exampleAnswers' => $request->boolean('source_example') ? app(IsoPlatformRelease::class)->answers('intro') : null,
             'events' => DB::table('iso_plant_events')->where('profile_id', $profile->id)->orderByDesc('id')->limit(50)->get(['action', 'user_name', 'created_at']),
         ]);
+    }
+
+    public function responsible(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $this->access($request, $audit, true);
+        $this->checkProfile($audit, $profile);
+        $data = $request->validate(['responsible_user_id' => ['present', 'nullable', 'integer', Rule::in($audit->company->users()->pluck('users.id')->all())]]);
+        $profile->update(['responsible_user_id' => $data['responsible_user_id'] ?? null]);
+        $this->record($request, $profile, 'assign');
+
+        return back()->with('success', 'Zapisano osobę odpowiedzialną za profil.');
+    }
+
+    public function copy(Request $request, Audit $audit, IsoPlantProfile $profile)
+    {
+        $client = $this->access($request, $audit, true);
+        $this->checkProfile($audit, $profile);
+        $copy = DB::transaction(function () use ($request, $audit, $profile) {
+            Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
+            $name = Str::limit($profile->answers['site.name']['value'] ?? 'Zakład', 185, '').' — kopia';
+            $siteId = DB::table('iso_plant_sites')->insertGetId(['company_id' => $audit->company_id, 'name' => $name, 'created_at' => now(), 'updated_at' => now()]);
+            $answers = $profile->answers;
+            unset($answers['_html']);
+            $answers['site.name'] = ['value' => $name, 'unknown' => false, 'source' => 'Kopia profilu #'.$profile->id, 'updated_by' => $request->user()->id, 'updated_at' => now()->toIso8601String()];
+            $copy = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $siteId, 'revision' => 1, 'lock_version' => 0, 'status' => 'editing', 'as_of_date' => $profile->as_of_date, 'definition' => $profile->definition, 'answers' => $answers]);
+            $this->record($request, $copy, 'copy');
+
+            return $copy;
+        });
+
+        return redirect()->route($this->prefix($client).'show', [$audit, $copy])->with('success', 'Skopiowano dane profilu. Sprawdź nazwę, adres i dane nowego zakładu. Kopia wymaga nowych zatwierdzeń.');
     }
 
     public function update(Request $request, Audit $audit, IsoPlantProfile $profile)
@@ -145,7 +178,7 @@ class IsoPlantProfileController extends Controller
                 if ($latest->id !== $current->id) {
                     return $latest;
                 }
-                $next = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $current->site_id, 'revision' => $current->revision + 1, 'lock_version' => 0, 'status' => 'editing', 'as_of_date' => $current->as_of_date, 'definition' => $current->definition, 'answers' => $current->answers]);
+                $next = IsoPlantProfile::create(['audit_id' => $audit->id, 'site_id' => $current->site_id, 'responsible_user_id' => $current->responsible_user_id, 'revision' => $current->revision + 1, 'lock_version' => 0, 'status' => 'editing', 'as_of_date' => $current->as_of_date, 'definition' => $current->definition, 'answers' => $current->answers]);
                 $this->record($request, $next, 'revise');
 
                 return $next;
@@ -157,7 +190,9 @@ class IsoPlantProfileController extends Controller
                     abort_unless($client && $request->user()->hasRole('client_admin'), 403);
                 }
                 $request->validate(['answers' => 'required|array', 'as_of_date' => 'required|date_format:Y-m-d', 'complete_form' => 'required|accepted'], ['complete_form.required' => 'Nie dotarł cały formularz. Zmniejsz liczbę wierszy i spróbuj ponownie — dotychczasowy zapis pozostał bez zmian.']);
-                $answers = $this->questionnaire->normalize($data['answers'], $current->definition, $current->answers, $request->user()->id, $op === 'submit');
+                $input = $data['answers'];
+                $input['FAKT_LOKALIZACJE'] = ['value' => IsoPlantProfile::where('audit_id', $audit->id)->distinct()->count('site_id'), 'source' => 'Liczba profili zakładów w audycie'];
+                $answers = $this->questionnaire->normalize($input, $current->definition, $current->answers, $request->user()->id, $op === 'submit');
                 if ($htmlState !== null) {
                     $answers['_html'] = $htmlState;
                 }
@@ -271,7 +306,7 @@ class IsoPlantProfileController extends Controller
 
     private function record(Request $request, IsoPlantProfile $profile, string $action): void
     {
-        DB::table('iso_plant_events')->insert(['profile_id' => $profile->id, 'user_id' => $request->user()->id, 'user_name' => $request->user()->name, 'action' => $action, 'snapshot' => json_encode($profile->only(['answers', 'as_of_date', 'revision', 'lock_version', 'status', 'client_approval', 'auditor_approval', 'review_note', 'auditor_changes', 'client_changes']), JSON_THROW_ON_ERROR), 'created_at' => now(), 'updated_at' => now()]);
+        DB::table('iso_plant_events')->insert(['profile_id' => $profile->id, 'user_id' => $request->user()->id, 'user_name' => $request->user()->name, 'action' => $action, 'snapshot' => json_encode($profile->only(['answers', 'responsible_user_id', 'as_of_date', 'revision', 'lock_version', 'status', 'client_approval', 'auditor_approval', 'review_note', 'auditor_changes', 'client_changes']), JSON_THROW_ON_ERROR), 'created_at' => now(), 'updated_at' => now()]);
         ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'update', 'auditable_type' => Audit::class, 'auditable_id' => $profile->audit_id, 'subject_label' => 'Profil zakładu #'.$profile->id.' — '.$action, 'route_name' => $request->route()->getName()]);
     }
 

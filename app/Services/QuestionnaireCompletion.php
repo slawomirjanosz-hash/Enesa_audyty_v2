@@ -36,7 +36,8 @@ class QuestionnaireCompletion
             if ($audit->surveys->contains(fn ($survey) => $survey->auditType?->slug === 'iso50001')) {
                 $plants = ($profiles->get($audit->id) ?? collect())->unique('site_id');
                 foreach ($plants as $profile) {
-                    $parts[] = $this->plant($profile->definition, $profile->answers);
+                    $profile->setAttribute('audit_site_count', $plants->count());
+                    $parts[] = $this->plant($profile->definition, $profile->answers, $plants->count());
                     $facts = $factors->facts($profile);
                     $review = $factorReviews->get($audit->id.':'.$profile->site_id);
                     $parts[] = $factors->progress($facts, $factors->currentAnswers($review?->answers ?? [], $review?->basis ?? [], $facts));
@@ -90,12 +91,15 @@ class QuestionnaireCompletion
         return $this->result(count(array_filter($keys, fn ($key) => isset($answers[$key]) && is_scalar($answers[$key]) && trim((string) $answers[$key]) !== '')), count($keys));
     }
 
-    public function plant(array $definition, array $answers): array
+    public function plant(array $definition, array $answers, ?int $siteCount = null): array
     {
+        if ($siteCount !== null) {
+            $answers['FAKT_LOKALIZACJE'] = ['value' => $siteCount];
+        }
         $service = app(IsoPlantQuestionnaire::class);
         $answered = $total = 0;
         foreach ($service->questions($definition) as $question) {
-            if ($question['type'] === 'auto' || ! $service->visible($question, $answers)) {
+            if ($question['key'] === 'FAKT_LOKALIZACJE' || $question['type'] === 'auto' || ! $service->visible($question, $answers)) {
                 continue;
             }
             $total++;
@@ -123,8 +127,9 @@ class QuestionnaireCompletion
         if (request()->attributes->has($cacheKey)) {
             return request()->attributes->get($cacheKey);
         }
-        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->latestPerSite()->get(['id', 'site_id', 'revision', 'lock_version', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'elaboration_document_id', 'client_changes']);
-        $plants = $profiles->map(fn ($profile) => ['id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $this->plant($profile->definition, $profile->answers), 'profile' => $profile]);
+        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->with('responsibleUser')->latestPerSite()->get(['id', 'site_id', 'responsible_user_id', 'revision', 'lock_version', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'elaboration_document_id', 'client_changes']);
+        $profiles->each(fn ($profile) => $profile->setAttribute('audit_site_count', $profiles->count()));
+        $plants = $profiles->map(fn ($profile) => ['id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $this->plant($profile->definition, $profile->answers, $profiles->count()), 'profile' => $profile]);
         $review = IsoContextReview::where('audit_id', $audit->id)->where('year', now()->year)->first(['answers']);
         $result = ['plants' => $plants, 'context' => $this->fields(array_column(app(IsoContextLibrary::class)->questions(), 'kod'), $review?->answers['facts'] ?? [])];
         $factorReviews = IsoFactorReview::where('audit_id', $audit->id)->get()->keyBy('site_id');

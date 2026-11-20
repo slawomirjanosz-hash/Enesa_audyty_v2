@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
         element.hidden = !window.plantConditionVisible(condition, form);
     });
     const factors = JSON.parse(document.getElementById('plant-energy-factors')?.textContent || '{}');
-    const calculate = () => {
+    const calculate = (resetHeat = false) => {
+        if (!form) return;
         const get = key => form?.elements.namedItem(`answers[${key}][value]`)?.value;
         const put = (key, value, help) => {
             const output = document.querySelector(`[data-auto-value="${key}"]`);
@@ -30,6 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (note) note.textContent = help;
         };
         const rows = [...form.querySelectorAll('[data-question="FAKT_NOSNIKI"] [data-rows] .plant-repeat-row')];
+        const heatOptions = EnesaPlantEnergy.heatChoices(rows.map(row => ({c0: row.querySelector('[name$="[c0]"]')?.value})), form.elements.namedItem('answers[FAKT_NOSNIKI][unknown]')?.checked);
+        const heatMulti = form.querySelector('[data-question="FAKT_CIEPLO_PALIWO"] .plant-multi');
+        heatMulti?.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            const allowed = heatOptions.includes(input.value);
+            if (resetHeat && !allowed) input.checked = false;
+            input.closest('label').hidden = !allowed && !input.checked;
+            input.title = allowed ? '' : 'To źródło nie występuje w zużyciu nośników. Uzupełnij nośniki albo usuń zaznaczenie.';
+        });
+        if (heatMulti) heatMulti.querySelector('[data-selection-label]').textContent = [...heatMulti.querySelectorAll('input:checked')].map(input => input.dataset.label).join(', ') || 'Wybierz odpowiedzi';
         const result = EnesaPlantEnergy.calculate(rows.map(row => Object.fromEntries(['c0','c1','c2','c3'].map(key => [key, row.querySelector(`[name$="[${key}]"]`)?.value]))), factors, form.elements.namedItem('answers[FAKT_NOSNIKI][unknown]')?.checked);
         rows.forEach((row, index) => { row.title = result.errors[index] || ''; row.querySelectorAll('input,select').forEach(control => control.setAttribute('aria-invalid', result.errors[index] ? 'true' : 'false')); });
         put('ZUZYCIE_TJ', result.value === null ? null : `${result.value} TJ`, result.detail);
@@ -43,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const unknown = event.target.closest('[data-question]')?.querySelector('input[name$="[unknown]"]');
             if (unknown) unknown.checked = false;
         }
-        changed(); conditions(); calculate();
+        changed(); conditions(); calculate(!!event.target.closest('[data-question="FAKT_NOSNIKI"]'));
     });
     form?.addEventListener('change', event => {
         const multi = event.target.closest('.plant-multi');
@@ -53,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             multi.querySelector('[data-selection-label]').textContent = [...multi.querySelectorAll('input:checked')].map(input => input.dataset.label).join(', ') || 'Wybierz odpowiedzi';
         }
-        changed(); conditions(); calculate();
+        changed(); conditions(); calculate(!!event.target.closest('[data-question="FAKT_NOSNIKI"]'));
     });
     document.addEventListener('click', event => {
         const button = event.target.closest('button');
@@ -65,12 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
             repeat.dataset.next = index + 1;
             repeat.querySelector('[data-rows]').insertAdjacentHTML('beforeend', repeat.querySelector('template').innerHTML.replaceAll('__INDEX__', String(index)));
             changed();
-            calculate();
+            calculate(true);
         }
         if (button.hasAttribute('data-remove-row') && window.confirm('Usunąć ten wiersz z edytowanej wersji?')) {
             button.closest('.plant-repeat-row').remove();
             changed();
-            calculate();
+            calculate(true);
         }
     });
     form?.addEventListener('submit', () => { dirty = false; });

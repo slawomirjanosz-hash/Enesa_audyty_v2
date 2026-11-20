@@ -26,12 +26,12 @@ test('auditor schema retains all 85 stable codes and all six departments', funct
     expect($service->visible($questions['FAKT_SYSTEM_BAZOWY_ROK'], ['FAKT_SYSTEM_BAZOWY' => ['value' => 'iso_9001']]))->toBeTrue();
     expect($service->visible($questions['FAKT_LOKALIZACJE_LISTA'], ['FAKT_LOKALIZACJE' => ['value' => 0]]))->toBeFalse();
     expect($service->visible($questions['FAKT_LOKALIZACJE_LISTA'], ['FAKT_LOKALIZACJE' => ['value' => 2]]))->toBeTrue();
-    expect(app(QuestionnaireCompletion::class)->plant($definition, [])['total'])->toBe(57);
+    expect(app(QuestionnaireCompletion::class)->plant($definition, [])['total'])->toBe(56);
 });
 
 test('server calculates energy and fossil fuel facts without trusting submitted automatic fields', function () {
     $s = app(IsoPlantQuestionnaire::class);
-    $input = ['FAKT_NOSNIKI' => ['value' => [['c0' => 'energia elektryczna', 'c1' => 1000, 'c2' => 'MWh', 'c3' => 0]]], 'ZUZYCIE_TJ' => ['value' => 999], 'FAKT_KOTLOWNIA' => ['value' => 'wlasne'], 'FAKT_CIEPLO_PALIWO' => ['value' => ['gaz ziemny']]];
+    $input = ['FAKT_NOSNIKI' => ['value' => [['c0' => 'gaz ziemny', 'c1' => 1000, 'c2' => 'MWh', 'c3' => 0]]], 'ZUZYCIE_TJ' => ['value' => 999], 'FAKT_KOTLOWNIA' => ['value' => 'wlasne'], 'FAKT_CIEPLO_PALIWO' => ['value' => ['gaz ziemny']]];
     $answers = $s->normalize($input, $s->definition(), ['old.variable' => ['value' => 'Zachowaj']], 1, false);
     expect($answers['ZUZYCIE_TJ']['value'])->toBe(3.6)->and($answers['FAKT_CIEPLO_PALIWA']['value'])->toBe('tak')
         ->and($answers['old.variable']['value'])->toBe('Zachowaj');
@@ -41,6 +41,19 @@ test('server calculates energy and fossil fuel facts without trusting submitted 
     $answers = app(IsoPlantCalculations::class)->apply($s->definition(), $input);
     expect($answers['ZUZYCIE_TJ']['value'])->toBeNull()->and($answers['FAKT_CIEPLO_PALIWA']['value'])->toBe('do potwierdzenia');
     expect($s->facts($s->definition(), $answers)['FAKT_CIEPLO_PALIWO'])->toBeNull();
+});
+
+test('own heat choices follow energy carriers and always include heat pumps', function () {
+    $s = app(IsoPlantQuestionnaire::class);
+    $input = ['FAKT_NOSNIKI' => ['value' => [['c0' => 'energia elektryczna', 'c1' => 1000, 'c2' => 'MWh']]], 'FAKT_KOTLOWNIA' => ['value' => 'wlasne']];
+    expect(array_keys($s->heatChoices($input)))->toEqualCanonicalizing(['energia elektryczna', 'pompa ciepła']);
+    $input['FAKT_CIEPLO_PALIWO'] = ['value' => ['gaz ziemny']];
+    expect(fn () => $s->normalize($input, $s->definition(), [], 1, false))->toThrow(ValidationException::class);
+    $input['FAKT_CIEPLO_PALIWO'] = ['value' => ['energia elektryczna', 'pompa ciepła']];
+    expect($s->normalize($input, $s->definition(), [], 1, false)['FAKT_CIEPLO_PALIWA']['value'])->toBe('nie');
+    $input['FAKT_NOSNIKI']['value'][] = ['c0' => 'LPG', 'c1' => 100, 'c2' => 'MWh'];
+    $input['FAKT_CIEPLO_PALIWO'] = ['value' => ['LPG']];
+    expect($s->normalize($input, $s->definition(), [], 1, false)['FAKT_CIEPLO_PALIWA']['value'])->toBe('tak');
 });
 
 test('auditor questionnaire validates units percentages years dates and maximum three processes', function () {
@@ -69,6 +82,7 @@ test('new auditor questionnaire saves approves and renders with automatic fields
             default => $q['required'] ? ['value' => 'Dane zakładu'] : ['unknown' => true],
         };
     }
+    $input['FAKT_CIEPLO_PALIWO'] = ['value' => ['pompa ciepła']];
     $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), ['operation' => 'submit', 'lock_version' => 0, 'complete_form' => 1, 'as_of_date' => '2026-09-23', 'answers' => $input])->assertSessionHasNoErrors()->assertRedirect();
     expect($profile->fresh()->status)->toBe('submitted');
     $this->actingAs($staff)->post(route('audits.plant-profile.update', [$audit, $profile]), ['operation' => 'approve', 'lock_version' => 1, 'note' => 'Sprawdzono'])->assertRedirect();

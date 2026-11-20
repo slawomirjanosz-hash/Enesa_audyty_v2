@@ -18,7 +18,12 @@ class IsoFactorQuestionnaire
 
     public function facts(IsoPlantProfile $profile): array
     {
-        return app(IsoPlantQuestionnaire::class)->facts($profile->definition, $profile->answers);
+        $facts = app(IsoPlantQuestionnaire::class)->facts($profile->definition, $profile->answers);
+        if ($profile->audit_id) {
+            $facts['FAKT_LOKALIZACJE'] = $profile->getAttribute('audit_site_count') ?? IsoPlantProfile::where('audit_id', $profile->audit_id)->distinct()->count('site_id');
+        }
+
+        return $facts;
     }
 
     public function hash(IsoPlantProfile $profile): string

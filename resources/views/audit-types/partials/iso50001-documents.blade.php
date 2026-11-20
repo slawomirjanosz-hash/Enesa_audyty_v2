@@ -35,17 +35,13 @@
     @if($sectionId === 'intro' && $isAuditContext)
         <div style="padding:20px;border:1px solid #dce5df;border-radius:12px;background:#f5f9f6;margin-bottom:20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
             <div><h3 style="margin:0 0 5px">Profil zakładu</h3><p style="margin:0;font-size:14px">Dane zakładu, energia, instalacje i organizacja pracy. Wypełnij profil i przekaż go do zatwierdzenia.</p></div>
-            <a href="{{ $plantEntries->count() === 1 ? route(($clientView ?? false) ? 'client.audits.plant-profile.show' : 'audits.plant-profile.show', [$audit,$plantEntries->first()['id']]) : route(($clientView ?? false) ? 'client.audits.plant-profile.index' : 'audits.plant-profile.index', $audit) }}" style="background:var(--green,#1a4d3a);color:white;padding:11px 18px;border-radius:8px;text-decoration:none;font-weight:700;white-space:nowrap">Otwórz profil zakładu →</a>
+            @php
+                $profilePrefix=($clientView??false)?'client.audits.plant-profile.':'audits.plant-profile.';
+                $profilesCanWrite=($clientView??false)||auth()->user()->can('audits.manage');
+            @endphp
+            @if($profilesCanWrite)<a href="{{route($profilePrefix.'index',$audit)}}#add-profile" style="background:var(--green,#1a4d3a);color:white;padding:11px 18px;border-radius:8px;text-decoration:none;font-weight:700;white-space:nowrap">Dodaj profil zakładu</a>@endif
             <div style="width:100%">
-                @forelse(app(\App\Services\QuestionnaireCompletion::class)->audit($audit)['plants'] as $plant)
-                    <a href="{{ route(($clientView ?? false)?'client.audits.plant-profile.show':'audits.plant-profile.show',[$audit,$plant['id']]) }}" style="text-decoration:none">
-                        @include('partials.questionnaire-progress', ['progress'=>$plant['progress'], 'progressLabel'=>$plant['name']])
-                    </a>
-                    @include('audits.plant-profile.status', ['profile'=>$plant['profile']])
-                @empty
-                    @include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant(app(\App\Services\IsoPlantQuestionnaire::class)->definition(),[]), 'progressLabel'=>'Profil zakładu'])
-                    @include('audits.plant-profile.status', ['profile'=>new \App\Models\IsoPlantProfile])
-                @endforelse
+                @include('audits.plant-profile.list',['profileList'=>$plantEntries->pluck('profile'),'profileUsers'=>$audit->company->users()->orderBy('name')->get(),'profilesCanWrite'=>$profilesCanWrite,'profilePrefix'=>$profilePrefix])
             </div>
         </div>
     @endif

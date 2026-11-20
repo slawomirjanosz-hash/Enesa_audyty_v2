@@ -92,7 +92,7 @@ class IsoPlantCalculations
         } elseif ($heat === 'siec') {
             $fossil = 'do potwierdzenia';
         } elseif (in_array($heat, ['wlasne', 'oba'])) {
-            if (is_array($fuels) && array_intersect($fuels, ['gaz ziemny', 'olej', 'węgiel'])) {
+            if (is_array($fuels) && array_intersect($fuels, ['gaz ziemny', 'olej', 'olej opałowy', 'węgiel', 'LPG', 'CNG', 'benzyna', 'olej napędowy'])) {
                 $fossil = 'tak';
             } elseif ($heat === 'oba') {
                 $fossil = 'do potwierdzenia';

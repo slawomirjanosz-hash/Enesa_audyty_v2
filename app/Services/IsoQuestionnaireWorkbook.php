@@ -176,8 +176,16 @@ class IsoQuestionnaireWorkbook
         $r = 3;
         foreach ($profile->definition['groups'] as $group) {
             foreach ($group['questions'] as $q) {
+                if ($q['key'] === 'FAKT_CIEPLO_PALIWO') {
+                    $q['options'] += app(IsoPlantQuestionnaire::class)->heatOptions();
+                }
                 $answer = $profile->answers[$q['key']] ?? [];
                 $value = $answer['value'] ?? null;
+                if ($q['key'] === 'FAKT_LOKALIZACJE') {
+                    $q['type'] = 'auto';
+                    $q['label'] = 'Liczba zakładów — automatycznie z profili';
+                    $value = IsoPlantProfile::where('audit_id', $profile->audit_id)->distinct()->count('site_id');
+                }
                 if ($q['type'] === 'rows') {
                     $name = 'T'.str_pad((string) (count($context['tables']) + 1), 2, '0', STR_PAD_LEFT);
                     $fields = $q['fields'];
@@ -409,7 +417,7 @@ class IsoQuestionnaireWorkbook
         $sheet = $book->getSheetByName('Pytania');
         $answers = [];
         foreach ($questions as $q) {
-            if ($q['type'] === 'auto') {
+            if ($q['type'] === 'auto' || $q['key'] === 'FAKT_LOKALIZACJE') {
                 continue;
             }$r = $rows[$q['key']];
             $answer = ['value' => null, 'unknown' => $this->yes($sheet, 'D'.$r), 'detail' => $this->value($sheet, 'E'.$r), 'source' => $this->value($sheet, 'F'.$r)];
@@ -463,7 +471,18 @@ class IsoQuestionnaireWorkbook
                 $answers[$key]['value'][] = $option;
             }
         }
-        $this->exact($seen, $expected, 'Wybory');
+        $legacyExpected = [];
+        foreach ($profile->definition['groups'] as $group) {
+            foreach ($group['questions'] as $q) {
+                if ($q['type'] === 'multi') {
+                    foreach (array_keys($q['options']) as $option) {
+                        $legacyExpected[] = $q['key'].'|'.$option;
+                    }
+                }
+            }
+        }
+        // Old workbooks retain their original option rows and stable identifiers.
+        $this->exact($seen, count($seen) === count($legacyExpected) ? $legacyExpected : $expected, 'Wybory');
 
         return ['lock_version' => $context['lock_version'], 'as_of_date' => $this->value($sheet, 'C'.$rows['_as_of_date'], ['type' => 'date']), 'answers' => $answers];
     }

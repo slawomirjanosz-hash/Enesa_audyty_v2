@@ -6,6 +6,14 @@ const context = {}; vm.createContext(context); vm.runInContext(readFileSync(new 
 const {calculate, number, fossil} = context.EnesaPlantEnergy;
 const factors = {LPG: {kWh: .0036, MWh: 3.6, GJ: 1, l: .0246, t: 46}, węgiel: {kWh: .0036, MWh: 3.6, GJ: 1, t: 23}};
 const row = (c1, c2 = 'MWh', c0 = 'LPG') => ({c0, c1, c2});
+
+test('heat choices track carriers, preserve legacy oil keys and always allow a heat pump', () => {
+    const {heatChoices} = context.EnesaPlantEnergy;
+    assert.deepEqual(Array.from(heatChoices([row(10, 'MWh', 'gaz ziemny'), row(20, 'MWh', 'energia elektryczna')])), ['pompa ciepła', 'gaz ziemny', 'energia elektryczna']);
+    assert.deepEqual(Array.from(heatChoices([row(10, 'l', 'olej opałowy')])), ['pompa ciepła', 'olej']);
+    assert.deepEqual(Array.from(heatChoices([row(10)], true)), ['pompa ciepła']);
+    assert.equal(fossil('wlasne', ['LPG']), 'tak');
+});
 test('4.1 and 4.2 derived facts keep backend values including null over stale or partial rows', () => {
  const {sourceFacts} = context.EnesaPlantEnergy;
  const facts = {ZUZYCIE_TJ:72, FAKT_CIEPLO_PALIWA:null, FAKT_NOSNIKI:[row(1000),row(1,'l','węgiel')], FAKT_KOTLOWNIA:'siec', FAKT_CIEPLO_PALIWO:['gaz ziemny']};

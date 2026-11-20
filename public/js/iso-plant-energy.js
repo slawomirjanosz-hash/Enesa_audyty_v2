@@ -29,7 +29,7 @@
         if (heat === 'brak') return 'nie';
         if (heat === 'siec') return 'do potwierdzenia';
         if (!['wlasne','oba'].includes(heat)) return null;
-        if (Array.isArray(fuels) && fuels.some(value => ['gaz ziemny','olej','węgiel'].includes(value))) return 'tak';
+        if (Array.isArray(fuels) && fuels.some(value => ['gaz ziemny','olej','olej opałowy','węgiel','LPG','CNG','benzyna','olej napędowy'].includes(value))) return 'tak';
         if (heat === 'oba') return 'do potwierdzenia';
         return Array.isArray(fuels) && fuels.length && !unknown ? 'nie' : null;
     };
@@ -37,5 +37,6 @@
         ZUZYCIE_TJ: authoritative ? (facts.ZUZYCIE_TJ ?? null) : Array.isArray(facts.FAKT_NOSNIKI) ? calculate(facts.FAKT_NOSNIKI, factors).value : number(facts.ZUZYCIE_TJ),
         FAKT_CIEPLO_PALIWA: authoritative ? (facts.FAKT_CIEPLO_PALIWA ?? null) : fossil(facts.FAKT_KOTLOWNIA, facts.FAKT_CIEPLO_PALIWO),
     });
-    root.EnesaPlantEnergy = {number, calculate, fossil, sourceFacts};
+    const heatChoices = (rows, unknown = false) => [...new Set(['pompa ciepła', ...(unknown ? [] : rows.map(row => row.c0 === 'olej opałowy' ? 'olej' : row.c0).filter(Boolean))])];
+    root.EnesaPlantEnergy = {number, calculate, fossil, sourceFacts, heatChoices};
 })(typeof window === 'undefined' ? globalThis : window);
