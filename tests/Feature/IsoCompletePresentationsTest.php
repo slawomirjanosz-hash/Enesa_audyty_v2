@@ -54,6 +54,13 @@ test('all chapter and clause cards appear in the correct panel for each full pag
     $dom->loadHTML('<?xml encoding="utf-8" ?>'.$response->getContent(), LIBXML_NOERROR | LIBXML_NOWARNING);
     $xpath = new DOMXPath($dom);
     foreach (IsoPresentation::all() as $deck) {
+        if ($deck->section_id === 'training') {
+            $buttons = $xpath->query('//tr[@data-training-section="training"]//*[@data-presentation-title]');
+            expect($buttons->length)->toBe(1)
+                ->and($buttons->item(0)->getAttribute('data-presentation-title'))->toBe($deck->title);
+
+            continue;
+        }
         $cards = $xpath->query('//section[@data-iso-panel="'.$deck->section_id.'"]//article[@data-presentation-title]');
         expect($cards->length)->toBe(1, $view.': '.$deck->section_id);
         expect($cards->item(0)->getAttribute('data-presentation-title'))->toBe($deck->title)

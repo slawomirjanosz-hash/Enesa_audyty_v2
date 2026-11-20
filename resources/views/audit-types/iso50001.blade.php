@@ -18,7 +18,7 @@
 <div class="iso-workspace"><main class="iso-content">
 @foreach($chapters as $chapter)
 <section class="iso-panel {{$loop->first?'active':''}}" data-iso-panel="{{$chapter['id']}}"><h2><span>{{$chapter['number']}}</span> {{$chapter['title']}}</h2><p class="iso-panel-lead">{{$chapter['description']}}</p>@if($chapter['source_url'] ?? false)<a href="{{$chapter['source_url']}}" target="_blank" rel="noopener" style="display:inline-flex;margin-top:12px;color:var(--green);font-size:11px;font-weight:800;text-decoration:none"><i class="ti ti-external-link"></i>&nbsp; {{$chapter['source_label']}}</a>@endif
-@if(($trainingPresentations ?? collect())->get($chapter['id'], collect())->isNotEmpty())
+@if($chapter['id']!=='training' && ($trainingPresentations ?? collect())->get($chapter['id'], collect())->isNotEmpty())
     @include('audit-types.partials.iso50001-presentations',['sectionId'=>$chapter['id'], 'sectionLabel'=>$chapter['number'].' '.$chapter['title']])
 @endif
 @if($chapter['id']==='training')@include('audit-types.partials.iso50001-training')@elseif($chapter['items'] ?? false)<div class="iso-chapter-scope"><h3>Zakres tego rozdziału</h3><ul>@foreach($chapter['items'] as $chapterItem)<li><strong>{{$chapterItem['number']}}</strong> — {{$chapterItem['title']}}</li>@endforeach</ul></div>@endif @include('audit-types.partials.iso50001-documents',['sectionId'=>$chapter['id']])</section>
