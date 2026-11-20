@@ -1,5 +1,5 @@
 @foreach($w->records('question') as $question)
-<section class="plant-card">
+<section class="plant-card" id="question-{{ $question['id'] }}" data-enms-jump-target>
     <h3>{{ $question['symbol'] }} · {{ $question['payload']['pytanie'] }}</h3>
     @if(($question['payload']['state']??'')==='open')
     @php($previousAnswer=$service->one($w,'answer','question_id',$question['id']))

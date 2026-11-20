@@ -1,5 +1,5 @@
 @php($value = $value ?? null)
-<label data-enms-field="{{ $field['key'] }}" class="{{ $errors->has($field['key']) || $errors->has('payload.'.$field['key']) ? 'enms-invalid' : '' }}">{{ $field['label'] }}@if($field['required']) * @endif
+<label id="edit-{{ $kind }}-field-{{ $field['key'] }}" data-enms-jump-target data-enms-field="{{ $field['key'] }}" class="{{ $errors->has($field['key']) || $errors->has('payload.'.$field['key']) ? 'enms-invalid' : '' }}">{{ $field['label'] }}@if($field['required']) * @endif
 @if(in_array($field['type'], ['select','multi']))
 <select name="payload[{{ $field['key'] }}]{{ $field['type']==='multi'?'[]':'' }}" @if($field['type']==='multi') multiple size="5" @endif>
 @if($field['type']!=='multi')<option value="">Wybierz</option>@endif

@@ -3,7 +3,7 @@
 @php($canEditRegister=$kind==='rule'?$w->writable:$editable)
 <section class="plant-card" id="register-{{ $kind }}"><h2>{{ \App\Services\Enms\Registers::TITLES[$kind] }}</h2>
 <div class="plant-scroll"><table><thead><tr><th>Symbol</th>@foreach($fields as $f)<th>{{ $f['label'] }}</th>@endforeach<th>Wersja</th><th data-sort-disabled>Akcje</th></tr></thead><tbody>
-@foreach(array_reverse($rows) as $record)<tr><td>{{ $record['symbol'] }}@if($service->changedSinceSubmission($w,$record))<p class="plant-notice">Zmiana od przekazania ankiety</p>@endif</td>@foreach($fields as $f)
+@foreach(array_reverse($rows) as $record)<tr id="record-{{ $record['id'] }}" data-enms-jump-target><td>{{ $record['symbol'] }}@if($service->changedSinceSubmission($w,$record))<p class="plant-notice">Zmiana od przekazania ankiety</p>@endif</td>@foreach($fields as $f)
 @php($v=$record['payload'][$f['key']]??null)
 <td @if(in_array($f['type'],['date','integer','number'])) data-sort-value="{{ $v }}" @endif>@if($f['type']==='multi'){{ implode(', ',array_map(fn($x)=>$f['choices'][$x]??'Brak pozycji', (array)$v)) }}@elseif($f['type']==='select'){{ $f['choices'][$v??'']??'—' }}@else{{ $v??'—' }}@endif</td>@endforeach
 <td data-sort-value="{{ $record['version'] }}">{{ $record['version'] }}</td><td>

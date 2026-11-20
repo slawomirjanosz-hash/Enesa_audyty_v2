@@ -3,6 +3,7 @@ $declaration = $service->one($w, 'declaration', 'requirement_id', $requirement['
 $answer = $declaration['payload'] ?? [];
 if(old('operation')==='declaration' && old('requirement_id')===$requirement['id']) $answer=array_replace_recursive($answer,old('payload',[]));
 $answerStates = ['jest'=>'Jest i można pokazać','czesciowo'=>'Częściowo','niema'=>'Jeszcze tego nie ma'];
+$anchor = 'req-'.($hostRequirement??'').$requirement['kod'];
 if (!$requirement['normative'] && ($requirement['dopuszczaNiedotyczy'] ?? false)) $answerStates['niedotyczy']='Nie dotyczy — z uzasadnieniem';
 @endphp
 <section class="plant-card enms-declaration {{ $declaration && empty($answer['stan'])?'enms-missing':'' }}" id="req-{{ ($hostRequirement??'').$requirement['kod'] }}">
@@ -14,11 +15,11 @@ if (!$requirement['normative'] && ($requirement['dopuszczaNiedotyczy'] ?? false)
 @include('audits.enms.token')
 <input type="hidden" name="operation" value="declaration"><input type="hidden" name="requirement_id" value="{{ $requirement['id'] }}">
 <fieldset @disabled(!$editable)>
-<label>Odpowiedź<select name="payload[stan]" data-enms-state><option value="">Wybierz</option>@foreach($answerStates as $key=>$label)<option value="{{ $key }}" @selected(($answer['stan']??'')===$key)>{{ $label }}</option>@endforeach</select></label>
+<label id="{{ $anchor }}-state" data-enms-jump-target>Odpowiedź<select name="payload[stan]" data-enms-state><option value="">Wybierz</option>@foreach($answerStates as $key=>$label)<option value="{{ $key }}" @selected(($answer['stan']??'')===$key)>{{ $label }}</option>@endforeach</select></label>
 <div data-enms-states="jest czesciowo niema niedotyczy"><label>Komentarz organizacji — nieobowiązkowy<textarea name="payload[opis]" rows="2">{{ $answer['opis']??'' }}</textarea></label></div>
 <div data-enms-states="jest czesciowo">
 @foreach($requirement['pola'] as $field)
-<label class="{{ $errors->has('pola.'.$field['klucz'])?'enms-invalid':($declaration && ($answer['stan']??'')==='jest' && $field['wymagane'] && $field['typ']!=='odwolanie' && blank($answer['pola'][$field['klucz']]??null)?'enms-missing':'') }}">{{ $field['etykieta'] }} @if(!$field['wymagane']) (nieobowiązkowe) @endif
+<label id="{{ $anchor }}-field-{{ $field['klucz'] }}" data-enms-jump-target class="{{ $errors->has('pola.'.$field['klucz'])?'enms-invalid':($declaration && ($answer['stan']??'')==='jest' && $field['wymagane'] && $field['typ']!=='odwolanie' && blank($answer['pola'][$field['klucz']]??null)?'enms-missing':'') }}">{{ $field['etykieta'] }} @if(!$field['wymagane']) (nieobowiązkowe) @endif
 @if($field['typ']==='odwolanie')
 @php($citation=$sources['citations'][$field['zrodlo']['obiekt']])
 <div class="enms-source"><strong>Punkt {{ $field['zrodlo']['punkt'] }}</strong> · {{ $citation['source_id']?'Odczyt potwierdzony':'Brak zapisu w punkcie źródłowym' }} · {{ $citation['approved']?'Aktualny, zatwierdzony dokument':'Brak aktualnego zatwierdzonego dokumentu' }}
@@ -33,12 +34,12 @@ if (!$requirement['normative'] && ($requirement['dopuszczaNiedotyczy'] ?? false)
 @else<textarea name="payload[pola][{{ $field['klucz'] }}]" rows="2">{{ $answer['pola'][$field['klucz']]??'' }}</textarea>@endif
 </label>
 @endforeach
-<details><summary>Dowody do tej odpowiedzi</summary>
+<details id="{{ $anchor }}-evidence" data-enms-jump-target><summary>Dowody do tej odpowiedzi</summary>
 @forelse($w->records('evidence') as $evidence)<label class="enms-check"><input type="checkbox" name="payload[evidence_ids][]" value="{{ $evidence['id'] }}" @checked(in_array($requirement['id'],$evidence['payload']['requirements']??[],true))>{{ $evidence['symbol'] }} · {{ $evidence['payload']['tytul']??'Bez tytułu' }}</label>@empty<p>Dodaj dowód w rejestrze dowodów, a następnie przypisz go do odpowiedzi.</p>@endforelse
 <a href="{{ route($prefix.'show',[$audit,$profile,'tab'=>'dowody']) }}">Otwórz rejestr dowodów</a></details>
 </div>
-<div data-enms-states="czesciowo niema"><h4>Plan uzupełnienia</h4>@foreach(['opis'=>'Co zamierzacie zrobić','termin'=>'Do kiedy','kto'=>'Kto — nieobowiązkowo'] as $key=>$label)<label>{{ $label }}<textarea rows="2" name="payload[plan][{{ $key }}]">{{ $answer['plan'][$key]??'' }}</textarea></label>@endforeach</div>
-<div data-enms-states="niedotyczy"><label>Dlaczego nie dotyczy<textarea name="payload[uzasadnienieNiedotyczy]">{{ $answer['uzasadnienieNiedotyczy']??'' }}</textarea></label><p>{{ $requirement['warunekNiedotyczy']??'' }}</p></div>
+<div data-enms-states="czesciowo niema"><h4>Plan uzupełnienia</h4>@foreach(['opis'=>'Co zamierzacie zrobić','termin'=>'Do kiedy','kto'=>'Kto — nieobowiązkowo'] as $key=>$label)<label id="{{ $anchor }}-plan-{{ $key }}" data-enms-jump-target>{{ $label }}<textarea rows="2" name="payload[plan][{{ $key }}]">{{ $answer['plan'][$key]??'' }}</textarea></label>@endforeach</div>
+<div data-enms-states="niedotyczy"><label id="{{ $anchor }}-justification" data-enms-jump-target>Dlaczego nie dotyczy<textarea name="payload[uzasadnienieNiedotyczy]">{{ $answer['uzasadnienieNiedotyczy']??'' }}</textarea></label><p>{{ $requirement['warunekNiedotyczy']??'' }}</p></div>
 @if($editable)<button class="primary">Zapisz odpowiedź</button>@endif
 </fieldset></form>
 @if(!empty($requirement['pozycjeWspierajace']))<details><summary>Pozycje wspierające ({{ count($requirement['pozycjeWspierajace']) }})</summary>

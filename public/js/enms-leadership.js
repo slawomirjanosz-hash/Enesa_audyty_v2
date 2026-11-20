@@ -32,3 +32,33 @@ document.querySelectorAll('[data-enms-register]').forEach(form => {
     form.addEventListener('change', render);
     render();
 });
+
+// Readiness links use real URLs, so opening a new tab and browser Back work as usual.
+const revealEnmsTarget = () => {
+    let target;
+    try {
+        target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    } catch {
+        return;
+    }
+    if (!target?.matches('[data-enms-jump-target]')) return;
+    for (let parent = target; parent; parent = parent.parentElement) {
+        if (parent.matches('details')) parent.open = true;
+    }
+    // A previously linked field may no longer apply after another user changes the answer.
+    if (target.closest('[hidden]')) target = target.closest('.enms-declaration');
+    if (!target) return;
+    document.querySelectorAll('.enms-jump-target').forEach(el => el.classList.remove('enms-jump-target'));
+    target.classList.add('enms-jump-target');
+    target.style.scrollMarginTop = `${(document.querySelector('.iso-clause-tabs')?.offsetHeight || 0) + 20}px`;
+    const controls = [...target.querySelectorAll('input:not([type="hidden"]), select, textarea')]
+        .filter(el => !el.matches(':disabled') && !el.readOnly && el.getClientRects().length);
+    const empty = el => ['checkbox', 'radio'].includes(el.type) ? !el.checked : !el.value.trim();
+    const focus = controls.find(empty) || controls[0] || target.querySelector('a, button:not(:disabled)') || target;
+    if (focus === target) target.setAttribute('tabindex', '-1');
+    focus.focus({preventScroll: true});
+    target.scrollIntoView({block: 'start'});
+};
+window.addEventListener('hashchange', revealEnmsTarget);
+// Wait for native fragment navigation, which otherwise resets focus after deferred scripts.
+window.addEventListener('pageshow', revealEnmsTarget);

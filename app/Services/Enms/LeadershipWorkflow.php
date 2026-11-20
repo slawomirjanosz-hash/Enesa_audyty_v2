@@ -429,31 +429,39 @@ final class LeadershipWorkflow
         return hash('sha256', json_encode([$records, $this->sources($w)['hash']], JSON_THROW_ON_ERROR));
     }
 
-    public function readiness(Workspace $w): array
+    public function readiness(Workspace $w, bool $withTargets = false): array
     {
         $missing = [];
+        $missingTargets = [];
+        // Keep validation messages and document snapshots unchanged; navigation is opt-in for the form.
+        $addMissing = function (string $message, array $target) use (&$missing, &$missingTargets): void {
+            $missing[] = $message;
+            $missingTargets[] = $target;
+        };
         $gaps = [];
         $inconsistencies = [];
         $source = $this->sources($w);
         foreach ($this->library->requirements() as $id => $requirement) {
             $declaration = $this->one($w, 'declaration', 'requirement_id', $id)['payload'] ?? [];
             $state = $declaration['stan'] ?? '';
+            $target = ['tab' => 'obowiazki', 'anchor' => 'req-'.$requirement['kod']];
+            $fieldTarget = fn (string $field) => array_replace($target, ['anchor' => $target['anchor'].'-'.$field]);
             if ($state === 'niedotyczy' && blank($declaration['uzasadnienieNiedotyczy'] ?? null)) {
-                $missing[] = ($requirement['iso'] ?? $requirement['kod']).': odpowiedź „nie dotyczy” wymaga uzasadnienia.';
+                $addMissing(($requirement['iso'] ?? $requirement['kod']).': odpowiedź „nie dotyczy” wymaga uzasadnienia.', $fieldTarget('justification'));
             }
             $label = $requirement['iso'] ?? $requirement['kod'];
             if (! $state && $requirement['normative']) {
-                $missing[] = "$label: nie ma odpowiedzi na pytanie.";
+                $addMissing("$label: nie ma odpowiedzi na pytanie.", $fieldTarget('state'));
             }
             if (in_array($state, ['czesciowo', 'niema'])) {
                 $gaps[] = "$label: ".($declaration['plan']['opis'] ?? 'Brak planu');
                 if (blank($declaration['plan']['opis'] ?? null) || blank($declaration['plan']['termin'] ?? null)) {
-                    $missing[] = "$label: uzupełnij plan i termin.";
+                    $addMissing("$label: uzupełnij plan i termin.", $fieldTarget('plan-'.(blank($declaration['plan']['opis'] ?? null) ? 'opis' : 'termin')));
                 }
             }
             if ($state === 'jest') {
                 if (! array_filter($w->records('evidence'), fn ($e) => in_array($id, $e['payload']['requirements'] ?? [], true))) {
-                    $missing[] = "$label: wskaż dowód z rejestru.";
+                    $addMissing("$label: wskaż dowód z rejestru.", $fieldTarget('evidence'));
                 }
                 foreach ($requirement['pola'] as $field) {
                     if (! $field['wymagane']) {
@@ -461,14 +469,14 @@ final class LeadershipWorkflow
                     }
                     $value = $field['typ'] === 'odwolanie' ? ($source['citations'][$field['zrodlo']['obiekt']]['value'] ?? null) : ($declaration['pola'][$field['klucz']] ?? null);
                     if (blank($value) && $value !== 0 && $value !== '0') {
-                        $missing[] = "$label: nie wypełniono — ".$field['etykieta'];
+                        $addMissing("$label: nie wypełniono — ".$field['etykieta'], $fieldTarget('field-'.$field['klucz']));
                     }
                 }
             }
             foreach ($declaration['citations'] ?? [] as $key => $citation) {
                 $field = collect($requirement['pola'])->firstWhere('klucz', $key);
                 if (! SnapshotComparison::same($citation, $source['citations'][$field['zrodlo']['obiekt']] ?? null)) {
-                    $missing[] = "$label: źródło pola „".$field['etykieta'].'” zmieniło się. Sprawdź i zapisz odpowiedź ponownie.';
+                    $addMissing("$label: źródło pola „".$field['etykieta'].'” zmieniło się. Sprawdź i zapisz odpowiedź ponownie.', $fieldTarget('field-'.$field['klucz']));
                 }
             }
         }
@@ -486,7 +494,7 @@ final class LeadershipWorkflow
             }
             foreach ($required as $key) {
                 if (blank($p[$key] ?? null)) {
-                    $missing[] = $evidence['symbol'].': brak pola '.$key.'.';
+                    $addMissing($evidence['symbol'].': brak pola '.$key.'.', ['tab' => 'dowody', 'anchor' => 'edit-evidence-field-'.$key, 'edit' => $evidence['id'], 'readonly_anchor' => 'record-'.$evidence['id']]);
                 }
             }
         }
@@ -509,12 +517,12 @@ final class LeadershipWorkflow
         }
         foreach ($inconsistencies as $key => $message) {
             if (! $this->one($w, 'explanation', 'key', $key)) {
-                $missing[] = $message.' Wymagane wyjaśnienie.';
+                $addMissing($message.' Wymagane wyjaśnienie.', ['tab' => 'spojnosc', 'anchor' => 'explanation-'.$key]);
             }
         }
         foreach ($w->records('question') as $question) {
             if (($question['payload']['state'] ?? '') === 'open' && ! $this->hasCurrentAnswer($w, $question)) {
-                $missing[] = $question['symbol'].': odpowiedz na pytanie audytora.';
+                $addMissing($question['symbol'].': odpowiedz na pytanie audytora.', ['tab' => 'spojnosc', 'anchor' => 'question-'.$question['id']]);
             }
         }
 
@@ -537,7 +545,7 @@ final class LeadershipWorkflow
             $warnings['NS-a-rola'] = 'Zakres przyjęła inna rola niż wskazane najwyższe kierownictwo. Sprawdź upoważnienie.';
         }
 
-        return compact('missing', 'gaps', 'inconsistencies', 'warnings');
+        return compact('missing', 'gaps', 'inconsistencies', 'warnings') + ($withTargets ? compact('missingTargets') : []);
     }
 
     public function status(Workspace $w): array

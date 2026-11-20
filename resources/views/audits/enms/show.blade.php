@@ -4,8 +4,10 @@
 <details class="plant-card"><summary>Excel ankiety</summary><a href="{{ route($prefix.'excel',[$audit,$profile]) }}">Pobierz odpowiedzi do Excel</a>@if($editable)<form method="post" enctype="multipart/form-data" action="{{ route($prefix.'excel-import',[$audit,$profile]) }}">@csrf<label>Aktualny plik XLSX<input type="file" name="file" accept=".xlsx" required></label><button>Importuj odpowiedzi</button></form>@endif<p>Import nie zatwierdza ankiety. Dowody i przypisania edytuj w rejestrze platformy.</p></details>
 @if(session('success'))<div class="plant-notice success" role="status">{{ session('success') }}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź zapis:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
-@php($normative=array_filter($library->requirements(),fn($r)=>$r['normative']))
-@php($answered=count(array_filter($normative,fn($r)=>!empty($service->one($w,'declaration','requirement_id',$r['id'])['payload']['stan']))))
+@php
+$normative=array_filter($library->requirements(),fn($r)=>$r['normative']);
+$answered=count(array_filter($normative,fn($r)=>!empty($service->one($w,'declaration','requirement_id',$r['id'])['payload']['stan'])));
+@endphp
 <div class="plant-summary iso-questionnaire-summary"><strong>Wypełnienie: {{ $answered }} / {{ count($normative) }} obowiązków · {{ round(100*$answered/count($normative)) }}%</strong>@include('audits.enms.status',['leadershipStatus'=>$status])</div>
 @if($status['changed'])<div class="plant-notice">Dane lub źródła zmieniły się od zatwierdzenia. Sprawdź odpowiedzi i zatwierdź je ponownie. Poprzedni zapis pozostaje w historii.</div>@endif
 <nav class="iso-clause-tabs" aria-label="Zakładki ankiety">@foreach($tabs as $key=>$label)<a href="{{ route($prefix.'show',[$audit,$profile,'tab'=>$key]) }}" @if($key===$tab) class="active" aria-current="page" @endif>{{ $label }}</a>@endforeach</nav>
@@ -18,10 +20,22 @@
 <h2>Pozycje metodyczne ENESA</h2>@foreach($library->requirements() as $requirement)@if(!$requirement['normative'])@include('audits.enms.declaration')@endif @endforeach
 @elseif($tab==='spojnosc')
 <section class="plant-card"><h2>Przed przekazaniem</h2><p>Braki formalne i niewyjaśnione niespójności wymagają uzupełnienia. Luki wdrożeniowe opisane planem nie blokują przekazania.</p>
-<h3>Braki formalne ({{ count($readiness['missing']) }})</h3>@forelse($readiness['missing'] as $missing)<p class="plant-notice">{{ $missing }}</p>@empty<p>Brak przeszkód formalnych.</p>@endforelse
+<h3>Braki formalne ({{ count($readiness['missing']) }})</h3>
+@forelse($readiness['missing'] as $index=>$missing)
+@php
+    $target = $readiness['missingTargets'][$index];
+    $params = [$audit, $profile, 'tab' => $target['tab']];
+    $anchor = $target['anchor'];
+    if (isset($target['edit'])) {
+        if ($editable) $params['edit'] = $target['edit'];
+        else $anchor = $target['readonly_anchor'];
+    }
+@endphp
+<div class="plant-notice enms-readiness-issue"><span>{{ $missing }}</span><a class="plant-button" href="{{ route($prefix.'show',$params) }}#{{ $anchor }}" aria-label="Przejdź — {{ $missing }}">Przejdź</a></div>
+@empty<p>Brak przeszkód formalnych.</p>@endforelse
 <h3>Luki wdrożeniowe</h3>@forelse($readiness['gaps'] as $gap)<p>{{ $gap }}</p>@empty<p>Nie zgłoszono luk.</p>@endforelse
 <h3>Uwagi do sprawdzenia</h3>@forelse($readiness['warnings'] as $warning)<p>{{ $warning }}</p>@empty<p>Brak dodatkowych uwag.</p>@endforelse
-@foreach($readiness['inconsistencies'] as $key=>$message)<section class="plant-card"><h3>{{ $message }}</h3><form method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@include('audits.enms.token')<input type="hidden" name="operation" value="explanation"><input type="hidden" name="payload[key]" value="{{ $key }}"><label>Wyjaśnienie<textarea name="payload[text]" @disabled(!$editable)>{{ $service->one($w,'explanation','key',$key)['payload']['text']??'' }}</textarea></label>@if($editable)<button>Zapisz wyjaśnienie</button>@endif</form></section>@endforeach
+@foreach($readiness['inconsistencies'] as $key=>$message)<section class="plant-card" id="explanation-{{ $key }}" data-enms-jump-target><h3>{{ $message }}</h3><form method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@include('audits.enms.token')<input type="hidden" name="operation" value="explanation"><input type="hidden" name="payload[key]" value="{{ $key }}"><label>Wyjaśnienie<textarea name="payload[text]" @disabled(!$editable)>{{ $service->one($w,'explanation','key',$key)['payload']['text']??'' }}</textarea></label>@if($editable)<button>Zapisz wyjaśnienie</button>@endif</form></section>@endforeach
 @include('audits.enms.questions')
 @if($client && $w->actor->hasRole('client_admin') && !$status['submitted'])<form method="post" action="{{ route($prefix.'update',[$audit,$profile]) }}">@include('audits.enms.token')<button class="primary" name="operation" value="submission">Zatwierdź i przekaż ankietę konsultantowi</button></form>@endif
 </section>

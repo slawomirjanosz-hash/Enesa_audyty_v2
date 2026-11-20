@@ -35,7 +35,7 @@ final class EnmsLeadershipController extends Controller
         $library = $service->library;
         $sources = $service->sources($w);
         $status = $service->status($w);
-        $readiness = $service->readiness($w);
+        $readiness = $service->readiness($w, withTargets: true);
         $records = $w->records();
         // No consultant drafts in the client's HTML, including hidden elements.
         if ($client) {
