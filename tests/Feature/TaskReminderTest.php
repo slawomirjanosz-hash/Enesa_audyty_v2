@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
+pest()->extend(\Tests\TestCase::class)->use(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
 beforeEach(function () {
     config(['mail.default' => 'smtp', 'mail.from.address' => 'reminders@test.invalid']);
     Mail::fake();
@@ -204,4 +206,12 @@ test('task cards show the recorded creator including an archived creator', funct
     $creator->delete();
     $this->actingAs($owner)->get(route('board.mine'))->assertOk()->assertSee('Wyznaczył(a):')->assertSee('Autor zadania testowego');
     expect($board->fresh()->createdBy->id)->toBe($creator->id);
+});
+
+test('project stage reminder names project progress and links directly to gantt', function () {
+    $project = Project::create(['name' => 'Instalacja ELPO', 'number' => 'PR/20', 'status' => 'active']);
+    $task = Task::create(['title' => 'Montaż rur', 'project_id' => $project->id, 'progress' => 65, 'due_date' => '2026-10-13', 'status' => 'in_progress']);
+    $html = html_entity_decode((new TaskOverdue(collect([$task->load('project')])))->render());
+    expect($html)->toContain('Minął termin etapu prac', 'Instalacja ELPO', 'PR/20', '65%', route('projects.show', ['project' => $project->id, 'tab' => 'gantt']))
+        ->not->toContain('tab=schedule', 'wciąż nie są oznaczone jako zakończone');
 });

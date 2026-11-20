@@ -16,7 +16,7 @@ class TaskOverdue extends Mailable
 
     public function build()
     {
-        return $this->subject('Masz '.$this->tasks->count().' zaległych zadań — '.(CompanySettings::first()?->name ?? config('app.name')))
+        return $this->subject('Minął termin: zadania i etapy prac ('.$this->tasks->count().') — '.(CompanySettings::first()?->name ?? config('app.name')))
             ->view('emails.task-overdue')
             ->with(['tasks' => $this->tasks]);
     }
