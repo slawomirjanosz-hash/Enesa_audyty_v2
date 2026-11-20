@@ -18,6 +18,10 @@ $assessmentStates=['wykazane'=>'Wykazane','zadeklarowane'=>'Zadeklarowane','niew
 <h2>5. Wymagane decyzje i działania</h2>@include('audits.enms.pdf-register',['kind'=>'decision'])@include('audits.enms.pdf-register',['kind'=>'task'])
 @elseif(in_array($type,['zalacznik','ankieta']))
 <h2>1. {{ $type==='zalacznik'?'Do którego raportu należy ten załącznik':'Odpowiedzi organizacji' }}</h2><p>{{ $type==='zalacznik'?'Załącznik do R-EnMS-PRZ-01. Należy czytać razem z raportem o tym samym odcisku danych.':'Wydruk ankiety przedstawia deklaracje organizacji. Nie zastępuje raportu diagnostycznego ani Karty przywództwa.' }}</p>
+@if($type==='ankieta' && isset($snapshot['self_assessment']))
+<h3>Samoocena kierownictwa — cztery pytania kontrolne</h3><p>Deklaracja kierownictwa, nie wynik oceny konsultanta.</p>
+@foreach($snapshot['self_assessment'] as $answer)<div class="item"><h3>{{ $answer['id'] }} · {{ $answer['question'] }}</h3><p><strong>Odpowiedź kierownictwa:</strong> {{ $answer['answer'] }}</p>@if($answer['comment']!=='')<p style="white-space:pre-wrap"><strong>Komentarz:</strong> {{ $answer['comment'] }}</p>@endif</div>@endforeach
+@endif
 <h2>2. Pozycje metodyczne ENESA — warunki oceny</h2>@foreach($snapshot['requirements'] as $requirement)@if(!$requirement['normative'])@include('audits.enms.pdf-declaration')@endif @endforeach
 <h2>3. Obowiązki a)–m) — co ustalono</h2>@foreach($snapshot['requirements'] as $requirement)@if($requirement['normative'])@include('audits.enms.pdf-declaration')@endif @endforeach
 <h2>4. Rejestr dowodów</h2>@include('audits.enms.pdf-register',['kind'=>'evidence'])

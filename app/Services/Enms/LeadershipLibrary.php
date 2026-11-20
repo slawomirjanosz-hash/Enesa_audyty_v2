@@ -7,6 +7,9 @@ use Ramsey\Uuid\Uuid;
 /** Adapter for the source library. The shared ledger knows no clause codes. */
 final class LeadershipLibrary
 {
+    // SAMO.P1–P4 in the reference; keep "nie" distinct from DEKL's "niema".
+    public const SELF_ASSESSMENT_STATES = ['jest' => 'Jest i można pokazać', 'czesciowo' => 'Częściowo', 'nie' => 'Jeszcze tego nie ma'];
+
     private ?array $data = null;
 
     public function data(): array

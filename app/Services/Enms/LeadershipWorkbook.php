@@ -15,10 +15,17 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 /** Uses the existing Excel conventions; import never approves or changes old mappings. */
 final class LeadershipWorkbook extends IsoQuestionnaireWorkbook
 {
-    private function fields(Workspace $w): array
+    private function fields(Workspace $w, bool $includeSelfAssessment = true): array
     {
         $fields = [];
         $service = app(LeadershipWorkflow::class);
+        if ($includeSelfAssessment) {
+            foreach ($service->library->data()['PYTANIA_4'] as $question) {
+                foreach (['stan' => ['label' => 'Odpowiedź kierownictwa', 'options' => LeadershipLibrary::SELF_ASSESSMENT_STATES], 'komentarz' => ['label' => 'Komentarz — opcjonalnie']] as $path => $field) {
+                    $fields['SAMO.'.$question['id'].'.'.$path] = $field + ['kind' => 'self_assessment', 'id' => $question['id'], 'path' => $path, 'code' => $question['id'], 'question' => $question['nazwa']];
+                }
+            }
+        }
         foreach ($service->library->positions() as $id => $r) {
             $states = ['jest' => 'Jest i można pokazać', 'czesciowo' => 'Częściowo', 'niema' => 'Jeszcze tego nie ma'];
             if (! $r['normative'] && ($r['dopuszczaNiedotyczy'] ?? true)) {
@@ -38,9 +45,9 @@ final class LeadershipWorkbook extends IsoQuestionnaireWorkbook
         return $fields;
     }
 
-    private function stamp(Workspace $w): array
+    private function stamp(Workspace $w, bool $includeSelfAssessment = true): array
     {
-        return ['format' => 'enms-1', 'audit' => $w->audit->id, 'company' => $w->audit->company_id, 'profile' => $w->profile->id, 'revision' => $w->revision(), 'source' => app(LeadershipWorkflow::class)->sources($w)['hash'], 'layout' => hash('sha256', json_encode($this->fields($w), JSON_THROW_ON_ERROR)), 'deployment' => config('app.url')];
+        return ['format' => $includeSelfAssessment ? 'enms-2' : 'enms-1', 'audit' => $w->audit->id, 'company' => $w->audit->company_id, 'profile' => $w->profile->id, 'revision' => $w->revision(), 'source' => app(LeadershipWorkflow::class)->sources($w)['hash'], 'layout' => hash('sha256', json_encode($this->fields($w, $includeSelfAssessment), JSON_THROW_ON_ERROR)), 'deployment' => config('app.url')];
     }
 
     public function build(Workspace $w): Spreadsheet
@@ -58,7 +65,8 @@ final class LeadershipWorkbook extends IsoQuestionnaireWorkbook
         $answers = $this->sheet('Odpowiedzi', ['Mapowanie', 'Kod', 'Pytanie', 'Pole', 'Odpowiedź']);
         $i = 2;
         foreach ($this->fields($w) as $key => $field) {
-            $p = $service->one($w, 'declaration', 'requirement_id', $field['id'])['payload'] ?? [];
+            $selfAssessment = ($field['kind'] ?? '') === 'self_assessment';
+            $p = $service->one($w, $selfAssessment ? 'self_assessment' : 'declaration', $selfAssessment ? 'question_id' : 'requirement_id', $field['id'])['payload'] ?? [];
             $value = data_get($p, $field['path']);
             $this->row($answers, $i, [$key, $field['code'], $field['question'], $field['label'], isset($field['options']) ? ($field['options'][$value ?? ''] ?? '') : $value]);
             $this->editable($answers, 'E'.$i, array_values($field['options'] ?? []));
@@ -113,22 +121,30 @@ final class LeadershipWorkbook extends IsoQuestionnaireWorkbook
                     }
                 }
             }
-            $fields = $this->fields($w);
+            if (! in_array($stamp['format'] ?? '', ['enms-1', 'enms-2'], true)) {
+                $this->fail('Nieobsługiwana wersja pliku. Pobierz aktualny Excel.');
+            }
+            // Old signed workbooks retain every original mapping and leave SAMO untouched.
+            $includeSelfAssessment = $stamp['format'] === 'enms-2';
+            $fields = $this->fields($w, $includeSelfAssessment);
             $indices = $this->indexed($book, 'Odpowiedzi');
             $this->exact(array_keys($indices), array_keys($fields), 'Odpowiedzi');
             $data = [];
             foreach ($fields as $key => $f) {
-                Arr::set($data[$f['id']], $f['path'], $this->value($book->getSheetByName('Odpowiedzi'), 'E'.$indices[$key], $f));
+                Arr::set($data[$f['kind'] ?? 'declaration'][$f['id']], $f['path'], $this->value($book->getSheetByName('Odpowiedzi'), 'E'.$indices[$key], $f));
             }
-            DB::transaction(function () use ($w, $stamp, $data) {
+            DB::transaction(function () use ($w, $stamp, $data, $includeSelfAssessment) {
                 Audit::whereKey($w->audit->id)->lockForUpdate()->firstOrFail();
-                if ($stamp !== $this->stamp($w)) {
+                if ($stamp !== $this->stamp($w, $includeSelfAssessment)) {
                     $this->fail('Plik pochodzi z innej ankiety albo dane zmieniły się po eksporcie. Pobierz aktualny Excel.');
                 }
                 $service = app(LeadershipWorkflow::class);
-                foreach ($data as $id => $p) {
+                foreach ($data['declaration'] ?? [] as $id => $p) {
                     // Evidence links are informative in this workbook and must not be implicitly adopted or removed.
                     $service->saveDeclaration($w, $w->revision(), $stamp['source'], $id, $p, syncEvidence: false);
+                }
+                foreach ($data['self_assessment'] ?? [] as $id => $p) {
+                    $service->saveSelfAssessment($w, $w->revision(), $stamp['source'], $id, $p);
                 }
             });
         } finally {

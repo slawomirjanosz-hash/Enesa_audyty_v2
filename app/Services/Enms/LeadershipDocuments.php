@@ -14,7 +14,7 @@ final class LeadershipDocuments
 {
     public const TYPES = ['raport' => ['R-EnMS-PRZ-01', 'Raport diagnostyczny'], 'zalacznik' => ['R-EnMS-PRZ-01-Z', 'Załącznik szczegółowy do raportu diagnostycznego'], 'karta' => ['D-EnMS-PRZ-01', 'Karta przywództwa i zaangażowania kierownictwa'], 'ankieta' => ['A-EnMS-PRZ-01', 'Wydruk ankiety']];
 
-    public const GENERATOR = 'enms-native-1';
+    public const GENERATOR = 'enms-native-2';
 
     public function __construct(private readonly LeadershipWorkflow $workflow) {}
 
@@ -40,6 +40,14 @@ final class LeadershipDocuments
                 'author' => $w->actor->name, 'date' => now()->toIso8601String(), 'data_hash' => $this->workflow->assessmentHash($w),
                 'limitations' => $this->limitations($w),
             ];
+            if ($data['type'] === 'ankieta') {
+                // Freeze labels as well as values; older drafts keep their existing layout.
+                $snapshot['self_assessment'] = array_map(function ($question) use ($w) {
+                    $answer = $this->workflow->one($w, 'self_assessment', 'question_id', $question['id'])['payload'] ?? [];
+
+                    return ['id' => $question['id'], 'question' => $question['nazwa'], 'answer' => LeadershipLibrary::SELF_ASSESSMENT_STATES[$answer['stan'] ?? ''] ?? 'Brak — do uzupełnienia', 'comment' => $answer['komentarz'] ?? ''];
+                }, $this->workflow->library->data()['PYTANIA_4']);
+            }
             $data += ['snapshot' => $snapshot, 'generator' => self::GENERATOR, 'data_hash' => $snapshot['data_hash']];
 
             return $w->append($revision, 'document_draft', null, 'PROJ-'.(count($w->records('document_draft')) + 1), $data, config('enms.library'), $source['scope_version']);

@@ -10,8 +10,8 @@
 @if($status['changed'])<div class="plant-notice">Dane lub źródła zmieniły się od zatwierdzenia. Sprawdź odpowiedzi i zatwierdź je ponownie. Poprzedni zapis pozostaje w historii.</div>@endif
 <nav class="iso-clause-tabs" aria-label="Zakładki ankiety">@foreach($tabs as $key=>$label)<a href="{{ route($prefix.'show',[$audit,$profile,'tab'=>$key]) }}" @if($key===$tab) class="active" aria-current="page" @endif>{{ $label }}</a>@endforeach</nav>
 @if($tab==='pytania')
-<section class="plant-card"><h2>Cztery pytania kontrolne</h2><p>Przywództwo pokazujemy przez decyzje, działania i dowody. Cztery pytania porządkują trzynaście obowiązków kierownictwa.</p></section>
-@foreach($library->data()['PYTANIA_4'] as $q)<section class="plant-card"><h2>{{ $q['nazwa'] }}</h2><p>{{ $q['opis'] }}</p><details><summary>Przykłady dowodów</summary><p>{{ $q['dowod'] }}</p></details><p><a href="{{ route($prefix.'show',[$audit,$profile,'tab'=>'obowiazki']) }}#group-{{ $q['id'] }}">Przejdź do obowiązków</a></p></section>@endforeach
+<section class="plant-card"><h2>Cztery pytania kontrolne</h2><p>Zakładka dla kierownictwa. Trzynaście zobowiązań normy układa się w cztery pytania; odpowiedź na nie jest deklaracją kierownictwa, a nie oceną — ocenę dołącza konsultant po przejrzeniu dowodów.</p></section>
+@foreach($library->data()['PYTANIA_4'] as $q)@include('audits.enms.self-assessment')@endforeach
 @elseif($tab==='obowiazki')
 <section class="plant-card"><h2>Obowiązki kierownictwa — trzynaście pytań</h2><p>Trzynaście obowiązków, które norma stawia najwyższemu kierownictwu. Przy każdym jedno pytanie, a szczegóły tylko wtedy, gdy są potrzebne. Odpowiedź „jeszcze tego nie ma” jest prawidłowa — wtedy zamiast szczegółów wpisujecie plan.</p></section>
 @foreach($library->data()['PYTANIA_4'] as $q)<h2 id="group-{{ $q['id'] }}">{{ $q['nazwa'] }}</h2>@foreach($normative as $requirement)@if($requirement['group']===$q['id'])@include('audits.enms.declaration')@endif @endforeach @endforeach

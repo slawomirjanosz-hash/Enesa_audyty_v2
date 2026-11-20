@@ -36,7 +36,7 @@ final class EnmsLeadershipController extends Controller
         $records = $w->records();
         // No consultant drafts in the client's HTML, including hidden elements.
         if ($client) {
-            $records = array_filter($records, fn ($r) => in_array($r['kind'], ['declaration', 'evidence', 'task', 'deadline', 'question', 'answer', 'explanation', 'submission', 'authority', 'effectiveness', 'document', 'rule']));
+            $records = array_filter($records, fn ($r) => in_array($r['kind'], ['declaration', 'self_assessment', 'evidence', 'task', 'deadline', 'question', 'answer', 'explanation', 'submission', 'authority', 'effectiveness', 'document', 'rule']));
         }
         $options = $service->options($w);
         if ($client) {
@@ -73,11 +73,13 @@ final class EnmsLeadershipController extends Controller
     {
         $w = $this->workspace($request, $audit, $profile);
         abort_unless($w->writable, 403);
-        $data = $request->validate(['revision' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['declaration', 'record', 'submission', 'completion', 'explanation', 'answer', 'close_question', 'withdraw_question', 'withdraw', 'return', 'authorized'])], 'record_id' => 'nullable|uuid', 'requirement_id' => 'nullable|uuid', 'kind' => 'nullable|string', 'payload' => 'nullable|array', 'action' => 'nullable|string', 'grant_id' => 'nullable|uuid']);
+        $data = $request->validate(['revision' => 'required|integer|min:0', 'source_hash' => 'required|string|size:64', 'operation' => ['required', Rule::in(['declaration', 'self_assessment', 'record', 'submission', 'completion', 'explanation', 'answer', 'close_question', 'withdraw_question', 'withdraw', 'return', 'authorized'])], 'record_id' => 'nullable|uuid', 'requirement_id' => 'nullable|uuid', 'question_id' => 'nullable|string|max:10', 'kind' => 'nullable|string', 'payload' => 'nullable|array', 'action' => 'nullable|string', 'grant_id' => 'nullable|uuid']);
         $operation = $data['operation'];
         $message = 'Zapisano. Historia i powiązania zostały zachowane.';
         if ($operation === 'declaration') {
             $this->workflow->saveDeclaration($w, $data['revision'], $data['source_hash'], $data['requirement_id'] ?? '', $data['payload'] ?? []);
+        } elseif ($operation === 'self_assessment') {
+            $this->workflow->saveSelfAssessment($w, $data['revision'], $data['source_hash'], $data['question_id'] ?? '', $data['payload'] ?? []);
         } elseif ($operation === 'record') {
             $this->workflow->save($w, $data['revision'], $data['source_hash'], $data['kind'] ?? '', $data['record_id'] ?? null, $data['payload'] ?? []);
         } elseif ($operation === 'authorized') {

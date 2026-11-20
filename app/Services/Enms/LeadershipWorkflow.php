@@ -396,13 +396,35 @@ final class LeadershipWorkflow
         });
     }
 
+    public function saveSelfAssessment(Workspace $w, int $revision, string $hash, string $questionId, array $input): void
+    {
+        $data = Validator::make(['question_id' => $questionId] + $input, [
+            'question_id' => ['required', Rule::in(array_column($this->library->data()['PYTANIA_4'], 'id'))],
+            'stan' => ['nullable', Rule::in(array_keys(LeadershipLibrary::SELF_ASSESSMENT_STATES))],
+            'komentarz' => 'nullable|string|max:12000',
+        ])->validate();
+        $payload = ['question_id' => $questionId, 'stan' => $data['stan'] ?? '', 'komentarz' => $data['komentarz'] ?? ''];
+
+        DB::transaction(function () use ($w, $revision, $hash, $questionId, $payload) {
+            Audit::whereKey($w->audit->id)->lockForUpdate()->firstOrFail();
+            $this->assertEditing($w);
+            $source = $this->sources($w);
+            abort_unless($w->revision() === $revision && $source['hash'] === $hash, 409, 'Dane lub źródła zmieniły się.');
+            $existing = $this->one($w, 'self_assessment', 'question_id', $questionId);
+            if ($existing && SnapshotComparison::same($existing['payload'], $payload)) {
+                return;
+            }
+            $w->append($revision, 'self_assessment', $existing['id'] ?? null, $existing['symbol'] ?? 'SAMO-'.$questionId, $payload, config('enms.library'), $source['scope_version']);
+        });
+    }
+
     public function clientHash(Workspace $w): string
     {
         $selectedEvidence = [];
         foreach ($w->records('declaration') as $r) {
             $selectedEvidence = [...$selectedEvidence, ...($r['payload']['evidence_ids'] ?? [])];
         }
-        $records = array_values(array_filter($w->records(), fn ($r) => in_array($r['kind'], ['declaration', 'explanation', 'answer']) || ($r['kind'] === 'evidence' && (($r['payload']['created_by_client'] ?? false) || in_array($r['id'], $selectedEvidence, true)))));
+        $records = array_values(array_filter($w->records(), fn ($r) => in_array($r['kind'], ['declaration', 'self_assessment', 'explanation', 'answer']) || ($r['kind'] === 'evidence' && (($r['payload']['created_by_client'] ?? false) || in_array($r['id'], $selectedEvidence, true)))));
 
         return hash('sha256', json_encode([$records, $this->sources($w)['hash']], JSON_THROW_ON_ERROR));
     }
