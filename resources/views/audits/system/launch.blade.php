@@ -6,10 +6,9 @@
     @if($item['id']==='5-1' && \App\Services\Enms\Rollout::enabled($audit->id))
         @include('audits.enms.launch')
     @else
-        <strong>{{$card['name']}}</strong> · {{$card['status']}}
+        @include('audits.partials.questionnaire-launch-heading', ['launchName'=>$card['name'], 'launchStatus'=>$card['status'], 'launchLabel'=>'Otwórz ankietę '.str_replace('-','.',$item['id']), 'launchUrl'=>route(($clientView??false)?'client.audits.system.show':'audits.system.show',[$audit,$card['profile_id'],$item['id']])])
         @include('partials.questionnaire-progress',['progress'=>$card['progress']])
         @include('audits.partials.questionnaire-status',['statusRecord'=>$card['review'],'statusStale'=>$card['stale']])
-        <a href="{{route(($clientView??false)?'client.audits.system.show':'audits.system.show',[$audit,$card['profile_id'],$item['id']])}}" class="iso-action-btn primary" style="display:inline-block;text-decoration:none">Otwórz ankietę {{str_replace('-','.',$item['id'])}}</a>
     @endif
 </div>
 @empty

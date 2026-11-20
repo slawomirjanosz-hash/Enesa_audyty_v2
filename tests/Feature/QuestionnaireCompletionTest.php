@@ -30,7 +30,7 @@ test('audit and profile screens display saved completion and only latest site re
     $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('2/64 pytań · 3%')->assertSee('data-completion-mode="plant"', false);
-    $this->get(route('client.audits.plant-profile.index', $audit))->assertOk()->assertSee('Wypełnienie')->assertSee('data-sort-value="3"', false);
+    $this->get(route('client.audits.plant-profile.index', $audit))->assertOk()->assertSee('2/64 pytań · 3%')->assertSee('data-sort-value="Piła"', false);
     $next = $profile->replicate();
     $next->revision = 2;
     $next->answers = $profile->answers + ['operations.headcount' => ['value' => 0]];
