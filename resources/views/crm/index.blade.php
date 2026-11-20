@@ -1494,7 +1494,7 @@ function fetchCompanyEditFromGus() {
 
 @include('partials.lead-notes-autogrow')
 @push('scripts')
-<script type="module" src="{{ asset('js/crm-company-picker.js') }}"></script>
+<script type="module" src="{{ asset('js/crm-company-picker.js') }}?v=2"></script>
 <script src="{{ asset('js/crm-opportunity-history.js') }}?v=1"></script>
 <script>
 function toggleDashboard(companyId, btn) {
