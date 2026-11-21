@@ -13,3 +13,5 @@
 .plant-profile-list{container-type:inline-size;overflow-x:auto}
 
 .plant-profile-table .profile-status-cell{grid-column:1/-1;grid-row:2}.plant-profile-table .profile-responsible-cell{grid-column:4;grid-row:1}.plant-profile-table .profile-actions-cell{grid-column:5;grid-row:1}
+
+.iso-help{display:inline-flex;align-items:center}.iso-help .iso-point-help{padding:0;cursor:help}.iso-help .iso-point-tooltip{font-weight:400;line-height:1.5;z-index:1000}.iso-help:hover .iso-point-tooltip,.iso-help:focus-within .iso-point-tooltip{display:block}.iso-help .iso-point-tooltip p{margin:0;font:inherit;color:inherit}.iso-help .iso-point-tooltip ul{margin:8px 0 0;padding-left:18px}.iso-help .iso-point-tooltip li{margin:4px 0}.iso-help .iso-point-tooltip strong{display:block;margin-top:8px}.iso-upload-help{position:relative}.iso-upload-help .iso-point-tooltip{top:auto;bottom:calc(100% + 7px);width:min(400px,calc(100vw - 80px));max-width:none}.iso-docs .iso-doc-box{overflow:visible}.iso-docs-head>.iso-point-title{flex:1}

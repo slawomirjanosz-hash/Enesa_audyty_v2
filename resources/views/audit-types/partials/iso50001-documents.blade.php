@@ -7,6 +7,7 @@
 @php
     $guidance = config('iso50001-guidance.'.$sectionId, []);
     $suggestedDocuments = $guidance['evidence'] ?? [];
+    $documentSectionNumber = collect(config('iso50001.chapters'))->flatMap(fn($chapter) => [$chapter, ...($chapter['items'] ?? [])])->firstWhere('id', $sectionId)['number'] ?? str_replace('-', '.', $sectionId);
     $sectionTemplates = collect($templateDocuments->get($sectionId, []));
     $sectionClientDocuments = isset($clientDocuments) ? collect($clientDocuments->get($sectionId, [])) : collect();
     $isAuditContext = isset($audit);
@@ -46,12 +47,12 @@
             </div>
         </div>
     @endif
-    <div class="iso-docs-head"><div><h3><i class="ti ti-folders"></i> Dokumentacja punktu</h3><p>Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p></div></div>
-    @if($suggestedDocuments)
-        <div class="iso-doc-suggestions"><strong>Przewidywane dokumenty i dowody:</strong><ul>@foreach($suggestedDocuments as $suggestion)<li>{{ $suggestion }}</li>@endforeach</ul></div>
-    @endif
+    <div class="iso-docs-head"><div class="iso-point-title"><h3><i class="ti ti-folders" aria-hidden="true"></i> Dokumentacja punktu {{ $documentSectionNumber }}</h3><x-iso-help :label="'Informacje o dokumentacji punktu '.$documentSectionNumber">
+        <p>Dokumenty pozostają przypisane do tego punktu, roku i wersji.</p>
+        @if($suggestedDocuments)<strong>Przewidywane dokumenty i dowody:</strong><ul>@foreach($suggestedDocuments as $suggestion)<li>{{ $suggestion }}</li>@endforeach</ul>@endif
+    </x-iso-help></div></div>
     <div class="iso-doc-columns">
-        <details class="iso-doc-box iso-doc-box-template" open><summary>Dokumentacja wzorcowa <span class="iso-doc-count">{{ $sectionTemplates->count() }}</span></summary><div class="iso-doc-body">
+        <section class="iso-doc-box iso-doc-box-template" aria-label="Dokumenty wzorcowe"><div class="iso-doc-body">
             @forelse($sectionTemplates as $document)
                 <div class="iso-doc-row"><div class="iso-doc-title">{{ $document->title }}</div><div class="iso-doc-meta">Rok {{ $document->document_year ?? '—' }} · wersja {{ $document->version_number }} · {{ $document->formattedSize() }} · {{ $document->uploader?->name ?? 'System' }}</div>@if($document->description)<div class="iso-doc-description">{{ $document->description }}</div>@endif
                     <div class="iso-doc-actions">
@@ -61,20 +62,20 @@
                 </div>
             @empty<div class="iso-doc-empty">Nie dodano jeszcze dokumentów wzorcowych.</div>@endforelse
             @if(!$isAuditContext && $canUpload)
-                <form class="iso-doc-form" method="POST" enctype="multipart/form-data" action="{{ route('audit-types.iso-documents.store', $auditType) }}">@csrf<input type="hidden" name="section_id" value="{{ $sectionId }}">@include('audit-types.partials.iso50001-document-form-fields')<button class="iso-doc-submit"><i class="ti ti-upload"></i> Dodaj dokumenty wzorcowe</button></form>
+                <form class="iso-doc-form" method="POST" enctype="multipart/form-data" action="{{ route('audit-types.iso-documents.store', $auditType) }}">@csrf<input type="hidden" name="section_id" value="{{ $sectionId }}">@include('audit-types.partials.iso50001-document-form-fields')<x-iso-help label="Dodaj dokumenty wzorcowe" :submit="true">Do 20 plików jednocześnie, maksymalnie 30 MB każdy. Dodanie kolejnej wersji nie usuwa poprzedniej.</x-iso-help></form>
             @endif
-        </div></details>
+        </div></section>
         @if($isAuditContext)
-        <details class="iso-doc-box iso-doc-box-client" open><summary>Dokumentacja klienta <span class="iso-doc-count">{{ $sectionClientDocuments->count() }}</span></summary><div class="iso-doc-body">
+        <section class="iso-doc-box iso-doc-box-client" aria-label="Dokumenty klienta"><div class="iso-doc-body">
             @if($sectionClientDocuments->isNotEmpty())
             <div class="iso-client-doc-table-wrap"><table class="iso-client-doc-table"><thead><tr><th>Nazwa dokumentu</th><th>Opis</th><th>Rok</th><th>Wersja</th><th>Rozmiar</th><th>Osoba</th><th>Data utworzenia</th><th data-sortable="false">Akcje</th></tr></thead><tbody>
                 @foreach($sectionClientDocuments as $document)@include('audit-types.partials.iso-client-document-row')@endforeach
             </tbody></table></div>
             @else<div class="iso-doc-empty">Nie dodano jeszcze dokumentacji klienta.</div>@endif
             @if($canUpload)
-                <form class="iso-doc-form" method="POST" enctype="multipart/form-data" action="{{ route('audits.iso-documents.store', $audit) }}">@csrf<input type="hidden" name="section_id" value="{{ $sectionId }}">@include('audit-types.partials.iso50001-document-form-fields')<button class="iso-doc-submit"><i class="ti ti-upload"></i> Dodaj dokumentację klienta</button></form>
+                <form class="iso-doc-form" method="POST" enctype="multipart/form-data" action="{{ route('audits.iso-documents.store', $audit) }}">@csrf<input type="hidden" name="section_id" value="{{ $sectionId }}">@include('audit-types.partials.iso50001-document-form-fields')<x-iso-help label="Dodaj dokumentację klienta" :submit="true">Do 20 plików jednocześnie, maksymalnie 30 MB każdy. Dodanie kolejnej wersji nie usuwa poprzedniej.</x-iso-help></form>
             @endif
-        </div></details>
+        </div></section>
         @endif
     </div>
 </div>

@@ -5,4 +5,3 @@
 </div>
 <textarea name="description" rows="2" maxlength="2000" placeholder="Krótki opis dokumentu lub zmian w tej wersji (opcjonalnie)"></textarea>
 <input class="iso-doc-file" type="file" name="files[]" multiple required accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.csv,.txt,.jpg,.jpeg,.png,.zip">
-<div class="iso-doc-meta">Do 20 plików jednocześnie, maksymalnie 30 MB każdy. Dodanie kolejnej wersji nie usuwa poprzedniej.</div>

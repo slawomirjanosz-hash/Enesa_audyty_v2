@@ -20,7 +20,7 @@
 @elseif(($trainingPresentations ?? collect())->get($item['id'], collect())->isNotEmpty())
     @include('audit-types.partials.iso50001-presentations',['sectionId'=>$item['id'], 'canManageTraining'=>false])
 @endif
-<p>{{$item['description']}}</p>@include('audit-types.partials.iso50001-guidance',['item'=>$item])<p class="iso-source-note">Opracowano na podstawie materiałów „Energia pod kontrolą”, tom 1 i 2.</p>@include('audit-types.partials.iso50001-documents',['sectionId'=>$item['id']])</section>
+<p>{{$item['description']}}</p>@include('audit-types.partials.iso50001-guidance',['item'=>$item])@include('audit-types.partials.iso50001-documents',['sectionId'=>$item['id']])</section>
 @endforeach
 @endforeach
 </div></div>

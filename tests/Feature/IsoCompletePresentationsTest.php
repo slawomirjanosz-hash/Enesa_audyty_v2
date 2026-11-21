@@ -68,7 +68,27 @@ test('all chapter and clause cards appear in the correct panel for each full pag
         $slideUrl = $view === 'catalogue' ? route('audit-types.presentations.slide', [$type, $deck, 1])
             : route($view === 'client' ? 'client.audits.presentations.slide' : 'audits.presentations.slide', [$audit, $deck, 1]);
         expect($xpath->query('.//img', $cards->item(0))->item(0)->getAttribute('src'))->toBe($slideUrl);
+        $description = $xpath->query('.//div[@class="iso-presentation-info"]/p', $cards->item(0))->item(0)->textContent;
+        expect($description)->not->toContain('na podstawie książki', 'Na podstawie książki')->not->toBeEmpty();
+        $presentationHelp = $xpath->query('//section[@data-iso-panel="'.$deck->section_id.'"]//header[contains(@class,"iso-point-title")]//*[@role="tooltip"]');
+        expect($presentationHelp->length)->toBe(1)
+            ->and($presentationHelp->item(0)->textContent)->toContain('Slajdy do sekcji', 'Oglądaj w małym lub dużym oknie.');
     }
+    foreach (collect(config('iso50001.chapters'))->flatMap(fn ($chapter) => [$chapter, ...($chapter['items'] ?? [])]) as $section) {
+        $documents = $xpath->query('//div[@id="iso-documents-'.$section['id'].'"]')->item(0);
+        expect(trim($xpath->query('./div[@class="iso-docs-head"]//h3', $documents)->item(0)->textContent))->toBe('Dokumentacja punktu '.$section['number']);
+        $help = $xpath->query('./div[@class="iso-docs-head"]//*[@role="tooltip"]', $documents)->item(0);
+        expect($help)->not->toBeNull();
+        foreach (config('iso50001-guidance.'.$section['id'].'.evidence', []) as $evidence) {
+            expect($help->textContent)->toContain($evidence);
+        }
+        expect($xpath->query('.//summary[contains(.,"Dokumentacja")]', $documents)->length)->toBe(0);
+        foreach ($xpath->query('.//button[@class="iso-doc-submit"]', $documents) as $upload) {
+            $tooltip = $xpath->query('//*[@id="'.$upload->getAttribute('aria-describedby').'"]')->item(0);
+            expect($tooltip->textContent)->toContain('Do 20 plików jednocześnie', '30 MB');
+        }
+    }
+    expect($xpath->query('//*[@class="iso-source-note"]')->length)->toBe(0);
     expect($xpath->query('//dialog[@data-slide-dialog]')->length)->toBe(1);
     $response->assertSee('Slajdy do sekcji 6 Planowanie')->assertDontSee('Slajdy do sekcji planning');
     if ($view !== 'catalogue') {

@@ -3,7 +3,7 @@
     $presentationManage = ($canManageTraining ?? false) && isset($auditType);
 @endphp
 <section class="iso-presentations" aria-label="Prezentacje szkoleniowe">
-    <header><div><h3><i class="ti ti-presentation"></i> Prezentacje szkoleniowe</h3><p>Slajdy do sekcji {{$sectionLabel ?? str_replace('-', '.', $sectionId)}}. Oglądaj w małym lub dużym oknie.</p></div></header>
+    <header class="iso-point-title"><h3><i class="ti ti-presentation" aria-hidden="true"></i> Prezentacje szkoleniowe</h3><x-iso-help label="Informacje o prezentacjach szkoleniowych">Slajdy do sekcji {{$sectionLabel ?? str_replace('-', '.', $sectionId)}}. Oglądaj w małym lub dużym oknie.</x-iso-help></header>
     @if($presentationManage)
         <details class="iso-presentation-edit"><summary>+ Dodaj prezentację PowerPoint</summary>
             <form method="POST" enctype="multipart/form-data" action="{{route('audit-types.presentations.store', $auditType)}}" data-presentation-upload>
@@ -24,7 +24,7 @@
         @endphp
         <article class="iso-presentation-card" data-slide-base="{{rtrim($presentationSlideUrl, '1')}}" data-slide-count="{{$presentation->slide_count}}" data-presentation-title="{{$presentation->title}}">
             <button type="button" class="iso-presentation-thumb" data-presentation-open aria-label="Otwórz prezentację: {{$presentation->title}}"><img src="{{$presentationSlideUrl}}" loading="lazy" alt="Pierwszy slajd: {{$presentation->title}}" draggable="false"><span><i class="ti ti-player-play-filled"></i></span></button>
-            <div class="iso-presentation-info"><h4>{{$presentation->title}}</h4><p>{{$presentation->description}}</p><small>{{$presentation->slide_count}} slajdów</small>
+            <div class="iso-presentation-info"><h4>{{$presentation->title}}</h4><p>{{$presentation->displayDescription()}}</p><small>{{$presentation->slide_count}} slajdów</small>
                 <div class="iso-presentation-actions"><button type="button" class="iso-presentation-button" data-presentation-open>Otwórz prezentację</button><button type="button" class="iso-presentation-button secondary" data-presentation-open data-large>Duże okno</button></div>
             </div>
             @if($presentationManage)
