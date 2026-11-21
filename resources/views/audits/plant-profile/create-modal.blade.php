@@ -1,5 +1,5 @@
 @include('audits.partials.create-dialog-styles')
-<button type="button" class="audit-create-button" data-plant-create-open onclick="document.getElementById('plant-create-dialog').showModal()">Dodaj profil zakładu</button>
+<button type="button" class="iso-action-btn primary" data-plant-create-open onclick="document.getElementById('plant-create-dialog').showModal()">Dodaj profil zakładu</button>
 <dialog id="plant-create-dialog" class="audit-create-dialog" style="width:min(520px,calc(100vw - 32px))" aria-labelledby="plant-create-title">
     <div style="display:flex;justify-content:space-between;align-items:center"><h2 id="plant-create-title">Dodaj profil zakładu</h2><button type="button" aria-label="Zamknij" onclick="this.closest('dialog').close()" style="border:0;background:none;font-size:24px;cursor:pointer">×</button></div>
     @if($errors->plantCreate->any())<div role="alert" style="color:#b91c1c">@foreach($errors->plantCreate->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif

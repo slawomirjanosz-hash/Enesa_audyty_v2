@@ -65,6 +65,8 @@ test('all chapter and clause cards appear in the correct panel for each full pag
         expect($cards->length)->toBe(1, $view.': '.$deck->section_id);
         expect($cards->item(0)->getAttribute('data-presentation-title'))->toBe($deck->title)
             ->and($cards->item(0)->getAttribute('data-slide-count'))->toBe((string) $deck->slide_count);
+        expect($xpath->query('.//div[@class="iso-presentation-actions"]/button', $cards->item(0))->length)->toBe(1)
+            ->and($xpath->query('.//div[@class="iso-presentation-actions"]/button', $cards->item(0))->item(0)->getAttribute('class'))->toBe('iso-action-btn primary');
         $slideUrl = $view === 'catalogue' ? route('audit-types.presentations.slide', [$type, $deck, 1])
             : route($view === 'client' ? 'client.audits.presentations.slide' : 'audits.presentations.slide', [$audit, $deck, 1]);
         expect($xpath->query('.//img', $cards->item(0))->item(0)->getAttribute('src'))->toBe($slideUrl);
@@ -90,6 +92,8 @@ test('all chapter and clause cards appear in the correct panel for each full pag
     }
     expect($xpath->query('//*[@class="iso-source-note"]')->length)->toBe(0);
     expect($xpath->query('//dialog[@data-slide-dialog]')->length)->toBe(1);
+    expect($xpath->query('//*[@data-large]')->length)->toBe(0)
+        ->and($xpath->query('//dialog[@data-slide-dialog]//*[@data-slide-size]')->item(0)->textContent)->toBe('Pełny ekran');
     $response->assertSee('Slajdy do sekcji 6 Planowanie')->assertDontSee('Slajdy do sekcji planning');
     if ($view !== 'catalogue') {
         $response->assertDontSee('Dodaj prezentację PowerPoint')->assertDontSee('Edytuj lub podmień');

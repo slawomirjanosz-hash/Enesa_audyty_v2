@@ -47,7 +47,7 @@ test('presentation library includes sixteen example slides but never a source do
     expect($example->slide_count)->toBe(16)->and(DB::table('iso_presentation_slides')->where('iso_presentation_id', $example->id)->count())->toBe(16);
     $type = AuditType::firstOrCreate(['slug' => 'iso50001'], ['name' => 'ISO 50001']);
     $this->actingAs(presentationUser('superadmin'))->get(route('audit-types.show', $type))->assertOk()
-        ->assertSee('Dodaj prezentację PowerPoint')->assertSee('Otwórz prezentację')->assertSee('Duże okno')
+        ->assertSee('Dodaj prezentację PowerPoint')->assertSee('Otwórz prezentację')->assertSee('Pełny ekran')->assertDontSee('data-large', false)
         ->assertSee('data-slide-dialog', false)->assertDontSee('download="', false);
 });
 

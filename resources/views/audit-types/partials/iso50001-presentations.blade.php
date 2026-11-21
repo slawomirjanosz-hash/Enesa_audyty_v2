@@ -25,7 +25,7 @@
         <article class="iso-presentation-card" data-slide-base="{{rtrim($presentationSlideUrl, '1')}}" data-slide-count="{{$presentation->slide_count}}" data-presentation-title="{{$presentation->title}}">
             <button type="button" class="iso-presentation-thumb" data-presentation-open aria-label="Otwórz prezentację: {{$presentation->title}}"><img src="{{$presentationSlideUrl}}" loading="lazy" alt="Pierwszy slajd: {{$presentation->title}}" draggable="false"><span><i class="ti ti-player-play-filled"></i></span></button>
             <div class="iso-presentation-info"><h4>{{$presentation->title}}</h4><p>{{$presentation->displayDescription()}}</p><small>{{$presentation->slide_count}} slajdów</small>
-                <div class="iso-presentation-actions"><button type="button" class="iso-presentation-button" data-presentation-open>Otwórz prezentację</button><button type="button" class="iso-presentation-button secondary" data-presentation-open data-large>Duże okno</button></div>
+                <div class="iso-presentation-actions"><button type="button" class="iso-action-btn primary" data-presentation-open>Otwórz prezentację</button></div>
             </div>
             @if($presentationManage)
                 <details class="iso-presentation-edit"><summary>Edytuj lub podmień</summary>
