@@ -15,6 +15,9 @@ while true; do
     php artisan hr:send-vehicle-reminders --scheduled &
     child=$!
     wait "$child" || echo 'HR vehicle reminder check failed; inspect hr_vehicle_reminders logs.' >&2
+    php artisan hr:send-leave-reminders --scheduled &
+    child=$!
+    wait "$child" || echo 'HR leave reminder check failed; inspect hr.leave logs.' >&2
     sleep 60 &
     child=$!
     wait "$child" || true
