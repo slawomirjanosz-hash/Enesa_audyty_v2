@@ -177,6 +177,7 @@ Route::prefix('hr')->name('hr.')->middleware(['auth', 'staff.role', 'app.module:
     Route::put('/leaves/{leave}', [HrLeaveController::class, 'updateLeave'])->middleware('app.permission:hr.leaves.view')->name('leaves.update');
     Route::get('/leaves/{leave}/pdf', [HrLeaveController::class, 'leavePdf'])->middleware('app.permission:hr.leaves.view,hr.leaves.accounting')->name('leaves.pdf');
     Route::delete('/leaves/{leave}', [HrLeaveController::class, 'destroyLeave'])->middleware('app.permission:hr.leaves.view')->name('leaves.destroy');
+    Route::get('/attendance/hours', [HrController::class, 'attendanceHours'])->middleware('app.permission:hr.attendance.view')->name('attendance.hours');
     Route::post('/attendance', [HrAttendanceController::class, 'storeAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.store');
     Route::delete('/attendance/{attendance}', [HrAttendanceController::class, 'destroyAttendance'])->middleware('app.permission:hr.attendance.view')->name('attendance.destroy');
     Route::post('/vehicles', [HrVehicleController::class, 'storeVehicle'])->middleware('app.permission:hr.delegations.view')->name('vehicles.store');

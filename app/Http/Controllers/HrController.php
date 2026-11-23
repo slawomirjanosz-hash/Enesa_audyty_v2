@@ -81,6 +81,21 @@ class HrController extends Controller
         return view('hr.index', compact('vehicleColumnResponsibilities', 'vehicleResponsibilityPeople', 'canAllLeaves', 'hasReports', 'leaveScope', 'leaveRecipients', 'vehicleLocations', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
     }
 
+    public function attendanceHours(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $user = $request->user();
+        abort_if($user->hasAnyRole(['client_admin', 'client_user']), 403);
+        $data = $request->validate(['work_date' => ['required', 'date_format:Y-m-d'], 'user_id' => ['nullable', 'integer']]);
+        $personId = $data['user_id'] ?? $user->id;
+        abort_unless((int) $personId === $user->id || HrAccess::canViewTeam($user), 403);
+        $entry = HrAttendance::where('user_id', $personId)->whereDate('work_date', '<', $data['work_date'])
+            ->whereIn('status', ['present', 'remote'])->whereNotNull('started_at')->whereNotNull('finished_at')
+            ->orderByDesc('work_date')->orderByDesc('id')->first();
+
+        return response()->json(['started_at' => $entry ? substr($entry->started_at, 0, 5) : '',
+            'finished_at' => $entry ? substr($entry->finished_at, 0, 5) : ''])->header('Cache-Control', 'private, no-store');
+    }
+
     public function settings(Request $request): View
     {
         abort_unless(HrAccess::canManageSettings($request->user()), 403);

@@ -116,3 +116,5 @@ setupPlaceSuggestions('trip-origin','trip-origin-suggestions');setupPlaceSuggest
 
 @push('styles')<link rel="stylesheet" href="{{asset('css/vehicle-locations.css')}}?v=2">@endpush
 @push('scripts')<script src="{{asset('js/vehicle-locations.js')}}?v=2" defer></script>@endpush
+
+@push('scripts')<script src="{{asset('js/hr-attendance-hours.js')}}" defer></script>@endpush
