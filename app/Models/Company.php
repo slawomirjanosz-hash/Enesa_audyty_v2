@@ -36,6 +36,7 @@ class Company extends Model
         'phone',
         'address',
         'city',
+        'postcode',
         'status',
         'archived_at',
         'show_in_dashboard',

@@ -91,6 +91,7 @@ class SupplierController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
+            'postcode' => ['nullable', 'string', 'max:20'],
             'supplier_capabilities' => ['nullable', 'string'],
             'supplier_materials' => ['nullable', 'string'],
             'notes' => ['nullable', 'string'],

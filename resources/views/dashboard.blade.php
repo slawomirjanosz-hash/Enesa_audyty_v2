@@ -829,7 +829,7 @@
         <div style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;color:var(--green);margin-bottom:6px;">
             <i class="ti ti-building" style="margin-right:8px;"></i>Dodaj firmę
         </div>
-        <div style="font-size:13px;color:#888;margin-bottom:24px;">Wypełnij dane firmy lub pobierz automatycznie z GUS.</div>
+        <div style="font-size:13px;color:#888;margin-bottom:24px;">Wypełnij dane firmy lub pobierz automatycznie po NIP.</div>
 
         @if($errors->any())
         <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:10px 14px;font-size:13px;margin-bottom:16px;">
@@ -863,7 +863,7 @@
                            autocomplete="off">
                     <button type="button" onclick="fetchFromGus()"
                             style="padding:10px 14px;background:rgba(26,77,58,0.08);border:1px solid rgba(26,77,58,0.25);border-radius:6px;color:var(--green);font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
-                        Pobierz z GUS
+                        Pobierz po NIP
                     </button>
                 </div>
                 <div id="gus-status" style="margin-top:6px;font-size:12px;color:#888;"></div>
@@ -875,7 +875,7 @@
                 <input id="company-name" type="text" name="name" required
                        value="{{ old('name') }}"
                        style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
-                       placeholder="Pobrana z GUS lub wpisz ręcznie">
+                       placeholder="Pobrana po NIP lub wpisz ręcznie">
             </div>
 
             {{-- Adres + Miasto --}}
@@ -886,6 +886,13 @@
                            value="{{ old('address') }}"
                            style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
                            placeholder="ul. Przykładowa 1">
+                </div>
+                <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Kod pocztowy</label>
+                    <input id="company-postcode" type="text" name="postcode"
+                           value="{{ old('postcode') }}"
+                           style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:6px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;outline:none;box-sizing:border-box;"
+                           placeholder="00-000">
                 </div>
                 <div>
                     <label style="display:block;font-size:12px;font-weight:700;color:#3a3a3a;margin-bottom:5px;">Miasto</label>
@@ -987,7 +994,7 @@
 
     function resetAddClientForm() {
         const form = document.querySelector('#addClientModal form');
-        const fields = ['company-name', 'company-address', 'company-city', 'nip-input'];
+        const fields = ['company-name', 'company-address', 'company-postcode', 'company-city', 'nip-input'];
         const status = document.getElementById('gus-status');
 
         form.reset();
@@ -1031,7 +1038,7 @@
         }
 
         status.style.color = '#888';
-        status.textContent = 'Pobieranie danych z GUS...';
+        status.textContent = 'Pobieranie danych firmy...';
 
         fetch('{{ route("companies.fetchGus") }}', {
             method: 'POST',
@@ -1045,7 +1052,7 @@
             const data = await r.json();
 
             if (!r.ok) {
-                throw new Error(data.error || 'Nie udało się pobrać danych z GUS.');
+                throw new Error(data.error || 'Nie udało się pobrać danych firmy.');
             }
 
             return data;
@@ -1059,6 +1066,7 @@
 
             name.value = d.name    || '';
             addr.value = d.address || '';
+            document.getElementById('company-postcode').value = d.postcode || '';
             city.value = d.city    || '';
 
             if (d.name)    { name.style.borderColor = '#2E7D32'; }
@@ -1066,7 +1074,7 @@
             if (d.city)    { city.style.borderColor = '#2E7D32'; }
 
             status.style.color = '#2E7D32';
-            status.textContent = 'Dane pobrane poprawnie.';
+            status.textContent = 'Źródło: ' + d.source_label + '. ' + (d.warning || 'Sprawdź dane przed zapisem.');
         })
         .catch(function(error) {
             status.style.color = '#b91c1c';

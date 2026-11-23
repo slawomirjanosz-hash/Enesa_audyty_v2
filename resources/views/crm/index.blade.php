@@ -303,7 +303,7 @@
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
                                 <i class="ti ti-eye"></i>
                             </a>
-                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}', '{{$company->company_type}}')">
+                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}', '{{$company->company_type}}', @js($company->postcode))">
                                 <i class="ti ti-pencil"></i>
                             </button>
                             @if($company->offers->count() > 0 || $company->audits->count() > 0)
@@ -858,7 +858,7 @@
                             <a href="{{ route('companies.show', $company) }}" class="btn-icon btn-icon-view" title="Podgląd">
                                 <i class="ti ti-eye"></i>
                             </a>
-                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}', '{{$company->company_type}}')">
+                            <button type="button" class="btn-icon" title="Edytuj" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;" onclick="openEditCompanyModal({{ $company->id }}, '{{ addslashes($company->name) }}', '{{ addslashes($company->nip ?? '') }}', '{{ addslashes($company->email ?? '') }}', '{{ addslashes($company->phone ?? '') }}', '{{ addslashes($company->address ?? '') }}', '{{ addslashes($company->city ?? '') }}', '{{ addslashes($company->source ?? '') }}', '{{ addslashes($company->notes ?? '') }}', '{{$company->company_type}}', @js($company->postcode))">
                                 <i class="ti ti-pencil"></i>
                             </button>
                             <form method="POST" action="{{ route('crm.companies.restore', $company) }}" style="display:inline;">
@@ -1364,7 +1364,7 @@
                             style="min-width:0;flex:1;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                         <button type="button" onclick="fetchCompanyEditFromGus()"
                             style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
-                            <i class="ti ti-download"></i> GUS
+                            <i class="ti ti-download"></i> Pobierz po NIP
                         </button>
                     </div>
                     <div id="edit-gus-status" style="font-size:11px;margin-top:5px;min-height:15px;"></div>
@@ -1383,6 +1383,11 @@
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Adres</label>
                     <input type="text" id="edit-address" name="address"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Kod pocztowy</label>
+                    <input type="text" id="edit-postcode" name="postcode"
                         style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                 </div>
                 <div>
@@ -1416,7 +1421,7 @@
 </div>
 
 <script>
-function openEditCompanyModal(id, name, nip, email, phone, address, city, source, notes, companyType) {
+function openEditCompanyModal(id, name, nip, email, phone, address, city, source, notes, companyType, postcode) {
     document.getElementById('edit-company-id').value = id;
     document.getElementById('edit-name').value = name;
     document.getElementById('edit-nip').value = nip;
@@ -1424,6 +1429,7 @@ function openEditCompanyModal(id, name, nip, email, phone, address, city, source
     document.getElementById('edit-phone').value = phone;
     document.getElementById('edit-address').value = address;
     document.getElementById('edit-city').value = city;
+    document.getElementById('edit-postcode').value = postcode || '';
     document.getElementById('edit-source').value = source;
     document.getElementById('edit-notes').value = notes;
     document.getElementById('edit-company-type').value = companyType || 'client';
@@ -1450,7 +1456,7 @@ function fetchCompanyEditFromGus() {
     }
 
     status.style.color = '#6B7280';
-    status.textContent = 'Pobieranie danych z GUS…';
+    status.textContent = 'Pobieranie danych firmy…';
 
     fetch('{{ route("companies.fetchGus") }}', {
         method: 'POST',
@@ -1459,7 +1465,7 @@ function fetchCompanyEditFromGus() {
     })
     .then(async response => {
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Nie udało się pobrać danych z GUS.');
+        if (!response.ok) throw new Error(data.error || 'Nie udało się pobrać danych firmy.');
         return data;
     })
     .then(data => {
@@ -1467,6 +1473,7 @@ function fetchCompanyEditFromGus() {
             name: document.getElementById('edit-name'),
             address: document.getElementById('edit-address'),
             city: document.getElementById('edit-city'),
+            postcode: document.getElementById('edit-postcode'),
         };
         const hasExistingData = Object.values(fields).some(field => field.value.trim() !== '');
         if (hasExistingData && !confirm('Pobrane dane zastąpią obecną nazwę, adres i miasto w formularzu. Kontynuować?')) {
@@ -1481,7 +1488,7 @@ function fetchCompanyEditFromGus() {
             field.style.borderColor = data[key] ? '#2E7D32' : '#D1D5DB';
         });
         status.style.color = '#166534';
-        status.textContent = 'Dane pobrane. Sprawdź je i zapisz zmiany.';
+        status.textContent = 'Źródło: ' + data.source_label + '. ' + (data.warning || 'Sprawdź dane przed zapisem.');
     })
     .catch(error => {
         status.style.color = '#B91C1C';

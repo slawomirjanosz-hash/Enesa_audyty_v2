@@ -343,7 +343,7 @@
                                value="{{ old('nip', $company->nip ?? '') }}"
                                placeholder="0000000000">
                         <button id="fetch-gus" type="button" class="btn-gus">
-                            <i class="ti ti-download"></i>Pobierz z GUS
+                            <i class="ti ti-download"></i>Pobierz po NIP
                         </button>
                     </div>
                     <span id="gus-status" class="cf-hint gus-status">Wpisz 10 cyfr; myślniki i spacje zostaną pominięte.</span>
@@ -522,7 +522,7 @@ document.getElementById('test-company-mail')?.addEventListener('click', async fu
 
         button.disabled = true;
         status.style.color = '#888';
-        status.textContent = 'Pobieranie danych z GUS...';
+        status.textContent = 'Pobieranie danych firmy...';
 
         try {
             const response = await fetch('{{ route('companies.fetchGus') }}', {
@@ -537,7 +537,7 @@ document.getElementById('test-company-mail')?.addEventListener('click', async fu
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Nie udało się pobrać danych z GUS.');
+                throw new Error(data.error || 'Nie udało się pobrać danych firmy.');
             }
 
             nipInput.value = nip;
@@ -548,7 +548,7 @@ document.getElementById('test-company-mail')?.addEventListener('click', async fu
             });
 
             status.style.color = '#166534';
-            status.textContent = 'Dane pobrane. Możesz je poprawić przed zapisaniem.';
+            status.textContent = 'Źródło: ' + data.source_label + '. ' + (data.warning || 'Sprawdź dane przed zapisem.');
         } catch (error) {
             status.style.color = '#b91c1c';
             status.textContent = error.message;

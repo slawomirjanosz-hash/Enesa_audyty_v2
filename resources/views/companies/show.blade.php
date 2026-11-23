@@ -714,7 +714,7 @@
         </div>
         <div class="company-header-meta">
             @if($company->address || $company->city)
-                <span><i class="ti ti-map-pin"></i>{{ trim(($company->address ?? '') . ' ' . ($company->city ?? '')) }}</span>
+                <span><i class="ti ti-map-pin"></i>{{ trim(($company->address ?? '') . ' ' . ($company->postcode ?? '') . ' ' . ($company->city ?? '')) }}</span>
             @endif
             @if($company->email)
                 <span><i class="ti ti-mail"></i>{{ $company->email }}</span>
@@ -898,7 +898,7 @@
                     <div>
                         <div class="info-label">Miasto</div>
                         <div class="info-value {{ $company->city ? '' : 'empty' }}">
-                            {{ $company->city ?? 'Nie podano' }}
+                            {{ trim(($company->postcode ?? '') . ' ' . ($company->city ?? '')) ?: 'Nie podano' }}
                         </div>
                     </div>
                 </div>
@@ -2237,7 +2237,7 @@
                             style="min-width:0;flex:1;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                         <button type="button" onclick="fetchCompanyFromGus()"
                             style="padding:8px 10px;border:1px solid #94C4B0;border-radius:8px;background:#F0F7F3;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">
-                            <i class="ti ti-download"></i> GUS
+                            <i class="ti ti-download"></i> Pobierz po NIP
                         </button>
                     </div>
                     <div id="edit-company-gus-status" style="font-size:11px;margin-top:5px;min-height:15px;"></div>
@@ -2255,6 +2255,11 @@
                 <div>
                     <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Adres</label>
                     <input type="text" id="edit-company-address" name="address" value="{{ $company->address }}"
+                        style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;">Kod pocztowy</label>
+                    <input type="text" id="edit-company-postcode" name="postcode" value="{{ $company->postcode }}"
                         style="width:100%;margin-top:4px;padding:9px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;">
                 </div>
                 <div>
@@ -2313,7 +2318,7 @@ function fetchCompanyFromGus() {
     }
 
     status.style.color = '#6B7280';
-    status.textContent = 'Pobieranie danych z GUS…';
+    status.textContent = 'Pobieranie danych firmy…';
 
     fetch('{{ route("companies.fetchGus") }}', {
         method: 'POST',
@@ -2322,7 +2327,7 @@ function fetchCompanyFromGus() {
     })
     .then(async response => {
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Nie udało się pobrać danych z GUS.');
+        if (!response.ok) throw new Error(data.error || 'Nie udało się pobrać danych firmy.');
         return data;
     })
     .then(data => {
@@ -2330,6 +2335,7 @@ function fetchCompanyFromGus() {
             name: document.getElementById('edit-company-name'),
             address: document.getElementById('edit-company-address'),
             city: document.getElementById('edit-company-city'),
+            postcode: document.getElementById('edit-company-postcode'),
         };
         const hasExistingData = Object.values(fields).some(field => field.value.trim() !== '');
         if (hasExistingData && !confirm('Pobrane dane zastąpią obecną nazwę, adres i miasto w formularzu. Kontynuować?')) {
@@ -2344,7 +2350,7 @@ function fetchCompanyFromGus() {
             field.style.borderColor = data[key] ? '#2E7D32' : '#D1D5DB';
         });
         status.style.color = '#166534';
-        status.textContent = 'Dane pobrane. Sprawdź je i zapisz zmiany.';
+        status.textContent = 'Źródło: ' + data.source_label + '. ' + (data.warning || 'Sprawdź dane przed zapisem.');
     })
     .catch(error => {
         status.style.color = '#B91C1C';

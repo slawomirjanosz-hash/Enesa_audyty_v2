@@ -39,6 +39,7 @@ class RegistrationController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
+            'postcode' => ['nullable', 'string', 'max:20'],
         ], [
             'nip.unique' => 'Firma z tym NIP jest juz zarejestrowana.',
             'nip.digits' => 'NIP musi zawierac dokladnie 10 cyfr.',
@@ -53,6 +54,7 @@ class RegistrationController extends Controller
                 'name' => $data['name'],
                 'address' => $data['address'] ?? null,
                 'city' => $data['city'] ?? null,
+                'postcode' => $data['postcode'] ?? null,
                 'status' => 'pending',
             ]);
 

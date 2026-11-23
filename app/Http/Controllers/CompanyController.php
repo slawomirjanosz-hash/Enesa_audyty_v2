@@ -17,14 +17,15 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
+use App\Services\CompanyDataLookup;
 use App\Services\UserPermissions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class CompanyController extends Controller
 {
@@ -37,44 +38,14 @@ class CompanyController extends Controller
         }
 
         try {
-            $response = Http::timeout(10)
-                ->get("https://wl-api.mf.gov.pl/api/search/nip/{$nip}", [
-                    'date' => now()->format('Y-m-d'),
-                ]);
+            $data = app(CompanyDataLookup::class)->lookup($nip);
+            $data['name'] = $this->abbreviateCompanyForm($data['name']);
 
-            if ($response->failed()) {
-                return response()->json(['error' => 'Nie znaleziono firmy o podanym NIP w rejestrze MF.'], 404);
-            }
-
-            $subject = $response->json('result.subject');
-
-            if (empty($subject)) {
-                return response()->json(['error' => 'Brak danych dla podanego NIP.'], 404);
-            }
-
-            $name = $this->abbreviateCompanyForm($subject['name'] ?? '');
-            $rawAddress = $subject['residenceAddress'] ?? $subject['workingAddress'] ?? '';
-            $address = '';
-            $city = '';
-            $postcode = '';
-
-            if ($rawAddress) {
-                $lastComma = strrpos($rawAddress, ',');
-                if ($lastComma !== false) {
-                    $address = trim(substr($rawAddress, 0, $lastComma));
-                    $cityPart = trim(substr($rawAddress, $lastComma + 1));
-                    if (preg_match('/\b(\d{2}-\d{3})\b/', $cityPart, $postcodeMatch)) {
-                        $postcode = $postcodeMatch[1];
-                    }
-                    $city = trim(preg_replace('/^\d{2}-\d{3}\s+/', '', $cityPart));
-                } else {
-                    $address = $rawAddress;
-                }
-            }
-
-            return response()->json(compact('name', 'address', 'city', 'postcode'));
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Błąd połączenia z API. Spróbuj ponownie później.'], 503);
+            return response()->json($data);
+        } catch (HttpExceptionInterface $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getStatusCode());
+        } catch (\Throwable) {
+            return response()->json(['error' => 'Błąd połączenia z rejestrem. Spróbuj ponownie później.'], 503);
         }
     }
 
@@ -255,6 +226,7 @@ class CompanyController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
+            'postcode' => ['nullable', 'string', 'max:20'],
             'notes' => ['nullable', 'string'],
             'supplier_capabilities' => ['nullable', 'string'],
             'supplier_materials' => ['nullable', 'string'],
@@ -473,6 +445,7 @@ class CompanyController extends Controller
             'company_type' => ['required', Rule::in(['client', 'supplier'])],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
+            'postcode' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'nip' => ['nullable', 'digits:10', Rule::unique('companies', 'nip')->whereNull('archived_at')],

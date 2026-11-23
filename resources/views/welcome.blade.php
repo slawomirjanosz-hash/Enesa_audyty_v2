@@ -368,7 +368,7 @@
                            placeholder="np. 527-000-11-22 lub 5270001122"
                            value="{{ old('nip') }}"
                            oninput="formatNipHint()">
-                    <button type="button" class="btn-gus" onclick="fetchFromGus()">Pobierz z GUS</button>
+                    <button type="button" class="btn-gus" onclick="fetchFromGus()">Pobierz po NIP</button>
                 </div>
                 <div id="nip-hint" style="font-size:11px;margin-top:4px;"></div>
                 <div id="gus-status" style="font-size:12px;margin-top:4px;"></div>
@@ -378,13 +378,18 @@
             <div class="form-group">
                 <label for="company-name">Nazwa firmy</label>
                 <input id="company-name" type="text" name="name" class="form-input"
-                       placeholder="Pobrana automatycznie z GUS lub wpisz ręcznie"
+                       placeholder="Pobrana automatycznie po NIP lub wpisz ręcznie"
                        value="{{ old('name') }}" required>
             </div>
             <div class="form-group">
                 <label for="company-address">Adres</label>
                 <input id="company-address" type="text" name="address" class="form-input"
                        placeholder="ul. Przykładowa 1" value="{{ old('address') }}">
+            </div>
+            <div class="form-group">
+                <label for="company-postcode">Kod pocztowy</label>
+                <input id="company-postcode" type="text" name="postcode" class="form-input"
+                       placeholder="00-000" value="{{ old('postcode') }}">
             </div>
             <div class="form-group">
                 <label for="company-city">Miasto</label>
@@ -468,7 +473,7 @@
         }
 
         status.style.color = '#888';
-        status.textContent = 'Pobieranie danych z GUS…';
+        status.textContent = 'Pobieranie danych firmy…';
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -492,14 +497,15 @@
             const cityField    = document.getElementById('company-city');
             document.getElementById('nip-input').value = clean;
             if (data.name)    { nameField.value    = data.name;    nameField.style.borderColor    = '#2E7D32'; }
+            document.getElementById('company-postcode').value = data.postcode || '';
             if (data.address) { addressField.value = data.address; addressField.style.borderColor = '#2E7D32'; }
             if (data.city)    { cityField.value    = data.city;    cityField.style.borderColor    = '#2E7D32'; }
             status.style.color = '#2E7D32';
-            status.textContent = 'Dane pobrane poprawnie ✓';
+            status.textContent = 'Źródło: ' + data.source_label + '. ' + (data.warning || 'Sprawdź dane przed zapisem.');
         })
         .catch(() => {
             status.style.color = '#b91c1c';
-            status.textContent = 'Błąd połączenia z GUS. Wypełnij dane ręcznie.';
+            status.textContent = 'Błąd połączenia z rejestrem. Wypełnij dane ręcznie.';
         });
     }
 
