@@ -88,5 +88,5 @@ test('calendar daily reminders also cover the day before a Sunday leave', functi
     $this->artisan('hr:send-leave-reminders --scheduled')->assertSuccessful();
     Mail::assertSent(HrLeaveReminder::class, fn ($mail) => $mail->leaves->contains('id', $leave->id));
     $mail = new HrLeaveReminder(collect([$leave]));
-    expect($mail->render())->toContain('Rozpatrz wniosek','29.11.2026')->not->toContain('decision_note');
+    expect($mail->render())->toContain('Rozpatrz wniosek', '29.11.2026')->not->toContain('decision_note');
 });

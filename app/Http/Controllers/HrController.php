@@ -11,6 +11,7 @@ use App\Models\HrVehicleColumnResponsibility;
 use App\Models\HrVehicleLocation;
 use App\Models\User;
 use App\Support\HrAccess;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -81,7 +82,7 @@ class HrController extends Controller
         return view('hr.index', compact('vehicleColumnResponsibilities', 'vehicleResponsibilityPeople', 'canAllLeaves', 'hasReports', 'leaveScope', 'leaveRecipients', 'vehicleLocations', 'tab', 'users', 'trips', 'leaves', 'attendances', 'vehicles', 'canTeam', 'canDelegations', 'canLeaves', 'canAttendance', 'selectedUserId', 'defaultKmRate', 'defaultDietRate', 'defaultOrigin', 'canManageHrSettings', 'leaveYear', 'leaveBalance'));
     }
 
-    public function attendanceHours(Request $request): \Illuminate\Http\JsonResponse
+    public function attendanceHours(Request $request): JsonResponse
     {
         $user = $request->user();
         abort_if($user->hasAnyRole(['client_admin', 'client_user']), 403);
