@@ -654,9 +654,10 @@ class OfferController extends Controller
         $this->authorize('update', $offer);
         $this->authorize('view', $offer);
         $data = $request->validate([
-            'status' => ['exclude_with:new_status', 'required', 'string', Rule::in(array_keys(OfferStatus::options()))],
+            'status' => [Rule::excludeIf($request->filled('new_status')), 'required', 'string', Rule::in(array_keys(OfferStatus::options()))],
             'new_status' => ['nullable', 'string', 'max:100', 'regex:/^[\pL\pN][\pL\pN ._()\/-]*$/u'],
             'won_as' => ['nullable', 'in:audyt,projekt,inne'],
+            'create_project' => ['sometimes', 'boolean'],
         ]);
 
         DB::transaction(function () use ($offer, $data): void {
@@ -683,6 +684,13 @@ class OfferController extends Controller
 
             $this->crmStageSynchronizer->synchronize($offer);
         });
+
+        if ($request->boolean('create_project') && $offer->fresh()->status === 'wygrana' && ! $offer->is_template
+            && app(AuditorAccessService::class)->hasFullAccess($request->user())
+            && $request->user()->can('projects.create') && CompanySettings::moduleIsEnabled('projects')) {
+            return redirect()->route('projects.index', ['from_offer' => $offer->id])
+                ->with('success', 'Status oferty został zaktualizowany. Uzupełnij dane nowego projektu.');
+        }
 
         return redirect()->back()->with('success', 'Status oferty został zaktualizowany.');
     }

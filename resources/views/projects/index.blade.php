@@ -52,17 +52,17 @@
 .completed-projects{margin-top:32px}.completed-projects h2{font-size:19px;margin:0 0 14px}.completed-projects h2 span{font-size:14px;color:#6b7a70;font-weight:500}.completed-projects-scroll{overflow-x:auto;border:1px solid #e5e1d8;border-radius:12px;background:#fff}.completed-projects-table{width:100%;border-collapse:collapse;font-size:13px}.completed-projects-table th,.completed-projects-table td{padding:13px 15px;text-align:left;border-bottom:1px solid #eceeea;vertical-align:middle}.completed-projects-table th{background:#f7f8f5;font-size:12px;color:#59665e;white-space:nowrap}.completed-projects-table tbody tr:last-child td{border-bottom:0}.completed-projects-table a{color:var(--green);text-decoration:none;font-weight:700}.completed-projects-table a:hover{text-decoration:underline}.completed-projects-table .nowrap{white-space:nowrap}
 </style>
 
-<div id="project-modal" class="modal" onclick="if(event.target===this)this.classList.remove('open')">
+<div id="project-modal" class="modal{{ !empty($projectPrefill) ? ' open' : '' }}" onclick="if(event.target===this)this.classList.remove('open')">
     <div class="modal-box">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;"><h2 style="margin:0;">Nowy projekt</h2><button type="button" onclick="document.getElementById('project-modal').classList.remove('open')" style="border:0;background:none;font-size:24px;cursor:pointer;">×</button></div>
-        <form data-autosave method="POST" action="{{ route('projects.store') }}">@csrf
+        <form data-autosave @if(!empty($projectPrefill)) data-draft-name="project-from-offer-{{ request('from_offer') }}" @endif method="POST" action="{{ route('projects.store') }}">@csrf
             <div class="form-grid">
                 @include('projects._new-number')
-                <div class="field"><label>Nazwa projektu *</label><input name="name" value="{{ old('name') }}" required></div>
-                <div class="field"><label>Firma / klient</label><select name="company_id"><option value="">Projekt wewnętrzny</option>@foreach($companies as $company)<option value="{{ $company->id }}">{{ $company->name }}</option>@endforeach</select></div>
+                <div class="field"><label>Nazwa projektu *</label><input name="name" value="{{ old('name', $projectPrefill['name'] ?? '') }}" required></div>
+                <div class="field"><label>Firma / klient</label><select name="company_id"><option value="">Projekt wewnętrzny</option>@foreach($companies as $company)<option value="{{ $company->id }}" @selected((string) old('company_id', $projectPrefill['company_id'] ?? '') === (string) $company->id)>{{ $company->name }}</option>@endforeach</select></div>
                 <div class="field"><label>Kierownik projektu *</label><select name="manager_id" required><option value="">Wybierz</option>@foreach($users as $user)<option value="{{ $user->id }}">{{ $user->name }}</option>@endforeach</select></div>
                 <div class="field"><label>Status</label><select name="status"><option value="planned">Planowany</option><option value="active">Aktywny</option><option value="on_hold">Wstrzymany</option><option value="completed">Zakończony</option></select></div>
-                @if($canViewFinances)<div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="0" required></div>@endif
+                @if($canViewFinances)<div class="field"><label>Wartość kontraktu netto</label><input type="number" step="0.01" min="0" name="contract_value" value="{{ old('contract_value', $projectPrefill['contract_value'] ?? 0) }}" required></div>@endif
                 <div class="field"><label>Data rozpoczęcia</label><input type="date" name="start_date"></div><div class="field"><label>Data zakończenia</label><input type="date" name="end_date"></div>
                 <div class="field half">@include('projects.partials.member-picker', ['selectedMembers'=>old('member_ids', [])])<small>Administratorzy widzą wszystkie projekty. Pozostali użytkownicy zobaczą tylko projekty, do których zostali tutaj przypisani.</small></div>
                 <div class="field half"><label>Opis</label><textarea name="description" rows="4">{{ old('description') }}</textarea></div>

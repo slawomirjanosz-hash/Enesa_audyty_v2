@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\CompanySettings;
+use App\Models\Offer;
 use App\Models\Project;
 use App\Models\ProjectProtocol;
 use App\Models\Task;
@@ -21,6 +23,19 @@ class ProjectController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
+        $projectPrefill = [];
+        if ($request->filled('from_offer')) {
+            abort_unless(app(AuditorAccessService::class)->hasFullAccess($user) && $user->can('projects.create') && CompanySettings::moduleIsEnabled('offers'), 403);
+            $request->validate(['from_offer' => ['required', 'integer']]);
+            $sourceOffer = Offer::findOrFail($request->integer('from_offer'));
+            $this->authorize('view', $sourceOffer);
+            abort_unless($sourceOffer->status === 'wygrana' && ! $sourceOffer->is_template, 422);
+            $projectPrefill = [
+                'name' => $sourceOffer->offer_title,
+                'company_id' => $sourceOffer->company_id,
+                'contract_value' => $this->canViewProjectFinances($user) && $user->can('viewPrices', $sourceOffer) ? $sourceOffer->kwota_netto : 0,
+            ];
+        }
         $query = Project::with(['company', 'manager', 'members'])
             ->withCount([
                 'tasks',
@@ -60,6 +75,7 @@ class ProjectController extends Controller
             'companies' => Company::clients()->active()->orderBy('name')->get(),
             'users' => $this->staffUsers(),
             'canViewFinances' => $this->canViewProjectFinances($user),
+            'projectPrefill' => $projectPrefill,
         ]);
     }
 

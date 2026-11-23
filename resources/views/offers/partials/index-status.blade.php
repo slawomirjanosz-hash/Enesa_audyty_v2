@@ -17,6 +17,9 @@
         @csrf
         @method('PATCH')
         <input type="hidden" name="new_status" value="">
+        @if(\App\Models\CompanySettings::moduleIsEnabled('projects') && app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user()) && auth()->user()->can('projects.create') && !request()->boolean('template'))
+            <input type="hidden" name="create_project" value="0">
+        @endif
         <select name="status" class="badge {{ $badgeClass }} offer-status-select" aria-label="Status oferty {{ $offer->fullNumber() }}" title="{{ $statusLabel }}" data-offer-status-select data-current-status="{{ $offer->status }}">
             @foreach($statusLabels as $value => $label)
                 <option value="{{ $value }}" @selected($offer->status === (string) $value)>{{ $offer->status === (string) $value ? $statusLabel : ($value === 'zarchiwizowana' ? 'Archiwizuj ofertę' : $label) }}</option>

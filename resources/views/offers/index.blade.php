@@ -304,6 +304,10 @@ document.querySelectorAll('[data-offer-status-select]').forEach(select => {
         } else {
             form.elements.new_status.value = '';
         }
+        if (form.elements.create_project) {
+            form.elements.create_project.value = !form.elements.new_status.value && select.value === 'wygrana'
+                && window.confirm('Czy chcesz utworzyć projekt na podstawie wygranej oferty? Dane będzie można edytować przed zapisaniem.') ? '1' : '0';
+        }
         form.requestSubmit();
     });
 });
