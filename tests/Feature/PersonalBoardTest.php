@@ -86,3 +86,19 @@ test('mixed board paginates filtered CRM records before hydration without duplic
     $this->actingAs($admin)->get(route('board.mine'))->assertOk()->assertViewHas('cards', fn ($cards) => $cards->count() === 90 && $cards->total() === 92);
     $this->get(route('board.mine', ['page' => 2]))->assertOk()->assertViewHas('cards', fn ($cards) => $cards->count() === 2);
 });
+
+test('personal board offers task creation and the shared CRM endpoint returns to the board', function () {
+    [$admin, $project] = boardFixture();
+    $worker = boardWorker($project);
+    $this->actingAs($worker)->get(route('board.mine'))->assertOk()->assertSee('id="board-create-task"', false);
+    $this->post(route('crm.tasks.store'), [
+        'title' => 'Zadanie utworzone z tablicy',
+        'status' => 'todo',
+        'priority' => 'medium',
+        'return_to_board' => 1,
+        'assigned_to' => $admin->id,
+    ])->assertRedirect(route('board.mine'));
+    $task = Task::where('title', 'Zadanie utworzone z tablicy')->sole();
+    expect($task->assigned_to)->toBe($worker->id);
+    $this->get(route('board.mine'))->assertOk()->assertSee('Zadanie utworzone z tablicy');
+});

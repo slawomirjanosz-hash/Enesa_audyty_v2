@@ -2,7 +2,7 @@
 @section('page-title','Moja tablica')
 @section('content')
 @include('partials.header-search-styles')
-<div class="app-search-header"><h1>{{$archivedBoard ? 'Archiwum zadań' : 'Moja tablica'}}</h1><div class="app-search-toolbar">@include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: zadanie, projekt, audyt, osoba…'])</div></div>
+<div class="app-search-header"><h1>{{$archivedBoard ? 'Archiwum zadań' : 'Moja tablica'}}</h1><div class="app-search-toolbar">@include('partials.list-search', ['serverSearch' => true, 'searchPlaceholder' => 'Szukaj: zadanie, projekt, audyt, osoba…']) @if(!$archivedBoard && \App\Models\CompanySettings::moduleIsEnabled('crm') && (app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user()) || auth()->user()->canAny(['crm.tasks.own.manage','crm.tasks.team.manage'])))<button type="button" class="board-primary" style="gap:6px;padding:8px 14px;border:0;border-radius:7px;background:var(--green,#1a4d3a);color:#fff;font:inherit;font-size:13px;cursor:pointer" onclick="document.getElementById('board-create-task').showModal()"><i class="ti ti-plus" aria-hidden="true"></i> Nowe zadanie</button>@endif</div></div>
 <nav class="board-tabs" aria-label="Widok zadań"><a href="{{route('board.mine')}}" @if(!$archivedBoard) aria-current="page" @endif>Aktywne zadania</a><a href="{{route('board.mine',['archive'=>1])}}" @if($archivedBoard) aria-current="page" @endif>Zarchiwizowane</a></nav>
 <p>Zadania z dostępnych modułów w jednym miejscu. Domyślnie pokazujemy zadania przypisane do Ciebie.</p>
 <form class="board-filters" method="get" action="{{route('board.mine')}}" aria-label="Filtry zadań">
@@ -17,6 +17,7 @@
 @endforeach
 <button class="board-primary" type="submit">Pokaż zadania</button><a class="board-reset" href="{{route('board.mine',$archivedBoard ? ['archive'=>1] : [])}}">Moje zadania · wszystkie źródła</a>
 </form>
+@include('boards.create-task')
 @include('boards.cards',['personalBoard'=>true,'boardManage'=>false])
 @if($cards->isEmpty() && $leaveTasks->isEmpty())<p>Nie masz przypisanych zadań w tym widoku.</p>@endif
 <p>Wyświetlono {{$cards->count()+$leaveTasks->count()}} z {{$cards->total()+$leaveTasks->count()}} zadań.@if($cards->hasPages()) Liczniki kolumn dotyczą tej strony.@endif</p>{{$cards->links()}}

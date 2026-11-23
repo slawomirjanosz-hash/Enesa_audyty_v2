@@ -278,6 +278,9 @@ class CrmController extends Controller
     public function storeTask(Request $request): RedirectResponse
     {
         $task = app(CrmTaskCreator::class)->create($request);
+        if ($request->boolean('return_to_board')) {
+            return redirect()->route('board.mine')->with('success', 'Zadanie zostało dodane.');
+        }
         $companyContextId = $request->integer('company_context_id');
 
         if ($companyContextId && (int) $companyContextId === (int) $task->company_id) {
