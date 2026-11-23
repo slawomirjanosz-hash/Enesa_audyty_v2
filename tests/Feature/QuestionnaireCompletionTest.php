@@ -27,11 +27,11 @@ test('completion counts zero no and unknown but excludes unanswered and conditio
 
 test('audit and profile screens display saved completion and only latest site revisions in audit summary', function () {
     [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('2/64 pytań · 3%')->assertSee('data-completion-mode="plant"', false);
     $overviewUrl = route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro']);
-    $this->get(route('client.audits.plant-profile.index', $audit))->assertRedirect($overviewUrl.'&add_profile=1');
+    $this->get(route('client.audits.plant-profile.index', $audit))->assertRedirect($overviewUrl);
     $this->get($overviewUrl)->assertOk()->assertSee('2/64 pytań · 3%')->assertSee('data-sort-value="Piła"', false);
     $next = $profile->replicate();
     $next->revision = 2;

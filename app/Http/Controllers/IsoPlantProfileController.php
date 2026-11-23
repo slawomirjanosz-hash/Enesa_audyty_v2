@@ -58,13 +58,14 @@ class IsoPlantProfileController extends Controller
 
         return redirect()->route($client ? 'client.audits.show' : 'audits.show', [
             $audit, 'tab' => 'iso50001', 'section' => 'intro',
-            'add_profile' => ($client || $request->user()->can('audits.manage')) ? 1 : null,
+            'add_profile' => (! $client && $request->user()->can('audits.manage')) ? 1 : null,
         ]);
     }
 
     public function create(Request $request, Audit $audit)
     {
         $client = $this->access($request, $audit, true);
+        abort_if($client, 403);
         $overview = $request->input('return_to') === 'overview';
         $data = $request->validateWithBag($overview ? 'plantCreate' : 'default', ['return_to' => ['nullable', Rule::in(['overview'])], 'site_id' => $overview ? 'prohibited' : 'nullable|integer', 'name' => ($overview ? 'required' : 'required_without:site_id|nullable').'|string|max:200', 'copy_latest' => $overview ? 'prohibited' : 'nullable|boolean', 'responsible_user_id' => ['nullable', 'integer', Rule::in($audit->company->users()->pluck('users.id')->all())]]);
         $profile = DB::transaction(function () use ($audit, $data, $request) {
@@ -124,8 +125,9 @@ class IsoPlantProfileController extends Controller
 
     public function responsible(Request $request, Audit $audit, IsoPlantProfile $profile)
     {
-        $this->access($request, $audit, true);
+        $client = $this->access($request, $audit, true);
         $this->checkProfile($audit, $profile);
+        abort_if($client, 403);
         $data = $request->validate(['responsible_user_id' => ['present', 'nullable', 'integer', Rule::in($audit->company->users()->pluck('users.id')->all())]]);
         $profile->update(['responsible_user_id' => $data['responsible_user_id'] ?? null]);
         $this->record($request, $profile, 'assign');
@@ -137,6 +139,7 @@ class IsoPlantProfileController extends Controller
     {
         $client = $this->access($request, $audit, true);
         $this->checkProfile($audit, $profile);
+        abort_if($client, 403);
         $copy = DB::transaction(function () use ($request, $audit, $profile) {
             Audit::whereKey($audit->id)->lockForUpdate()->firstOrFail();
             $name = Str::limit($profile->answers['site.name']['value'] ?? 'Zakład', 185, '').' — kopia';
@@ -194,6 +197,21 @@ class IsoPlantProfileController extends Controller
                 }
                 $request->validate(['answers' => 'required|array', 'as_of_date' => 'required|date_format:Y-m-d', 'complete_form' => 'required|accepted'], ['complete_form.required' => 'Nie dotarł cały formularz. Zmniejsz liczbę wierszy i spróbuj ponownie — dotychczasowy zapis pozostał bez zmian.']);
                 $input = $data['answers'];
+                if ($client) {
+                    // The compact client form omits provenance and identity annotations.
+                    // Keep them unless explicitly supplied (e.g. in a mapped Excel import).
+                    foreach ($this->questionnaire->questions($current->definition) as $question) {
+                        $key = $question['key'];
+                        if (array_key_exists($key, $input) && ! is_array($input[$key])) {
+                            continue;
+                        }
+                        foreach (['detail', 'source'] as $field) {
+                            if (! array_key_exists($field, $input[$key] ?? [])) {
+                                $input[$key][$field] = $current->answers[$key][$field] ?? null;
+                            }
+                        }
+                    }
+                }
                 $input['FAKT_LOKALIZACJE'] = ['value' => IsoPlantProfile::where('audit_id', $audit->id)->distinct()->count('site_id'), 'source' => 'Liczba profili zakładów w audycie'];
                 $answers = $this->questionnaire->normalize($input, $current->definition, $current->answers, $request->user()->id, $op === 'submit');
                 if ($htmlState !== null) {

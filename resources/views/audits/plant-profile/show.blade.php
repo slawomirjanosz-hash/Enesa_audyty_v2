@@ -10,13 +10,15 @@
     $operations['copy'] = 'Utworzono kopię profilu do sprawdzenia';
     $operations['assign'] = 'Zmieniono osobę odpowiedzialną';
 @endphp
-@include('audits.partials.questionnaire-excel')
+<div class="plant-overview-bar">
+<div class="plant-overview-progress"><h2>{{ $profile->answers['site.name']['value'] ?? 'Zakład' }}</h2>
+@include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($profile->definition,$answers), 'progressForm'=>'#plant-form', 'progressMode'=>'plant'])</div>
+@include('audits.plant-profile.status')
+@include('audits.plant-profile.excel')
+</div>
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'plant-form'])
 @include('audits.partials.iso-release-example', ['exampleAllowed'=>!$client && $editable])
-<div class="iso-questionnaire-summary">@include('partials.questionnaire-progress', ['progress'=>app(\App\Services\QuestionnaireCompletion::class)->plant($profile->definition,$answers), 'progressForm'=>'#plant-form', 'progressMode'=>'plant'])
-@include('audits.plant-profile.status')</div>
-<div class="plant-summary"><div><a href="{{ route($prefix.'index',$audit) }}">← Wszystkie profile</a><h2>{{ $profile->answers['site.name']['value'] ?? 'Zakład' }}</h2></div><span class="plant-badge">{{ \App\Models\IsoPlantProfile::STATUSES[$profile->status] }} · wersja {{ $profile->revision }}</span></div>
-@if($profile->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{ $profile->review_note }}</p></div>@endif
+@if($profile->review_note)<details class="plant-notice plant-review-notes"><summary>Uwagi audytora</summary><p>{{ $profile->review_note }}</p></details>@endif
 @if(!($isLatest ?? true))<div class="plant-notice">To wersja historyczna. <a href="{{route($prefix.'index',$audit)}}">Otwórz najnowszą wersję profilu</a>, aby ją edytować lub zatwierdzić.</div>@elseif($profile->status==='auditor_corrected')<div class="plant-notice">Poprawiony przez audytora. Zmienione odpowiedzi oznaczono na niebiesko. Sprawdź je i ponownie zatwierdź ankietę.</div>@elseif(!$client && in_array($profile->status,['submitted','approved']))<div class="plant-notice">Zapis korekty oznaczy zmienione odpowiedzi w tej samej ankiecie i będzie wymagał ponownego zatwierdzenia przez klienta.</div>@endif
 <style>.plant-correction{margin:10px 0;padding:12px 14px;border-left:4px solid #2877b5;background:#edf6ff;border-radius:6px;color:#17466c;font-size:14px}.plant-correction p{margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}.plant-question:has(.plant-correction)>input,.plant-question:has(.plant-correction)>select,.plant-question:has(.plant-correction)>details{border:2px solid #2877b5;background:#f3f8ff}</style>
 @if(isset($profile->client_changes['_as_of_date']))<div class="plant-correction"><strong>Klient zmienił datę „Stan danych na dzień”</strong><p>Przed: {{$profile->client_changes['_as_of_date']['before']}} → Po korekcie: {{$profile->client_changes['_as_of_date']['after']}}</p></div>@endif
@@ -30,7 +32,7 @@
 <input type="hidden" name="complete_form" value="1"></form>
 @if(!empty($profile->definition['legacy_groups']))
 <details class="plant-card"><summary>Odpowiedzi zachowane z poprzedniego profilu</summary><p>Pozostają pod dotychczasowymi nazwami zmiennych. Pytania o innym znaczeniu wymagają potwierdzenia w nowej ankiecie.</p>
-@foreach($profile->definition['legacy_groups'] as $oldGroup)<h3>{{$oldGroup['title']}}</h3>@foreach($oldGroup['questions'] as $oldQuestion)@if(isset($profile->answers[$oldQuestion['key']]))<p><strong>{{$oldQuestion['label']}}</strong><br><small>{{$oldQuestion['key']}}</small><br>{{ $questionnaire->display($oldQuestion,$profile->answers[$oldQuestion['key']]) }}</p>@endif @endforeach @endforeach
+@foreach($profile->definition['legacy_groups'] as $oldGroup)<h3>{{$oldGroup['title']}}</h3>@foreach($oldGroup['questions'] as $oldQuestion)@if(isset($profile->answers[$oldQuestion['key']]))<p><strong>{{$oldQuestion['label']}}</strong>@unless($client)<br><small>{{$oldQuestion['key']}}</small>@endunless<br>{{ $questionnaire->display($oldQuestion,$profile->answers[$oldQuestion['key']]) }}</p>@endif @endforeach @endforeach
 </details>
 @endif
 <section id="approvals" class="plant-card"><h2>Zatwierdzenia</h2>

@@ -34,12 +34,12 @@
 
 <div class="iso-docs" id="iso-documents-{{ $sectionId }}">
     @if($sectionId === 'intro' && $isAuditContext)
-        <div style="padding:20px;border:1px solid #dce5df;border-radius:12px;background:#f5f9f6;margin-bottom:20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div id="plant-profiles" style="padding:20px;border:1px solid #dce5df;border-radius:12px;background:#f5f9f6;margin-bottom:20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
             @include('audits.partials.questionnaire-point-heading',['pointTitle'=>'Profil zakładu','pointHelp'=>'Dane zakładu, energia, instalacje i organizacja pracy. Wypełnij profil i przekaż go do zatwierdzenia.'])
             @php
                 $profilePrefix=($clientView??false)?'client.audits.plant-profile.':'audits.plant-profile.';
-                $profilesCanWrite=($clientView??false)||auth()->user()->can('audits.manage');
-                $profileUsers=$audit->company->users()->orderBy('name')->get();
+                $profilesCanWrite=!($clientView??false)&&auth()->user()->can('audits.manage');
+                $profileUsers=$profilesCanWrite ? $audit->company->users()->orderBy('name')->get() : collect();
             @endphp
             @if($profilesCanWrite)@include('audits.plant-profile.create-modal')@endif
             <div style="width:100%">

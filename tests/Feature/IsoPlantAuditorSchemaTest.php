@@ -71,7 +71,7 @@ test('auditor questionnaire validates units percentages years dates and maximum 
 test('new auditor questionnaire saves approves and renders with automatic fields and department labels', function () {
     [$audit, $client, $staff] = plantFixture();
     $s = app(IsoPlantQuestionnaire::class);
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład']);
+    createPlantForClient($audit, $client, ['name' => 'Zakład']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('FAKT_CA_MOC')->assertSee('Kontroling / finanse')->assertSee('data-calculated', false);
     $input = [];
@@ -91,7 +91,7 @@ test('new auditor questionnaire saves approves and renders with automatic fields
 
 test('schema upgrade preserves answers and a full backup without creating profile revisions', function () {
     [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład']);
+    createPlantForClient($audit, $client, ['name' => 'Zakład']);
     $profile = IsoPlantProfile::firstOrFail();
     $oldDefinition = json_decode(file_get_contents(resource_path('iso50001/plant-profile-v1.json')), true);
     $original = ['site.name' => ['value' => 'Zakład'], 'operations.headcount' => ['value' => 42]];

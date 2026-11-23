@@ -48,7 +48,7 @@ test('editable offer project audit and ISO forms expose draft controls without e
     $this->get(route('audits.show', $audit))->assertOk()->assertSee('data-autosave', false);
     $offerPage = $this->get(route('offers.create'))->assertOk()->assertSee('data-autosave', false)->assertSee('offer-drafts.js')->assertSee('data-draft-user="'.$admin->id.'"', false);
     [$isoAudit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $isoAudit), ['name' => 'Autozapis']);
+    createPlantForClient($isoAudit, $client, ['name' => 'Autozapis']);
     $profile = IsoPlantProfile::firstOrFail();
     $page = $this->get(route('client.audits.plant-profile.show', [$isoAudit, $profile]))->assertOk()->assertSee('data-autosave', false)->assertSee('form-drafts.js');
     if (getenv('FORM_DRAFT_QA')) {

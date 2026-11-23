@@ -7,6 +7,13 @@ window.plantConditionVisible = (condition, form) => {
     return condition.values.includes(value);
 };
 document.addEventListener('DOMContentLoaded', () => {
+    const excelImport = document.querySelector('[data-plant-excel-import]');
+    const excelFile = excelImport?.querySelector('input[type="file"]');
+    excelImport?.querySelector('[data-plant-excel-open]')?.addEventListener('click', () => excelFile.click());
+    excelFile?.addEventListener('change', () => {
+        if (excelFile.files.length) excelImport.requestSubmit();
+    });
+    excelImport?.addEventListener('submit', () => { window.formDraftLeaving = true; });
     const form = document.getElementById('plant-form');
     const nav = document.querySelector('.plant-nav');
     if (nav) new ResizeObserver(() => document.documentElement.style.setProperty('--plant-nav-height', `${nav.offsetHeight + 16}px`)).observe(nav);

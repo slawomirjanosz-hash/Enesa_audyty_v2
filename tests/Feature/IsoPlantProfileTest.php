@@ -54,12 +54,23 @@ function plantAnswers(): array
     return $answers;
 }
 
+/** Profiles are prepared by staff before the client fills their answers. */
+function createPlantForClient(Audit $audit, User $client, array $data)
+{
+    $staff = User::role('superadmin')->firstOrFail();
+    $response = test()->actingAs($staff)->post(route('audits.plant-profile.create', $audit), $data);
+    test()->actingAs($client);
+
+    return $response;
+}
+
 test('plant copies keep source data but require independent approvals and responsibility', function () {
-    [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład A', 'responsible_user_id' => $client->id])->assertRedirect();
+    [$audit, $client, $staff] = plantFixture();
+    createPlantForClient($audit, $client, ['name' => 'Zakład A', 'responsible_user_id' => $client->id])->assertRedirect();
     $source = IsoPlantProfile::firstOrFail();
     $source->update(['status' => 'approved', 'document_id' => null, 'client_approval' => ['name' => 'Klient'], 'auditor_approval' => ['name' => 'Audytor']]);
-    $this->post(route('client.audits.plant-profile.copy', [$audit, $source]))->assertRedirect();
+    $this->actingAs($staff)->post(route('audits.plant-profile.copy', [$audit, $source]))->assertRedirect();
+    $this->actingAs($client);
     $copy = IsoPlantProfile::latest('id')->firstOrFail();
     expect($copy->id)->not->toBe($source->id)
         ->and($copy->site_id)->not->toBe($source->site_id)
@@ -67,32 +78,33 @@ test('plant copies keep source data but require independent approvals and respon
         ->and($copy->client_approval)->toBeNull()->and($copy->auditor_approval)->toBeNull()
         ->and($copy->responsible_user_id)->toBeNull()->and($copy->status)->toBe('editing')
         ->and($source->fresh()->status)->toBe('approved');
-    $this->get(route('client.audits.plant-profile.index', $audit))->assertRedirect(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro', 'add_profile' => 1]));
-    $this->get(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro']))->assertOk()->assertSee('Zakład A — kopia')->assertSee('Podgląd profilu')->assertSee('Kopiuj profil do nowego zakładu');
+    $this->get(route('client.audits.plant-profile.index', $audit))->assertRedirect(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro']));
+    $this->get(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro']))->assertOk()->assertSee('Zakład A — kopia')->assertSee('Wypełnij ankietę')->assertDontSee('Podgląd profilu')->assertDontSee('Kopiuj profil do nowego zakładu');
     $this->get(route('client.audits.plant-profile.show', [$audit, $copy, 'preview' => 1]))->assertOk()->assertSee('<fieldset disabled', false)->assertDontSee('value="save"', false);
 });
 
 test('plant responsibility and copying stay within the client company', function () {
-    [$audit, $client] = plantFixture();
+    [$audit, $client, $staff] = plantFixture();
     $outsider = User::factory()->create();
     $outsider->assignRole(Role::findOrCreate('client_admin'));
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład A']);
+    createPlantForClient($audit, $client, ['name' => 'Zakład A']);
     $profile = IsoPlantProfile::firstOrFail();
-    $url = route('client.audits.plant-profile.responsible', [$audit, $profile]);
-    $this->patch($url, ['responsible_user_id' => $outsider->id])->assertSessionHasErrors('responsible_user_id');
+    $url = route('audits.plant-profile.responsible', [$audit, $profile]);
+    $this->actingAs($staff)->patch($url, ['responsible_user_id' => $outsider->id])->assertSessionHasErrors('responsible_user_id');
     $this->patch($url, ['responsible_user_id' => $client->id])->assertSessionHasNoErrors();
     expect($profile->fresh()->responsible_user_id)->toBe($client->id);
     $this->actingAs($outsider)->post(route('client.audits.plant-profile.copy', [$audit, $profile]))->assertNotFound();
-    $this->patch($url, ['responsible_user_id' => null])->assertNotFound();
+    $this->patch(route('client.audits.plant-profile.responsible', [$audit, $profile]), ['responsible_user_id' => null])->assertNotFound();
     expect(IsoPlantProfile::count())->toBe(1)->and($profile->fresh()->responsible_user_id)->toBe($client->id);
 });
 
 test('location count comes from distinct sites rather than a manually supplied number', function () {
     app()->instance(IsoPlantQuestionnaire::class, new IsoPlantQuestionnaire);
-    [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład A']);
+    [$audit, $client, $staff] = plantFixture();
+    createPlantForClient($audit, $client, ['name' => 'Zakład A']);
     $profile = IsoPlantProfile::firstOrFail();
-    $this->post(route('client.audits.plant-profile.copy', [$audit, $profile]));
+    $this->actingAs($staff)->post(route('audits.plant-profile.copy', [$audit, $profile]));
+    $this->actingAs($client);
     $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()
         ->assertDontSee('Ile lokalizacji obejmie system zarządzania energią?');
     $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), [
@@ -105,7 +117,7 @@ test('location count comes from distinct sites rather than a manually supplied n
 
 test('progress selects only latest profiles per audit and site without sorting JSON in SQL', function () {
     [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Pierwszy']);
+    createPlantForClient($audit, $client, ['name' => 'Pierwszy']);
     $first = IsoPlantProfile::firstOrFail();
     $latest = $first->replicate();
     $latest->revision = 3;
@@ -113,7 +125,7 @@ test('progress selects only latest profiles per audit and site without sorting J
     $older = $first->replicate();
     $older->revision = 2;
     $older->save();
-    $this->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Drugi']);
+    createPlantForClient($audit, $client, ['name' => 'Drugi']);
     $second = IsoPlantProfile::orderByDesc('id')->firstOrFail();
     $query = IsoPlantProfile::where('audit_id', $audit->id)->latestPerSite();
     expect(strtolower($query->toSql()))->not->toContain('order by');
@@ -131,7 +143,7 @@ test('progress selects only latest profiles per audit and site without sorting J
 
 test('review exchange highlights client corrections until both approve the same content', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład']);
+    createPlantForClient($audit, $client, ['name' => 'Zakład']);
     $profile = IsoPlantProfile::firstOrFail();
     $clientUrl = route('client.audits.plant-profile.update', [$audit, $profile]);
     $staffUrl = route('audits.plant-profile.update', [$audit, $profile]);
@@ -178,7 +190,7 @@ test('client dashboard and audit list share dates manager status and aggregate p
             ->assertSee('01.09.2026')->assertSee('31.12.2026')->assertSee($staff->name)
             ->assertSee('Wypełnienie audytu: 0%')->assertSee('Rodzaj audytu: ISO 50001');
     }
-    $this->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Zakład']);
+    createPlantForClient($audit, $client, ['name' => 'Zakład']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), ['operation' => 'save', 'lock_version' => 0, 'complete_form' => 1, 'as_of_date' => '2026-09-23', 'answers' => plantAnswers()])->assertSessionHasNoErrors();
     $progress = app(QuestionnaireCompletion::class)->auditCards(Audit::whereKey($audit->id)->get())[$audit->id];
@@ -195,7 +207,7 @@ test('plant profile has 65 uniquely named questions and renders client and staff
     $questions = app(IsoPlantQuestionnaire::class)->questions(app(IsoPlantQuestionnaire::class)->definition());
     expect($questions)->toHaveCount(65)->and(array_unique(array_column($questions, 'key')))->toHaveCount(65);
     $this->actingAs($client)->get(route('client.audits.show', [$audit, 'tab' => 'iso50001', 'section' => 'intro']))->assertOk()->assertSee('data-sortable="false"', false)->assertSee('table-sort.js');
-    $this->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła'])->assertRedirect();
+    createPlantForClient($audit, $client, ['name' => 'Piła'])->assertRedirect();
     $profile = IsoPlantProfile::firstOrFail();
     $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('Zatwierdź jako klient')->assertSee('name="answers[energy.carriers][value][]"', false)->assertDontSee('Zatwierdź jako audytor');
     $this->actingAs($staff)->get(route('audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertDontSee('Zatwierdź jako klient');
@@ -203,14 +215,18 @@ test('plant profile has 65 uniquely named questions and renders client and staff
 
 test('answer details stay collapsed even with saved details and sources for client and staff', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $profile->update(['answers' => ['site.name' => ['value' => 'Piła', 'detail' => 'Dodatkowy opis', 'source' => 'Dokument źródłowy']]]);
     foreach ([[$client, 'client.audits.plant-profile.show'], [$staff, 'audits.plant-profile.show']] as [$user, $route]) {
-        $response = $this->actingAs($user)->get(route($route, [$audit, $profile]))->assertOk()
-            ->assertSee('Dodatkowy opis')->assertSee('Dokument źródłowy');
-        preg_match_all('/<details\b([^>]*)>\s*<summary>Uzupełnienie i źródło odpowiedzi<\/summary>/u', $response->getContent(), $matches);
-        expect($matches[1])->toHaveCount(65);
+        $response = $this->actingAs($user)->get(route($route, [$audit, $profile]))->assertOk();
+        if ($user->is($client)) {
+            $response->assertDontSee('Dodatkowy opis')->assertDontSee('Dokument źródłowy');
+        } else {
+            $response->assertSee('Dodatkowy opis')->assertSee('Dokument źródłowy');
+        }
+        preg_match_all('/<details\b([^>]*)>\s*<summary>(?:Uzupełnienie i źródło odpowiedzi|Szczegóły \/ wyjaśnienie)<\/summary>/u', $response->getContent(), $matches);
+        expect($matches[1])->toHaveCount($user->is($client) ? 60 : 65);
         foreach ($matches[1] as $attributes) {
             expect($attributes)->not->toContain('open');
         }
@@ -219,7 +235,7 @@ test('answer details stay collapsed even with saved details and sources for clie
 
 test('unanswered highlighting starts after saving and remains on reopening for both roles', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $url = route('client.audits.plant-profile.show', [$audit, $profile]);
     $this->get($url)->assertOk()->assertDontSee('data-highlight-unanswered');
@@ -233,20 +249,21 @@ test('unanswered highlighting starts after saving and remains on reopening for b
 
 test('plant profile rejects foreign clients audit mismatch and forged approval', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), ['lock_version' => 0, 'operation' => 'approve'])->assertForbidden();
     $this->post(route('client.audits.plant-profile.pdf', [$audit, $profile]), ['lock_version' => 0])->assertForbidden();
     [$otherAudit, $otherClient] = plantFixture();
     $this->actingAs($otherClient)->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertNotFound();
     $this->get(route('client.audits.plant-profile.show', [$otherAudit, $profile]))->assertNotFound();
-    $this->post(route('client.audits.plant-profile.create', $otherAudit), ['site_id' => $profile->site_id])->assertNotFound();
+    $this->post(route('client.audits.plant-profile.create', $otherAudit), ['site_id' => $profile->site_id])->assertForbidden();
+    $this->actingAs($staff)->post(route('audits.plant-profile.create', $otherAudit), ['site_id' => $profile->site_id])->assertNotFound();
     $this->actingAs($staff)->post(route('audits.plant-profile.update', [$audit, $profile]), ['lock_version' => 0, 'operation' => 'submit'])->assertForbidden();
 });
 
 test('plant profile validates submissions and protects simultaneous changes', function () {
     [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $url = route('client.audits.plant-profile.update', [$audit, $profile]);
     $this->post($url, ['lock_version' => 0, 'operation' => 'submit', 'complete_form' => 1, 'as_of_date' => '2026-09-22', 'answers' => ['site.name' => ['value' => 'Piła']]])->assertSessionHasErrors();
@@ -258,7 +275,7 @@ test('plant profile validates submissions and protects simultaneous changes', fu
 
 test('plant profile approval PDF and new version preserve immutable history', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $clientUrl = route('client.audits.plant-profile.update', [$audit, $profile]);
     $staffUrl = route('audits.plant-profile.update', [$audit, $profile]);
@@ -290,7 +307,7 @@ test('plant profile approval PDF and new version preserve immutable history', fu
 
 test('auditor corrections stay in the same profile and highlight changes until client approval', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $answers = plantAnswers();
     $clientUrl = route('client.audits.plant-profile.update', [$audit, $profile]);
@@ -299,6 +316,8 @@ test('auditor corrections stay in the same profile and highlight changes until c
     $this->actingAs($staff)->post($staffUrl, ['lock_version' => 1, 'operation' => 'approve', 'note' => 'OK'])->assertRedirect();
     $this->post(route('audits.plant-profile.pdf', [$audit, $profile]), ['lock_version' => 2])->assertRedirect();
     $oldDocument = $profile->fresh()->document_id;
+    // The auditor form includes the provenance retained by the compact client form.
+    $answers = $profile->fresh()->answers;
     $this->get(route('audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertSee('name="operation" value="save"', false)->assertDontSee('<fieldset disabled', false);
     $payload = ['lock_version' => 2, 'operation' => 'save', 'complete_form' => 1, 'as_of_date' => '2026-09-22', 'answers' => $answers];
     $this->post($staffUrl, $payload)->assertRedirect();
@@ -325,7 +344,7 @@ test('auditor corrections stay in the same profile and highlight changes until c
 
 test('successive auditor edits accumulate original values and survive client draft saves', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $answers = plantAnswers();
     $clientUrl = route('client.audits.plant-profile.update', [$audit, $profile]);
@@ -352,7 +371,7 @@ test('successive auditor edits accumulate original values and survive client dra
 
 test('returning profile clears approval and requires a fresh client confirmation', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), ['lock_version' => 0, 'operation' => 'submit', 'complete_form' => 1, 'as_of_date' => '2026-09-22', 'answers' => plantAnswers()]);
     $url = route('audits.plant-profile.update', [$audit, $profile]);
@@ -364,17 +383,17 @@ test('returning profile clears approval and requires a fresh client confirmation
 test('ordinary client can fill but cannot approve and sites stay separate', function () {
     [$audit, $client] = plantFixture();
     $client->syncRoles([Role::findOrCreate('client_user')]);
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->get(route('client.audits.plant-profile.show', [$audit, $profile]))->assertOk()->assertDontSee('Zatwierdź jako klient');
     $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), ['lock_version' => 0, 'operation' => 'submit'])->assertForbidden();
-    $this->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Chorzów'])->assertRedirect();
+    createPlantForClient($audit, $client, ['name' => 'Chorzów'])->assertRedirect();
     expect(IsoPlantProfile::count())->toBe(2)->and(DB::table('iso_plant_sites')->count())->toBe(2);
 });
 
 test('invalid profile fields retain input and return exact sparse row errors without saving', function () {
     [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $show = route('client.audits.plant-profile.show', [$audit, $profile]);
     $answers = ['energy.records' => ['value' => [7 => ['quantity' => 123, 'period_start' => '2026-12-31', 'period_end' => '2026-01-01']]]];
@@ -404,7 +423,7 @@ test('profile energy values need units period and boundary and reject contradict
 
 test('staff view permission cannot mutate and delegated auditor cannot access a foreign company', function () {
     [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $staff = User::factory()->create();
     $staff->assignRole(Role::findOrCreate('employee'));
@@ -418,7 +437,7 @@ test('staff view permission cannot mutate and delegated auditor cannot access a 
 
 test('copying a site into another audit retains periods but not signatures', function () {
     [$audit, $client, $staff] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $this->post(route('client.audits.plant-profile.update', [$audit, $profile]), ['lock_version' => 0, 'operation' => 'submit', 'complete_form' => 1, 'as_of_date' => '2025-12-31', 'answers' => plantAnswers()]);
     $this->actingAs($staff)->post(route('audits.plant-profile.update', [$audit, $profile]), ['lock_version' => 1, 'operation' => 'approve', 'note' => 'Zweryfikowano dane.']);
@@ -426,14 +445,14 @@ test('copying a site into another audit retains periods but not signatures', fun
     $nextAudit->number = 'PLANT/next';
     $nextAudit->save();
     $nextAudit->surveys()->create(['audit_type_id' => AuditType::where('slug', 'iso50001')->value('id'), 'title' => 'ISO', 'status' => 'draft']);
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $nextAudit), ['site_id' => $profile->site_id, 'copy_latest' => 1])->assertRedirect();
+    createPlantForClient($nextAudit, $client, ['site_id' => $profile->site_id, 'copy_latest' => 1])->assertRedirect();
     $copy = IsoPlantProfile::where('audit_id', $nextAudit->id)->firstOrFail();
     expect($copy->as_of_date->format('Y-m-d'))->toBe('2025-12-31')->and($copy->answers)->toBe($profile->fresh()->answers)->and($copy->client_approval)->toBeNull()->and($copy->status)->toBe('editing');
 });
 
 test('truncated forms do not erase answers and a person cannot approve in both roles', function () {
     [$audit, $client] = plantFixture();
-    $this->actingAs($client)->post(route('client.audits.plant-profile.create', $audit), ['name' => 'Piła']);
+    createPlantForClient($audit, $client, ['name' => 'Piła']);
     $profile = IsoPlantProfile::firstOrFail();
     $url = route('client.audits.plant-profile.update', [$audit, $profile]);
     $this->post($url, ['lock_version' => 0, 'operation' => 'save', 'as_of_date' => '2026-09-22', 'answers' => plantAnswers()])->assertSessionHasErrors('complete_form');
