@@ -39,14 +39,34 @@ class IsoSystemQuestionnaire
 
     public function sources(IsoPlantProfile $profile, string $section): array
     {
+        return $this->usingSourceCache(function () use ($profile, $section) {
+            $key = $profile->audit_id.':'.$profile->site_id.':'.$profile->id.':'.$profile->lock_version.':'.$section;
+
+            return self::$sourceCache[$key] ??= $this->resolveSources($profile, $section);
+        });
+    }
+
+    /** Read one overview snapshot; never retain it for a later save or approval. */
+    public function sourcesForSections(IsoPlantProfile $profile, array $sections): array
+    {
+        return $this->usingSourceCache(function () use ($profile, $sections) {
+            $sources = [];
+            foreach ($sections as $section) {
+                $sources[$section] = $this->sources($profile, $section);
+            }
+
+            return $sources;
+        });
+    }
+
+    private function usingSourceCache(callable $read): array
+    {
         if (self::$sourceDepth === 0) {
             self::$sourceCache = [];
         }
         self::$sourceDepth++;
         try {
-            $key = $profile->audit_id.':'.$profile->site_id.':'.$profile->id.':'.$profile->lock_version.':'.$section;
-
-            return self::$sourceCache[$key] ??= $this->resolveSources($profile, $section);
+            return $read();
         } finally {
             self::$sourceDepth--;
             if (self::$sourceDepth === 0) {

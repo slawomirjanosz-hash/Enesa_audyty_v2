@@ -166,7 +166,7 @@ class AuditController extends Controller
     public function show(Request $request, Audit $audit): View
     {
         $this->ensureAccess($request, $audit);
-        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments.uploader', 'isoImplementationResponses']);
+        $audit->load(['company', 'manager', 'members', 'tasks.assignedUser', 'financialEntries', 'documents.uploader', 'surveys.auditType', 'energyPassports.template', 'isoSectionDocuments' => fn ($query) => $query->metadata()->with('uploader'), 'isoImplementationResponses']);
         $audit->load(['financeGroups.entries', 'financialEntries.financeGroup', 'financialEntries.supplierCompany', 'documentFolders.documents.uploader', 'documentLinks']);
         $timelineItems = $audit->tasks
             ->map(fn (Task $task) => $this->taskTimelinePayload($audit, $task))->values();

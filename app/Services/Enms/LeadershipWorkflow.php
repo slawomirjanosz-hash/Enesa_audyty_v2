@@ -21,11 +21,12 @@ final class LeadershipWorkflow
         $w->profile->refresh();
         $rows = IsoSystemReview::where('audit_id', $w->audit->id)->where('site_id', $w->profile->site_id)->whereIn('section', ['4-3', '4-4', '5-3', '6-2', '6-3', '6-4', '6-5', '9-1-1', '9-1-2'])->get()->keyBy('section');
         $map = ['ZAKRES' => ['4-3', 'ZAKRES'], 'CELE' => ['6-2', 'CELE'], 'ENPI' => ['6-4', 'KARTY'], 'ENB' => ['6-5', 'KARTY'], 'WYNIKI' => ['9-1-1', 'WSKAZNIKI'], 'ROLE' => ['5-3', 'ROLE'], 'SEU' => ['6-3', 'SEU']];
+        $currentSources = app(IsoSystemQuestionnaire::class)->sourcesForSections($w->profile, $rows->keys()->intersect(array_column($map, 0))->all());
         $citations = [];
         foreach ($map as $key => [$section, $root]) {
             $row = $rows[$section] ?? null;
-            $document = $row?->document_id ? IsoSectionDocument::where('audit_id', $w->audit->id)->where('section_id', $section)->find($row->document_id) : null;
-            $current = $row && $row->source_hash === app(IsoSystemQuestionnaire::class)->sources($w->profile, $section)['hash'];
+            $document = $row?->document_id ? IsoSectionDocument::where('audit_id', $w->audit->id)->where('section_id', $section)->find($row->document_id, ['id', 'version_number']) : null;
+            $current = $row && $row->source_hash === $currentSources[$section]['hash'];
             $citations[$key] = ['section' => $section, 'value' => $row?->answers[$root] ?? null, 'source_id' => $row?->id, 'source_version' => $row?->lock_version, 'document_id' => $document?->id, 'document_version' => $document?->version_number, 'read_status' => $row ? 'potwierdzony' : 'niepotwierdzony', 'approved' => (bool) ($current && $document && $row?->client_approval && $row?->auditor_approval && $row?->status === 'approved')];
         }
         $scope = $rows['4-3'] ?? null;

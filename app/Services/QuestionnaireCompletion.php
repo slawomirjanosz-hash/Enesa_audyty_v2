@@ -127,7 +127,7 @@ class QuestionnaireCompletion
         if (request()->attributes->has($cacheKey)) {
             return request()->attributes->get($cacheKey);
         }
-        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->with('responsibleUser')->latestPerSite()->get(['id', 'site_id', 'responsible_user_id', 'revision', 'lock_version', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'elaboration_document_id', 'client_changes']);
+        $profiles = IsoPlantProfile::where('audit_id', $audit->id)->with('responsibleUser')->latestPerSite()->get(['id', 'audit_id', 'site_id', 'responsible_user_id', 'revision', 'lock_version', 'definition', 'answers', 'status', 'client_approval', 'auditor_approval', 'document_id', 'elaboration_document_id', 'client_changes']);
         $profiles->each(fn ($profile) => $profile->setAttribute('audit_site_count', $profiles->count()));
         $plants = $profiles->map(fn ($profile) => ['id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $this->plant($profile->definition, $profile->answers, $profiles->count()), 'profile' => $profile]);
         $review = IsoContextReview::where('audit_id', $audit->id)->where('year', now()->year)->first(['answers']);
@@ -154,11 +154,13 @@ class QuestionnaireCompletion
             return ['review' => $review, 'stale' => ! $stakeholderService->ready($profile, $factors) || ($review && $review->source_hash !== $stakeholderService->hash($profile, $factors)), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $stakeholderService->progress($answers, $parties, $review?->consultant ?? []), 'status' => $status];
         });
         $systems = IsoSystemReview::where('audit_id', $audit->id)->get()->keyBy(fn ($row) => $row->site_id.':'.$row->section);
+        $service = app(IsoSystemQuestionnaire::class);
         foreach (array_keys(IsoSystemReview::TITLES) as $section) {
-            $result[$section] = $profiles->map(function ($profile) use ($audit, $systems, $section) {
-                $profile->audit_id = $audit->id;
-                $service = app(IsoSystemQuestionnaire::class);
-                $sources = $service->sources($profile, $section);
+            $result[$section] = collect();
+        }
+        foreach ($profiles as $profile) {
+            $allSources = $service->sourcesForSections($profile, array_keys(IsoSystemReview::TITLES));
+            foreach ($allSources as $section => $sources) {
                 $review = $systems->get($profile->site_id.':'.$section);
                 $status = $review && $review->source_hash !== $sources['hash'] ? 'Źródła zmienione — wymagany przegląd' : IsoPlantProfile::STATUSES[$review?->status ?? 'editing'];
                 if ($review?->status === 'submitted') {
@@ -167,15 +169,21 @@ class QuestionnaireCompletion
                     $status .= ' — działanie klienta';
                 }
 
-                return ['review' => $review, 'stale' => ! $sources['ready'] || ($review && $review->source_hash !== $sources['hash']), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $service->progress($section, $review?->answers ?? $service->seed($section, $sources), $sources), 'status' => $status];
-            });
+                $result[$section]->push(['review' => $review, 'stale' => ! $sources['ready'] || ($review && $review->source_hash !== $sources['hash']), 'profile_id' => $profile->id, 'name' => $profile->answers['site.name']['value'] ?? 'Zakład', 'progress' => $service->progress($section, $review?->answers ?? $service->seed($section, $sources), $sources), 'status' => $status]);
+            }
         }
         $profilesById = $profiles->keyBy('id');
+        $leadershipProgress = app(LeadershipProgress::class)->forAudits([$audit->id]);
         foreach ($result as $key => $cards) {
             if ($key !== 'plants' && $cards instanceof Collection) {
                 $result[$key] = $cards->map(fn ($card) => $card + ['responsible_name' => $profilesById->get($card['profile_id'])?->responsibleUser?->name]);
             }
         }
+        $result['5-1'] = $result['5-1']->map(function ($card) use ($audit, $profilesById, $leadershipProgress) {
+            $profile = $profilesById->get($card['profile_id']);
+
+            return $card + ['profile' => $profile, 'leadership_progress' => $leadershipProgress[$audit->id.':'.$profile->site_id] ?? ['answered' => 0, 'total' => 13, 'percent' => 0]];
+        });
         request()->attributes->set($cacheKey, $result);
 
         return $result;
