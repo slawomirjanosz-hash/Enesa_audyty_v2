@@ -506,8 +506,6 @@
                 </span>
                 <ul class="nav-sub">
                     <li><a href="{{ url('/audit-types') }}" class="nav-link">Typy audytów</a></li>
-                    <li><a href="{{ route('audits.surveys') }}" class="nav-link {{ request()->routeIs('audits.surveys') ? 'active' : '' }}">Ankiety HTML</a></li>
-                    <li><a href="{{ route('audits.versioning') }}" class="nav-link {{ request()->routeIs('audits.versioning') ? 'active' : '' }}">Wersjonowanie</a></li>
                     @if($canAccessModule('audits.passports.view'))
                     <li><a href="{{ route('energy-passports.index') }}" class="nav-link {{ request()->routeIs('energy-passports.*') ? 'active' : '' }}">Paszporty energetyczne</a></li>
                     @endif
@@ -568,7 +566,7 @@
             @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
             <li class="nav-item">
                 <a href="{{ route('audits.index') }}" class="nav-link {{ request()->routeIs('audits.*') ? 'active' : '' }}">
-                    <i class="ti ti-clipboard-check"></i> Audyty
+                    <i class="ti ti-clipboard-check"></i> Projekty Audytowe
                 </a>
             </li>
             @endif
