@@ -139,7 +139,7 @@ class CompanySettings extends Model
     public function logoUrl(): string
     {
         if ($this->logo_data) {
-            return route('branding.logo', ['v' => $this->updated_at?->timestamp]);
+            return route('branding.logo', ['v' => $this->updated_at?->timestamp], false);
         }
 
         if ($this->logo_path && Storage::disk('public')->exists($this->logo_path)) {

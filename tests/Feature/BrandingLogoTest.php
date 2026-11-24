@@ -3,7 +3,31 @@
 use App\Models\CompanySettings;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\URL;
 use Spatie\Permission\Models\Role;
+
+test('stored logo stays on the current origin when the application has a different canonical domain', function () {
+    $settings = CompanySettings::create([
+        'name' => 'PRINŻ test',
+        'welcome_page_mode' => 'general',
+        'logo_data' => base64_encode('test-logo-binary'),
+        'logo_mime' => 'image/png',
+    ]);
+    URL::forceRootUrl('https://app.example.test');
+    URL::forceScheme('https');
+
+    try {
+        $logoUrl = $settings->logoUrl();
+        expect($logoUrl)->toStartWith('/branding/logo?v=')->not->toContain('app.example.test');
+        $this->get('https://alternate.example.test/')
+            ->assertOk()->assertSee('src="'.$logoUrl.'"', false);
+        $this->get('https://alternate.example.test'.$logoUrl)
+            ->assertOk()->assertContent('test-logo-binary')->assertHeader('Content-Type', 'image/png');
+    } finally {
+        URL::forceRootUrl(null);
+        URL::forceScheme(null);
+    }
+});
 
 test('disabling client zone updates the active settings record and removes navigation even for superadmin', function () {
     Role::findOrCreate('superadmin');
