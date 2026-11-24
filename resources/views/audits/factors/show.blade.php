@@ -1,4 +1,4 @@
-<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Czynniki 4.1 · ISO 50001</title><link rel="stylesheet" href="{{asset('css/iso-plant-profile.css')}}"><style>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Czynniki 4.1 · ISO 50001</title><link rel="stylesheet" href="{{asset('css/iso-plant-profile.css')}}?v={{filemtime(public_path('css/iso-plant-profile.css'))}}"><style>
 .factor-empty{background:#fff8dc;border-left:4px solid #e6b948}.factor-change{padding:12px;background:#edf6ff;border-left:4px solid #2877b5;margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere}.factor-auto{background:#f1f6f3;padding:14px;border-radius:8px}.factor-source{font-size:13px;color:#526b61}textarea{min-height:85px}.factor-hidden{display:none!important}.factor-status{display:flex;gap:12px;flex-wrap:wrap}.factor-status span{padding:8px;border-radius:8px;background:#edf3ef}
 </style></head><body>
 <header class="plant-header"><div><small>ISO 50001 · Punkt 4</small><h1>4.1 Czynniki kontekstowe</h1><span>{{$audit->company->name}} · {{$profile->answers['site.name']['value']??'Zakład'}}</span></div><a href="{{route($client?'client.audits.show':'audits.show',['audit'=>$audit,'tab'=>'iso50001','section'=>'4-1'])}}">← Wróć do audytu</a></header>
@@ -10,15 +10,14 @@
  $progress=$questionnaire->progress($facts,$answers);
  $operations=['save_swot'=>'Zapisano analizę SWOT','save'=>'Zapisano odpowiedzi','submit'=>'Zatwierdzono jako klient','approve'=>'Zatwierdzono jako audytor','return'=>'Zwrócono do uzupełnienia','withdraw'=>'Wycofano zatwierdzenie'];
 @endphp
-@include('audits.partials.questionnaire-excel',['excelReady'=>$ready])
 @include('audits.partials.questionnaire-example', ['exampleAllowed'=>!$client && $editable, 'exampleForm'=>'factor-form'])
 @include('audits.partials.iso-release-example', ['exampleAllowed'=>!$client && $editable])
 @if(session('success'))<div class="plant-notice success" role="status">{{session('success')}}</div>@endif
 @if($errors->any())<div class="plant-notice error" role="alert"><strong>Sprawdź zaznaczone pola:</strong><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 @if(!$ready)<div class="plant-notice">Ankieta korzysta z zatwierdzonego profilu zakładu. Najpierw zatwierdź profil jako klient i audytor. <a href="{{route($client?'client.audits.plant-profile.show':'audits.plant-profile.show',[$audit,$profile])}}">Otwórz profil zakładu →</a></div>@endif
 @if($stale)<div class="plant-notice">Profil zakładu zmienił się. Zachowano niezależne decyzje, a czynniki zależne od zmienionych danych wymagają ponownego potwierdzenia. Dotychczasowe zatwierdzenia ankiety nie są już aktualne.</div>@endif
-<div class="plant-summary iso-questionnaire-summary"><strong id="factor-progress" role="status">Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong>@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])</div>
-@if($review->review_note)<div class="plant-notice"><strong>Uwagi audytora</strong><p>{{$review->review_note}}</p></div>@endif
+<div class="plant-summary iso-questionnaire-summary"><div class="iso-toolbar-progress"><strong id="factor-progress" role="status">Wypełnienie: {{$progress['percent']}}% · {{$progress['answered']}} / {{$progress['total']}}</strong><progress max="100" value="{{$progress['percent']}}" aria-label="Wypełnienie ankiety"></progress></div>@include('audits.partials.questionnaire-status', ['statusRecord'=>$review, 'statusStale'=>$stale])@include('audits.partials.questionnaire-excel',['excelReady'=>$ready])</div>
+@if($review->review_note)<details class="plant-notice plant-review-notes"><summary>Uwagi audytora</summary><p>{{$review->review_note}}</p></details>@endif
 @if($review->status==='auditor_corrected')<div class="plant-notice">Sprawdź oznaczone na niebiesko korekty audytora i ponownie zatwierdź ankietę.</div>@elseif(!$client && $review->status==='submitted')<div class="plant-notice">Ankieta oczekuje na Twój przegląd. Zmiana odpowiedzi klienta wymaga jego ponownego zatwierdzenia. Analizę konsultanta zatwierdza audytor.</div>@endif
 @include('audits.partials.iso-chapter-four-tabs', ['clauseSection'=>'4-1'])
 <form @if($editable) data-autosave data-draft-exit="{{route($client?'client.audits.show':'audits.show',[$audit,'tab'=>'surveys'])}}" @endif id="factor-form" method="post" action="{{route($prefix.'update',[$audit,$profile])}}">@csrf

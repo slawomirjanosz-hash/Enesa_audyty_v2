@@ -147,7 +147,7 @@ test('section excel routes enforce tenant access and render controls for client 
         $params = $section === '4-2' ? [$audit, $profile] : [$audit, $profile, $section];
         foreach ([$client, $staff] as $user) {
             $prefix = ($user === $client ? 'client.' : '')."audits.$module.";
-            $this->actingAs($user)->get(route($prefix.'show', $params))->assertOk()->assertSee('Pobierz ankietę Excel')->assertSee(route($prefix.'excel', $params), false);
+            $this->actingAs($user)->get(route($prefix.'show', $params))->assertOk()->assertSee('Wypełnij Excela offline')->assertSee(route($prefix.'excel', $params), false);
             $this->get(route($prefix.'excel', $params))->assertOk()->assertHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         }
         $stranger = User::factory()->create();
