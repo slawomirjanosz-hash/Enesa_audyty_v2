@@ -33,7 +33,7 @@ class SecurityHeaders
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
-        if ($request->user() || $request->is('shared/*', 'support/mail-test')) {
+        if ($request->user() || $request->is('login', 'login/*', 'shared/*', 'support/mail-test')) {
             $response->headers->set('Cache-Control', 'private, no-store');
         }
         if ($request->is('shared/*', 'support/mail-test')) {
