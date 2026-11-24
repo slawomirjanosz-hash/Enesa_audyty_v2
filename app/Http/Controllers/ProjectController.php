@@ -109,6 +109,8 @@ class ProjectController extends Controller
         $canViewServicePrices = $user->hasRole('superadmin') || $user->can('projects.requirements.service_prices.view');
         $canViewDocuments = $fullAccess || $user->canAny(['projects.documents.view', 'projects.documents.manage']);
         $canViewProtocols = $fullAccess || $user->canAny(['projects.protocols.view', 'projects.protocols.manage']);
+        $canViewWorkOrders = $fullAccess || $user->canAny(['projects.work_orders.view', 'projects.work_orders.manage']);
+        $canManageWorkOrders = ! $user->hasFullReadOnlyAccess() && ($fullAccess || $user->can('projects.work_orders.manage'));
         $canManageProtocols = $fullAccess || $user->can('projects.protocols.manage');
         $project->load([
             'company', 'manager', 'members', 'tasks.assignedUser', 'tasks.dependency', 'tasks.participants',
@@ -149,6 +151,8 @@ class ProjectController extends Controller
             'canViewMaterialPrices' => $canViewMaterialPrices,
             'canViewServicePrices' => $canViewServicePrices,
             'canViewDocuments' => $canViewDocuments,
+            'canViewWorkOrders' => $canViewWorkOrders, 'canManageWorkOrders' => $canManageWorkOrders,
+            'workOrders' => $canViewWorkOrders ? \App\Models\ProjectWorkOrder::where('project_id', $project->id)->latest()->get() : collect(),
             'canViewProtocols' => $canViewProtocols,
             'canManageProtocols' => $canManageProtocols,
             'protocols' => $canViewProtocols ? ProjectProtocol::where('project_id', $project->id)->latest()->get(['id', 'project_id', 'number', 'title', 'acceptance_date', 'supplier_snapshot', 'client_snapshot', 'direction', 'kind', 'outcome', 'invoice_decision', 'items', 'items_mode', 'revision', 'created_at']) : collect(),

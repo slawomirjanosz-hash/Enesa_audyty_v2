@@ -160,7 +160,7 @@
 @endif
 
 <div class="tabs">
-    @foreach(collect(['overview'=>'Przegląd','gantt'=>'Harmonogram','tasks'=>'Zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','protocols'=>'Protokoły','documents'=>'Dokumenty'])->filter(fn($label,$id) => match($id) {'gantt','tasks'=>$canViewSchedule,'finances'=>$canViewFinances,'requirements'=>$canViewRequirements,'protocols'=>$canViewProtocols,'documents'=>$canViewDocuments,default=>true}) as $id=>$label)
+    @foreach(collect(['overview'=>'Przegląd','gantt'=>'Harmonogram','tasks'=>'Zadania','finances'=>'Finanse','requirements'=>'Materiały i usługi','work-orders'=>'Zlecenia','protocols'=>'Protokoły','documents'=>'Dokumenty'])->filter(fn($label,$id) => match($id) {'gantt','tasks'=>$canViewSchedule,'finances'=>$canViewFinances,'requirements'=>$canViewRequirements,'work-orders'=>$canViewWorkOrders,'protocols'=>$canViewProtocols,'documents'=>$canViewDocuments,default=>true}) as $id=>$label)
     <button class="tab {{ $loop->first?'active':'' }}" onclick="openProjectTab('{{ $id }}',this)">{{ $label }}</button>
     @endforeach
 </div>
@@ -172,6 +172,9 @@
     </div>
 </section>
 
+@if($canViewWorkOrders)
+    @include('projects.work-orders.list')
+@endif
 @if($canViewProtocols)
     @include('projects.protocols.list')
 @endif
@@ -377,6 +380,9 @@
         <div class="requirements-head">
             <div><h2>Materiały i usługi</h2><p>Zapotrzebowania, zamówienia i dostawy dla tego projektu.</p></div>
             <div class="requirements-head-actions">
+                @if($canManageWorkOrders && ($canViewMaterialPrices && $canViewServicePrices))
+                <button type="button" class="btn btn-soft" id="requirements-work-order">Utwórz zlecenie z zaznaczonych</button>
+                @endif
                 <button type="button" class="btn btn-soft" onclick="openRequirementsExportModal()"><i class="ti ti-file-spreadsheet"></i> Generuj listę Excel</button>
                 @if($canEdit)<a class="btn btn-soft" href="{{route('projects.requirements.template',$project)}}"><i class="ti ti-download"></i> Pobierz wzór Excel</a><button type="button" class="btn btn-soft" onclick="document.getElementById('requirements-import').open=true;document.getElementById('requirements-excel-input').click()"><i class="ti ti-file-spreadsheet"></i> Import z Excela</button><button type="button" class="btn" onclick="openRequirementModal()"><i class="ti ti-plus"></i> Dodaj pozycję</button>@endif
             </div>
@@ -660,6 +666,13 @@
 const projectTimelineItems = @json($timelineItems);
 const projectFinanceItems = @json($financeChartData);
 const projectContractValue = @json($canViewFinances ? (float) $project->contract_value : 0);
+document.getElementById('requirements-work-order')?.addEventListener('click', () => {
+    const ids = Array.from(document.querySelectorAll('.requirement-entry-check:checked'), input => input.value);
+    if (!ids.length) { alert('Zaznacz materiały lub usługi do zlecenia.'); return; }
+    const url = new URL(@json(route('projects.work-orders.create', $project)));
+    ids.forEach(id => url.searchParams.append('requirement_ids[]', id));
+    window.location.href = url.toString();
+});
 const requestedProjectTab = @json(request('tab') ?: ($errors->requirementsExport->any() ? 'requirements' : ($errors->ganttImport->any() ? 'gantt' : null)));
 const projectCanEdit = @json($canManageSchedule);
 const projectStartDate = @json($project->start_date?->format('Y-m-d'));

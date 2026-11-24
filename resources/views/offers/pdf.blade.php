@@ -150,9 +150,9 @@ th, td { margin: 0; }
         <div class="brand-sub">{!! nl2br(e($companySettings?->offerTagline() ?? \App\Models\CompanySettings::DEFAULT_OFFER_TAGLINE)) !!}</div>
     </td>
     <td style="text-align:right; white-space:nowrap;">
-        <div class="doc-ref-num">OFERTA NR {{ $offer->fullNumber() }}</div>
+        <div class="doc-ref-num">{{ isset($workOrder) ? 'ZLECENIE NR' : 'OFERTA NR' }} {{ $offer->fullNumber() }}</div>
         <div class="doc-ref-dates">
-            Data wystawienia: <strong>{{ $offer->created_at->format('d.m.Y') }}</strong>
+            Data wystawienia: <strong>{{ isset($workOrder) ? ($workOrder->issued_on?->format('d.m.Y') ?? '........................') : $offer->created_at->format('d.m.Y') }}</strong>
         </div>
     </td>
 </tr>
@@ -163,7 +163,7 @@ th, td { margin: 0; }
 {{-- TYTUŁ --}}
 <div class="offer-title">
     <div class="offer-title-main">{{ $offer->offer_title ?? 'Oferta handlowa' }}</div>
-    <div class="offer-title-sub">Oferta handlowa przygotowana przez {{ $companySettings?->name ?? 'firmę' }}</div>
+    <div class="offer-title-sub">@isset($workOrder){{ $workOrder->is_template ? 'WZÓR ZLECENIA' : ($workOrder->status === 'draft' ? 'ROBOCZE – niewystawione' : 'Zlecenie realizacji prac') }}@else Oferta handlowa przygotowana przez {{ $companySettings?->name ?? 'firmę' }} @endisset</div>
 </div>
 
 {{-- WYSTAWCA / ODBIORCA --}}
@@ -172,7 +172,7 @@ th, td { margin: 0; }
     {{-- Wystawca --}}
     <td class="party-accent">&nbsp;</td>
     <td class="party-inner" style="width:48%;">
-        <div class="party-lbl">Wystawca oferty</div>
+        <div class="party-lbl">{{ isset($workOrder) ? 'Zamawiający' : 'Wystawca oferty' }}</div>
         <div class="party-name">{{ $companySettings->name ?? config('app.name', 'Firma') }}</div>
         <div class="party-det">
             @if($companySettings?->address){{ $companySettings->address }}<br>@endif
@@ -193,7 +193,7 @@ th, td { margin: 0; }
     {{-- Odbiorca --}}
     <td class="party-accent">&nbsp;</td>
     <td class="party-inner" style="width:48%;">
-        <div class="party-lbl">Odbiorca oferty</div>
+        <div class="party-lbl">{{ isset($workOrder) ? 'Wykonawca' : 'Odbiorca oferty' }}</div>
         <div class="party-name">{{ $offer->company->name ?? '—' }}</div>
         <div class="party-det">
             @if($offer->company->address ?? false){{ $offer->company->address }}<br>@endif
@@ -206,6 +206,14 @@ th, td { margin: 0; }
 </tr>
 </table>
 
+@isset($workOrder)
+<div class="sec-content">
+    <strong>Miejsce:</strong> {{ $workOrder->place ?: '........................' }}<br>
+    <strong>Oferta wykonawcy:</strong> {{ $workOrder->offer_reference ?: '—' }} @if($workOrder->offer_date) / {{ $workOrder->offer_date->format('d.m.Y') }} @endif<br>
+    <strong>Kontakt zamawiającego:</strong> {{ $workOrder->our_contact ?: '........................' }}<br>
+    <strong>Kontakt wykonawcy:</strong> {{ $workOrder->supplier_contact ?: '........................' }}
+</div>
+@endisset
 {{-- SEKCJE OPISOWE (przed wyceną) --}}
 @php
     $__textSections = $offer->text_sections;
@@ -515,6 +523,21 @@ th, td { margin: 0; }
     @endif
 @endif
 
+@isset($workOrder)
+<div class="sec-content" style="margin:14px 0">
+VAT {{ $workOrder->vat_rate }}%: {{ number_format($workOrder->vat_cents/100,2,',',' ') }} zł ·
+<strong>Brutto: {{ number_format(($workOrder->net_cents+$workOrder->vat_cents)/100,2,',',' ') }} zł</strong><br>
+Zaliczka: {{ number_format($workOrder->advance_cents/100,2,',',' ') }} zł ·
+Pozostało: {{ number_format(($workOrder->net_cents+$workOrder->vat_cents-$workOrder->advance_cents)/100,2,',',' ') }} zł
+</div>
+@if($workOrder->attachment_snapshot)
+<div class="sec-content"><strong>Załączniki:</strong><ul>@foreach($workOrder->attachment_snapshot as $attachment)<li>{{$attachment['name']}}</li>@endforeach</ul></div>
+@endif
+<table class="footer-tbl"><tr>
+<td class="sign-cell" style="width:50%;height:70px"><div class="sign-line-div"></div>{{ $workOrder->our_contact }}<br>ZAMAWIAJĄCY – podpis i data</td>
+<td class="sign-cell" style="width:50%;height:70px"><div class="sign-line-div"></div>{{ $workOrder->supplier_contact }}<br>WYKONAWCA – potwierdzenie przyjęcia, podpis i data</td>
+</tr></table>
+@endisset
 {{-- UWAGI --}}
 @if($offer->notes)
 <div class="sec-block">
@@ -527,6 +550,7 @@ th, td { margin: 0; }
 @endif
 
 {{-- FOOTER --}}
+@unless(isset($workOrder))
 <div class="footer-spacing"></div>
 <table class="footer-tbl">
 <tr>
@@ -552,6 +576,6 @@ th, td { margin: 0; }
     </td>
 </tr>
 </table>
-
+@endunless
 </body>
 </html>

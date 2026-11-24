@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Project;
 use App\Models\ProjectProtocol;
+use App\Models\ProjectWorkOrder;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -31,7 +32,22 @@ class ProjectProtocolController extends Controller
     {
         $this->access($project, null, true);
 
-        $data = $request->validate(['direction' => ['sometimes', Rule::in(array_keys(ProjectProtocol::DIRECTIONS))]]);
+        $data = $request->validate(['direction' => ['sometimes', Rule::in(array_keys(ProjectProtocol::DIRECTIONS))], 'work_order_id' => ['nullable', 'integer']]);
+        if (! empty($data['work_order_id'])) {
+            $source = $this->sourceOrder($project, (int) $data['work_order_id']);
+            $scope = collect($source->text_sections)->where('placement', 'before_price')
+                ->map(fn ($section) => $section['name'].": ".trim(strip_tags(str_replace(['</p>', '</li>', '<br>'], "\n", $section['content']))))
+                ->implode("\n\n");
+            $protocol = new ProjectProtocol([
+                'direction' => 'supplier', 'work_order_id' => $source->id,
+                'supplier_company_id' => $source->supplier_company_id, 'reference' => $source->number,
+                'title' => 'Odbiór: '.$source->title, 'description' => mb_substr($scope, 0, 15000),
+                'items_mode' => 'manual', 'manual_items_description' => mb_substr(collect($source->price_sections)
+                    ->flatMap(fn ($section) => collect($section['rows'])->pluck('opis'))->implode("\n"), 0, 15000) ?: 'Zakres zgodnie ze zleceniem '.$source->number,
+            ]);
+
+            return $this->form($project, $protocol);
+        }
 
         return $this->form($project, new ProjectProtocol($data));
     }
@@ -49,7 +65,7 @@ class ProjectProtocolController extends Controller
         $copy = new ProjectProtocol($protocol->only([
             'supplier_company_id', 'place', 'reference', 'kind', 'outcome', 'description', 'title',
             'remarks', 'invoice_conditions', 'attachments', 'supplier_representative', 'items',
-            'items_mode', 'manual_items_description', 'direction',
+            'items_mode', 'manual_items_description', 'direction', 'work_order_id',
         ]));
         $copy->acceptance_date = $protocol->acceptance_date ? today() : null;
         $copy->receiver_name = $copy->isClientAcceptance() ? $protocol->receiver_name : request()->user()->name;
@@ -74,6 +90,16 @@ class ProjectProtocolController extends Controller
             ->orderBy('name')->pluck('name')->unique()->values()->all();
     }
 
+    private function sourceOrder(Project $project, int $id): ProjectWorkOrder
+    {
+        $user = request()->user();
+        abort_unless(app(AuditorAccessService::class)->hasFullAccess($user) || $user->canAny(['projects.work_orders.view', 'projects.work_orders.manage']), 403);
+        $order = ProjectWorkOrder::where('project_id', $project->id)->findOrFail($id);
+        abort_unless(! $order->is_template && in_array($order->status, ['issued', 'confirmed', 'in_progress', 'received'], true), 422, 'Protokół można utworzyć z wystawionego zlecenia.');
+
+        return $order;
+    }
+
     public function store(Request $request, Project $project)
     {
         return $this->save($request, $project, new ProjectProtocol);
@@ -90,6 +116,14 @@ class ProjectProtocolController extends Controller
         $type = $request->validate(['direction' => ['sometimes', Rule::in(array_keys(ProjectProtocol::DIRECTIONS))]]);
         $direction = $protocol->exists ? $protocol->direction : ($type['direction'] ?? 'supplier');
         $client = $direction === 'client';
+        $workOrderId = $request->validate(['work_order_id' => ['nullable', 'integer']])['work_order_id'] ?? null;
+        if ($protocol->exists && (int) $workOrderId !== (int) $protocol->work_order_id) {
+            throw ValidationException::withMessages(['work_order_id' => 'Powiązania ze zleceniem nie można zmienić po zapisaniu.']);
+        }
+        $sourceOrder = $workOrderId ? $this->sourceOrder($project, (int) $workOrderId) : null;
+        if ($sourceOrder && ($client || (int) $request->input('supplier_company_id') !== (int) $sourceOrder->supplier_company_id)) {
+            throw ValidationException::withMessages(['supplier_company_id' => 'Wykonawca musi być zgodny ze zleceniem.']);
+        }
         $internal = $client ? 'supplier_representative' : 'receiver_name';
         $people = $request->validate([
             'receivers' => ['sometimes', 'array', 'max:20'],
@@ -156,6 +190,7 @@ class ProjectProtocolController extends Controller
         $data['items_mode'] = $manual ? 'manual' : 'detailed';
         $data['manual_items_description'] = $data['manual_items_description'] ?? null;
         $data['direction'] = $direction;
+        $data['work_order_id'] = $sourceOrder?->id;
         unset($data['revision'], $data['use_signature']);
         $data['items'] = array_map(function ($row) {
             $net = (int) round(round((float) $row['quantity'] * 100) * round((float) $row['price'] * 100) / 100);

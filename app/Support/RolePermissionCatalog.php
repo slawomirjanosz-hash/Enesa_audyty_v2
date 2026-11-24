@@ -67,6 +67,8 @@ class RolePermissionCatalog
                 'projects.requirements.manage' => 'Zarządzanie materiałami i usługami',
                 'projects.documents.view' => 'Podgląd dokumentów projektu',
                 'projects.documents.manage' => 'Zarządzanie dokumentami projektu',
+                'projects.work_orders.view' => 'Podgląd zleceń realizacji prac (wraz z cenami)',
+                'projects.work_orders.manage' => 'Tworzenie i zarządzanie zleceniami realizacji prac (wraz z cenami)',
                 'projects.protocols.view' => 'Podgląd protokołów odbioru dostawców (wraz z cenami)',
                 'projects.protocols.manage' => 'Tworzenie i edycja protokołów odbioru (wraz z cenami)',
             ]],

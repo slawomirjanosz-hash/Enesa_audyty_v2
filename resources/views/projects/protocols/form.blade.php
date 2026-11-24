@@ -10,6 +10,7 @@
 @if($errors->any())<div role="alert" style="padding:12px;background:#fef2f2;color:#b91c1c"><ul>@foreach($errors->all() as $error)<li>{{$error}}</li>@endforeach</ul></div>@endif
 <form method="POST" action="{{$protocol->exists ? route('projects.protocols.update',[$project,$protocol]) : route('projects.protocols.store',$project)}}">@csrf @if($protocol->exists)@method('PUT')@endif
 <input type="hidden" name="direction" value="{{$protocol->direction}}">
+@if($protocol->work_order_id)<input type="hidden" name="work_order_id" value="{{$protocol->work_order_id}}">@endif
 <input type="hidden" name="revision" value="{{old('revision',$protocol->revision ?? 0)}}">
 @isset($copiedFrom)<p class="protocol-help">Kopia protokołu {{$copiedFrom}}. Nowy numer zostanie nadany po zapisaniu. Podpis i termin usunięcia usterek nie zostały skopiowane. @unless($client)Przed zapisem sprawdź dane i ponownie wybierz decyzję o fakturowaniu (domyślnie: nie).@endunless</p>@endisset
 <div class="protocol-grid">
