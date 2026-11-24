@@ -7,7 +7,6 @@ use App\Models\CompanySettings;
 use App\Models\Offer;
 use App\Models\ProjectWorkOrder;
 use App\Models\User;
-use App\Support\OfferDesign;
 use Mpdf\Mpdf;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
@@ -62,9 +61,8 @@ class ProjectWorkOrderDocument
     {
         Settings::setOutputEscapingEnabled(true);
         $word = new PhpWord;
-        $design = OfferDesign::profile($order->issuer_snapshot['offer_design_style'] ?? null);
-        $word->setDefaultFontName($design['word_font']);
-        $word->setDefaultFontSize($design['body_size']);
+        $word->setDefaultFontName('Calibri');
+        $word->setDefaultFontSize(11);
         $section = $word->addSection(['pageSizeW' => 11906, 'pageSizeH' => 16838, 'marginLeft' => 1134, 'marginRight' => 1134, 'marginTop' => 850, 'marginBottom' => 850]);
         $header = $section->addHeader();
         $logo = $order->issuer_snapshot['logo'] ?? '';
@@ -76,7 +74,7 @@ class ProjectWorkOrderDocument
         }
         $header->addText($order->number, ['bold' => true], ['alignment' => 'right']);
         $header->addText('Data zlecenia: '.($order->issued_on?->format('d.m.Y') ?? '........................'), [], ['alignment' => 'right']);
-        $section->addText($order->title, ['bold' => true, 'size' => $design['title_size']]);
+        $section->addText($order->title, ['bold' => true, 'size' => 18]);
         if ($order->status === 'draft' || $order->is_template) {
             $section->addText($order->is_template ? 'WZÓR ZLECENIA' : 'ROBOCZE – niewystawione', ['bold' => true]);
         }
