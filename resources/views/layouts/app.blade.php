@@ -468,6 +468,18 @@
             </li>
             @endif
 
+            @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
+            <li class="nav-item nav-group {{ request()->is('audit*', 'energy-passports*') ? 'open' : '' }}">
+                <span class="nav-link" onclick="toggleGroup(this)">
+                    <i class="ti ti-clipboard-list"></i> System Audytów
+                    <span class="arrow">▶</span>
+                </span>
+                <ul class="nav-sub">
+                    <li><a href="{{ url('/audit-types') }}" class="nav-link">Typy audytów</a></li>
+                    @if($canAccessModule('audits.passports.view'))
+                    <li><a href="{{ route('energy-passports.index') }}" class="nav-link {{ request()->routeIs('energy-passports.*') ? 'active' : '' }}">Paszporty energetyczne</a></li>
+                    @endif
+
             @if(($appBrand?->moduleEnabled('cylinders') ?? false) && ($layoutHasFullAccess || $canAccessModule('cylinders.view')))
             <li class="nav-item nav-group {{ request()->routeIs('cylinders.*') ? 'open' : '' }}">
                 <button type="button" class="nav-link {{ request()->routeIs('cylinders.*') ? 'active' : '' }}" onclick="toggleGroup(this)" aria-expanded="{{ request()->routeIs('cylinders.*') ? 'true' : 'false' }}" aria-controls="cylinders-navigation">
@@ -498,17 +510,7 @@
                 <script src="{{asset('js/expense-nav.js')}}" defer></script>
             @endonce
             @endif
-            @if($appModuleEnabled('audits') && $canAccessModule('audits.view'))
-            <li class="nav-item nav-group {{ request()->is('audit*', 'energy-passports*') ? 'open' : '' }}">
-                <span class="nav-link" onclick="toggleGroup(this)">
-                    <i class="ti ti-clipboard-list"></i> System Audytów
-                    <span class="arrow">▶</span>
-                </span>
-                <ul class="nav-sub">
-                    <li><a href="{{ url('/audit-types') }}" class="nav-link">Typy audytów</a></li>
-                    @if($canAccessModule('audits.passports.view'))
-                    <li><a href="{{ route('energy-passports.index') }}" class="nav-link {{ request()->routeIs('energy-passports.*') ? 'active' : '' }}">Paszporty energetyczne</a></li>
-                    @endif
+
                 </ul>
             </li>
             @endif

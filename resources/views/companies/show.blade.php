@@ -1938,7 +1938,7 @@
                 <label for="company-lead-assigned">Przypisany pracownik</label>
                 <select id="company-lead-assigned" name="assigned_to">
                     <option value="">Nieprzypisany</option>
-                    @foreach($crmAssignableUsers as $crmUser)
+                    @foreach($crmAssignableUsers as $crmUser) @continue($crmUser->hasRole('superadmin'))
                         <option value="{{ $crmUser->id }}" {{ (string) old('assigned_to', auth()->id()) === (string) $crmUser->id ? 'selected' : '' }}>{{ $crmUser->name }}</option>
                     @endforeach
                 </select>
@@ -1997,7 +1997,7 @@
                     <label for="company-task-assigned">Przypisana osoba</label>
                     <select id="company-task-assigned" name="assigned_to">
                         <option value="">Nieprzypisane</option>
-                        @foreach($crmAssignableUsers as $crmUser)
+                        @foreach($crmAssignableUsers as $crmUser) @continue($crmUser->hasRole('superadmin'))
                             <option value="{{ $crmUser->id }}" {{ (string) old('assigned_to', auth()->id()) === (string) $crmUser->id ? 'selected' : '' }}>{{ $crmUser->name }}</option>
                         @endforeach
                     </select>
@@ -2081,13 +2081,13 @@
             <div class="modal-field"><label for="opportunityEditDescription">Opis</label><textarea id="opportunityEditDescription" name="description"></textarea></div>
             <div class="modal-grid">
                 <div class="modal-field"><label for="opportunityEditStage">Etap</label><select id="opportunityEditStage" name="stage" required>@foreach($crmStageLabels as $value => $label)<option value="{{ $value }}">{{ $label }}</option>@endforeach</select></div>
-                <div class="modal-field"><label for="opportunityEditAssigned">Przypisany</label><select id="opportunityEditAssigned" name="assigned_to"><option value="">Nieprzypisany</option>@foreach($crmAssignableUsers as $crmUser)<option value="{{ $crmUser->id }}">{{ $crmUser->name }}</option>@endforeach</select></div>
+                <div class="modal-field"><label for="opportunityEditAssigned">Przypisany</label><select id="opportunityEditAssigned" name="assigned_to"><option value="">Nieprzypisany</option>@foreach($crmAssignableUsers as $crmUser) @continue($crmUser->hasRole('superadmin'))<option value="{{ $crmUser->id }}">{{ $crmUser->name }}</option>@endforeach</select></div>
             </div>
             <div class="modal-grid">
                 <div class="modal-field"><label for="opportunityEditValue">Szacowana wartość</label><input id="opportunityEditValue" type="number" name="value" min="0" step="0.01"></div>
                 <div class="modal-field"><label for="opportunityEditDate">Planowane zamknięcie</label><input id="opportunityEditDate" type="date" name="expected_close_date"></div>
             </div>
-            <div class="modal-field"><label>Osoby powiązane</label><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;">@foreach($crmAssignableUsers as $crmUser)<label style="display:flex;align-items:center;gap:7px;font-weight:500;"><input type="checkbox" name="related_users[]" value="{{ $crmUser->id }}" style="width:auto;"> {{ $crmUser->name }}</label>@endforeach</div></div>
+            <div class="modal-field"><label>Osoby powiązane</label><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;">@foreach($crmAssignableUsers as $crmUser) @continue($crmUser->hasRole('superadmin'))<label style="display:flex;align-items:center;gap:7px;font-weight:500;"><input type="checkbox" name="related_users[]" value="{{ $crmUser->id }}" style="width:auto;"> {{ $crmUser->name }}</label>@endforeach</div></div>
             <div class="modal-field"><label for="opportunityEditNotes">Notatki</label><textarea id="opportunityEditNotes" name="notes" data-lead-notes-autogrow></textarea></div>
             @include('crm.lead-action', ['users' => $crmAssignableUsers])
             @include('crm.opportunity-history', ['historyPrefix' => 'company-edit-opportunity'])

@@ -193,7 +193,7 @@
         @if($canCreateCrmTasks)
         <div data-crm-task-fields>
             <div class="board-form-grid">
-                <label>Przypisany<select name="assigned_to">@foreach($taskUsers as $person)<option value="{{ $person->id }}" @selected((string)old('assigned_to',auth()->id())===(string)$person->id)>{{ $person->name }}</option>@endforeach</select></label>
+                <label>Przypisany<select name="assigned_to"><option value="">— brak —</option>@foreach($taskUsers as $person) @continue($person->hasRole('superadmin'))<option value="{{ $person->id }}" @selected((string)old('assigned_to',auth()->id())===(string)$person->id)>{{ $person->name }}</option>@endforeach</select></label>
                 <label>Firma<select name="company_id"><option value="">— bez firmy —</option>@foreach($taskCompanies as $company)<option value="{{ $company->id }}" @selected((string)old('company_id')===(string)$company->id)>{{ $company->name }}</option>@endforeach</select></label>
             </div>
             <label>Szansa CRM<select name="crm_opportunity_id"><option value="">— bez powiązania —</option>@foreach($taskOpportunities as $opportunity)<option value="{{ $opportunity->id }}" data-company-id="{{ $opportunity->company_id }}" @selected((string)old('crm_opportunity_id')===(string)$opportunity->id)>{{ $opportunity->title }}</option>@endforeach</select></label>

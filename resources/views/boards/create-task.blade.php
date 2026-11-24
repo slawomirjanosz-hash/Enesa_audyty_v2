@@ -8,8 +8,8 @@
         <label>Tytuł *<input name="title" value="{{ old('title') }}" required maxlength="255"></label>
         <label>Opis<textarea name="description" rows="3">{{ old('description') }}</textarea></label>
         @if(app(\App\Services\AuditorAccessService::class)->hasFullAccess(auth()->user()) || auth()->user()->can('crm.tasks.team.manage'))
-            <label>Przypisany<select name="assigned_to">
-            @foreach(\App\Models\User::where('is_active', true)->whereHas('roles')->whereDoesntHave('roles', fn($q) => $q->whereIn('name', ['client_admin','client_user']))->orderBy('name')->get() as $person)
+            <label>Przypisany<select name="assigned_to"><option value="">— brak —</option>
+            @foreach(\App\Models\User::where('is_active', true)->whereHas('roles')->whereDoesntHave('roles', fn($q) => $q->whereIn('name', ['client_admin','client_user','superadmin']))->orderBy('name')->get() as $person)
                 <option value="{{ $person->id }}" @selected((string)old('assigned_to', auth()->id()) === (string)$person->id)>{{ $person->name }}</option>
             @endforeach
             </select></label>

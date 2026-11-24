@@ -988,7 +988,7 @@
                     <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Przypisany</label>
                     <select name="assigned_to" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                         <option value="">— brak —</option>
-                        @foreach($users as $u)
+                        @foreach($users as $u) @continue($u->hasRole('superadmin'))
                         <option value="{{ $u->id }}">{{ $u->name }}</option>
                         @endforeach
                     </select>
@@ -997,7 +997,7 @@
             <div style="margin-bottom:16px;">
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;font-family:'Manrope',sans-serif;">Osoby związane z leadem</label>
                 <div style="max-height:130px;overflow:auto;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;background:#FAFAF6;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                    @foreach($users as $u)
+                    @foreach($users as $u) @continue($u->hasRole('superadmin'))
                         <label style="display:flex;align-items:center;gap:7px;font-size:12px;"><input type="checkbox" name="related_users[]" value="{{ $u->id }}"> {{ $u->name }}</label>
                     @endforeach
                 </div>
@@ -1057,7 +1057,7 @@
                     <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Przypisany</label>
                     <select name="assigned_to" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                         <option value="">— brak —</option>
-                        @foreach($users as $u)
+                        @foreach($users as $u) @continue($u->hasRole('superadmin'))
                         <option value="{{ $u->id }}" {{ $u->id === auth()->id() ? 'selected' : '' }}>{{ $u->name }}</option>
                         @endforeach
                     </select>
@@ -1135,7 +1135,7 @@
                     <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Przypisany</label>
                     <select name="assigned_to" id="edit-task-assigned" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                         <option value="">— brak —</option>
-                        @foreach($users as $u)
+                        @foreach($users as $u) @continue($u->hasRole('superadmin'))
                         <option value="{{ $u->id }}">{{ $u->name }}</option>
                         @endforeach
                     </select>
@@ -1281,7 +1281,7 @@
                 <select id="edit-opp-assigned" name="assigned_to"
                     style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;">
                     <option value="">— brak —</option>
-                    @foreach($users as $u)
+                    @foreach($users as $u) @continue($u->hasRole('superadmin'))
                     <option value="{{ $u->id }}">{{ $u->name }}</option>
                     @endforeach
                 </select>
@@ -1290,7 +1290,7 @@
             <div style="margin-bottom:12px;">
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;font-family:'Manrope',sans-serif;">Osoby związane z leadem</label>
                 <div style="max-height:130px;overflow:auto;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;background:#FAFAF6;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                    @foreach($users as $u)
+                    @foreach($users as $u) @continue($u->hasRole('superadmin'))
                         <label style="display:flex;align-items:center;gap:7px;font-size:12px;"><input class="edit-related-user" type="checkbox" name="related_users[]" value="{{ $u->id }}"> {{ $u->name }}</label>
                     @endforeach
                 </div>

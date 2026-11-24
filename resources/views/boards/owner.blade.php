@@ -39,7 +39,7 @@
         <label>Opis<textarea name="description" rows="3" maxlength="10000"></textarea></label>
         <label>Etap harmonogramu<select name="stage_task_id"><option value="">Bez etapu</option>@foreach($boardOwner->tasks as $stage)<option value="{{$stage->id}}" data-due="{{$stage->due_date?->format('Y-m-d')}}">{{$stage->title}} — {{$stage->due_date?->format('d.m.Y') ?? 'bez terminu'}}</option>@endforeach</select></label>
         <div class="board-form-grid">
-        <label>Osoba odpowiedzialna<select name="assigned_to"><option value="">Nieprzypisane</option>@foreach(collect([$boardOwner->manager])->filter()->merge($boardOwner->members)->unique('id')->filter(fn($u) => $u->is_active && !$u->hasAnyRole(['client_admin','client_user'])) as $person)<option value="{{$person->id}}">{{$person->name}}</option>@endforeach</select></label>
+        <label>Osoba odpowiedzialna<select name="assigned_to"><option value="">Nieprzypisane</option>@foreach(collect([$boardOwner->manager])->filter()->merge($boardOwner->members)->unique('id')->filter(fn($u) => $u->is_active && !$u->hasAnyRole(['client_admin','client_user','superadmin'])) as $person)<option value="{{$person->id}}">{{$person->name}}</option>@endforeach</select></label>
         <label>Termin<input type="date" name="due_date"></label>
         <label>Status<select name="status"><option value="todo">Do zrobienia</option><option value="in_progress">W trakcie</option><option value="done">Zrobione</option></select></label>
         </div>

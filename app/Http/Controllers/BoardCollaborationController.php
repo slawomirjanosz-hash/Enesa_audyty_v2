@@ -25,10 +25,10 @@ class BoardCollaborationController extends Controller
             $owner = $card->project ?? $card->audit;
 
             return collect([$owner->manager])->filter()->merge($owner->members)->unique('id')
-                ->filter(fn ($u) => $u->is_active && ! $u->hasAnyRole(['client_admin', 'client_user']) && app(BoardAccessService::class)->view($u, $owner));
+                ->filter(fn ($u) => $u->is_active && ! $u->hasAnyRole(['client_admin', 'client_user', 'superadmin']) && app(BoardAccessService::class)->view($u, $owner));
         }
 
-        return User::where('is_active', true)->whereDoesntHave('roles', fn ($r) => $r->whereIn('name', ['client_admin', 'client_user']))->with(['roles.permissions', 'permissions'])->orderBy('name')->get()
+        return User::where('is_active', true)->whereDoesntHave('roles', fn ($r) => $r->whereIn('name', ['client_admin', 'client_user', 'superadmin']))->with(['roles.permissions', 'permissions'])->orderBy('name')->get()
             ->filter(fn ($u) => $u->hasRole('superadmin') || $u->canAny(['system.full_access', 'crm.view', 'crm.tasks.own.manage', 'crm.tasks.team.manage']));
     }
 

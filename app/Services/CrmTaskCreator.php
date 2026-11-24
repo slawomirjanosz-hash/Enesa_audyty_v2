@@ -43,6 +43,9 @@ class CrmTaskCreator
         if (! $canManageTeam) {
             $data['assigned_to'] = $request->user()->id;
         }
+        if (! empty($data['assigned_to']) && \App\Models\User::find($data['assigned_to'])?->hasRole('superadmin')) {
+            throw ValidationException::withMessages(['assigned_to' => 'Wybierz pracownika.'])->errorBag($errorBag);
+        }
         if (! empty($data['crm_opportunity_id']) && ! CrmOpportunity::query()
             ->whereKey($data['crm_opportunity_id'])->where('company_id', $data['company_id'] ?? null)->exists()) {
             throw ValidationException::withMessages(['crm_opportunity_id' => 'Wybrany lead nie należy do wskazanego klienta.'])->errorBag($errorBag);
