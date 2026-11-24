@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         column.addEventListener('drop', event => { event.preventDefault(); column.classList.remove('drag-over'); if(dragged) status(dragged,column.dataset.column); dragged = null; });
     });
     board.addEventListener('click', async event => {
-        if(event.target.closest('[data-board-new]')) { form.reset(); form.elements.stage_task_id.value = form.dataset.defaultStage || ''; form.elements.due_date.value = form.elements.stage_task_id.selectedOptions[0]?.dataset.due || ''; form.dataset.updateUrl = ''; form.querySelector('[data-board-heading]').textContent = 'Nowe zadanie'; form.querySelector('[data-board-error]').hidden=true; form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid')); dialog.showModal(); }
+        if(event.target.closest('[data-board-new]')) { form.reset(); form.elements.stage_task_id.value = form.dataset.defaultStage || ''; form.elements.due_date.value = form.elements.stage_task_id.selectedOptions[0]?.dataset.due || ''; form.dataset.updateUrl = ''; form.querySelector('[data-task-participant-picker]')?.removeAttribute('hidden'); form.querySelector('[data-board-heading]').textContent = 'Nowe zadanie'; form.querySelector('[data-board-error]').hidden=true; form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid')); dialog.showModal(); }
         const archive = event.target.closest('[data-board-archive]');
         if(archive && confirm(archive.dataset.restore==='1' ? 'Przywrócić zadanie na aktywną tablicę?' : 'Zarchiwizować zadanie? Pozostanie dostępne w archiwum.')) {
             archive.disabled=true;
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             catch(error){report(message,error.message);archive.disabled=false;}
         }
         const edit = event.target.closest('[data-board-edit]');
-        if(edit) { const values = JSON.parse(edit.dataset.values); values.revision = Number(edit.closest('[data-card]').dataset.revision); values.status = edit.closest('[data-card]').dataset.status; form.reset(); Object.entries(values).forEach(([key,value])=>{if(form.elements.namedItem(key)) form.elements.namedItem(key).value=value ?? '';}); form.dataset.updateUrl=edit.dataset.updateUrl; form.querySelector('[data-board-heading]').textContent='Edytuj zadanie'; form.querySelector('[data-board-error]').hidden=true; dialog.showModal(); }
+        if(edit) { const values = JSON.parse(edit.dataset.values); values.revision = Number(edit.closest('[data-card]').dataset.revision); values.status = edit.closest('[data-card]').dataset.status; form.reset(); form.querySelector('[data-task-participant-picker]')?.setAttribute('hidden', ''); Object.entries(values).forEach(([key,value])=>{if(form.elements.namedItem(key)) form.elements.namedItem(key).value=value ?? '';}); form.dataset.updateUrl=edit.dataset.updateUrl; form.querySelector('[data-board-heading]').textContent='Edytuj zadanie'; form.querySelector('[data-board-error]').hidden=true; dialog.showModal(); }
         const remove = event.target.closest('[data-board-delete]');
         if(remove && confirm('Trwale usunąć to zadanie? Tej operacji nie można cofnąć.')) { remove.disabled=true; try { await request(remove.dataset.deleteUrl,'DELETE',{revision:Number(remove.closest('[data-card]').dataset.revision)}); location.reload(); } catch(error){report(message,error.message);remove.disabled=false;} }
     });
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit',async event=>{
         event.preventDefault(); const submit=form.querySelector('[type="submit"]'); submit.disabled=true;
         form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
-        try { await request(form.dataset.updateUrl || form.action,form.dataset.updateUrl?'PUT':'POST',Object.fromEntries(new FormData(form))); location.reload(); }
+        try { const data = Object.fromEntries(new FormData(form)); if (!form.dataset.updateUrl) data.participants = [...form.querySelectorAll('[name="participants[]"]:checked')].map(input => Number(input.value)); await request(form.dataset.updateUrl || form.action,form.dataset.updateUrl?'PUT':'POST',data); location.reload(); }
         catch(error){report(form.querySelector('[data-board-error]'),error.message);Object.keys(error.fields).forEach(key=>form.elements.namedItem(key)?.setAttribute('aria-invalid','true'));}
         finally{submit.disabled=false;}
     });

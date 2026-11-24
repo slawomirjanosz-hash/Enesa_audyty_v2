@@ -82,6 +82,8 @@ class BoardController extends Controller
             'status' => ['required', Rule::in(['todo', 'in_progress', 'done'])],
             'stage_task_id' => ['nullable', 'integer'], 'assigned_to' => ['nullable', 'integer'],
             'due_date' => ['nullable', 'date_format:Y-m-d'],
+            'participants' => ['sometimes', 'array', 'max:100'],
+            'participants.*' => ['integer', 'distinct'],
             'revision' => [$editing ? 'required' : 'nullable', 'integer', 'min:1'],
         ]);
     }

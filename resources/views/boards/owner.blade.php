@@ -43,6 +43,7 @@
         <label>Termin<input type="date" name="due_date"></label>
         <label>Status<select name="status"><option value="todo">Do zrobienia</option><option value="in_progress">W trakcie</option><option value="done">Zrobione</option></select></label>
         </div>
+        @include('partials.task-participant-picker', ['taskParticipantOptions' => \App\Http\Controllers\BoardCollaborationController::candidates(new \App\Models\BoardTask([$boardType === 'project' ? 'project_id' : 'audit_id' => $boardOwner->id]))])
         <p class="board-muted">Termin jest pobierany z etapu. Możesz go zmienić — przesunięcie etapu zachowa ustaloną różnicę dni.</p>
         <footer><button type="button" data-board-close>Anuluj</button><button type="submit" class="board-primary">Zapisz zadanie</button></footer>
     </form>

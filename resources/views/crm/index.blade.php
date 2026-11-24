@@ -1104,6 +1104,7 @@
                 </div>
             </div>
             <label style="display:block;margin-bottom:12px;">Godzina (opcjonalnie)<input type="time" name="scheduled_time" style="display:block;width:100%;padding:8px;border:1px solid #D0CCC0;border-radius:7px;"></label>
+            @include('partials.task-participant-picker')
             <div style="margin-bottom:16px;">
                 <label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;font-family:'Manrope',sans-serif;">Opis</label>
                 <textarea name="description" rows="2" style="width:100%;background:#FAFAF6;border:1px solid #D0CCC0;border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Lato',sans-serif;outline:none;resize:none;box-sizing:border-box;"></textarea>

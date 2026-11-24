@@ -203,6 +203,7 @@
             </div>
         </div>
         @endif
+        @include('partials.task-participant-picker')
         <label>Opis<textarea name="description" rows="3" maxlength="10000">{{ old('description') }}</textarea></label>
         <p class="board-muted" data-calendar-task-note>Zadanie pojawi się w CRM i na Mojej tablicy. Uczestników, potwierdzenia wykonania i archiwizację obsłużysz tak samo jak przy innych zadaniach CRM.</p>
         <p class="board-muted" data-calendar-meeting-note>Spotkanie zostanie przypisane do Ciebie i pojawi się również na Mojej tablicy.</p>
@@ -211,5 +212,5 @@
 </dialog>
 @endsection
 @push('scripts')
-<script src="{{ asset('js/calendar-entry.js') }}?v=2" defer></script>
+<script src="{{ asset('js/calendar-entry.js') }}?v=3" defer></script>
 @endpush

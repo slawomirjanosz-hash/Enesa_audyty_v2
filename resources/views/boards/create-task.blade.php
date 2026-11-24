@@ -14,6 +14,7 @@
             @endforeach
             </select></label>
         @else<input type="hidden" name="assigned_to" value="{{ auth()->id() }}">@endif
+        @include('partials.task-participant-picker')
         <div class="board-form-grid">
             <label>Termin<input name="due_date" type="date" value="{{ old('due_date') }}"></label>
             <label>Godzina<input name="scheduled_time" type="time" value="{{ old('scheduled_time') }}"></label>

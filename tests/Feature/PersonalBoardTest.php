@@ -102,3 +102,14 @@ test('personal board offers task creation and the shared CRM endpoint returns to
     expect($task->assigned_to)->toBe($worker->id);
     $this->get(route('board.mine'))->assertOk()->assertSee('Zadanie utworzone z tablicy');
 });
+
+test('new owner board cards accept only participants with access to their team', function () {
+    [$admin, $project] = boardFixture();
+    $worker = boardWorker($project);
+    $data = ['title' => 'Wspólne zadanie projektu', 'status' => 'todo', 'assigned_to' => $admin->id, 'participants' => [$worker->id]];
+    $this->actingAs($admin)->postJson(route('board.store', ['project', $project->id]), $data)->assertSuccessful();
+    expect(BoardTask::where('title', $data['title'])->sole()->participants->modelKeys())->toBe([$worker->id]);
+    $outsider = User::factory()->create();
+    $this->postJson(route('board.store', ['project', $project->id]), array_replace($data, ['participants' => [$outsider->id]]))->assertUnprocessable();
+    expect(BoardTask::count())->toBe(1);
+});

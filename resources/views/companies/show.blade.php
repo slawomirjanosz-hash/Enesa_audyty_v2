@@ -2027,6 +2027,7 @@
             </div>
             <div class="modal-field">
                 <label for="company-task-description">Opis</label>
+                @include('partials.task-participant-picker')
                 <textarea id="company-task-description" name="description" rows="3" placeholder="Dodatkowe informacje o zadaniu">{{ old('description') }}</textarea>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
@@ -2411,6 +2412,7 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         if (!modal) return;
         const form = document.getElementById('companyTaskForm');
         if (!preserveValues) form.reset();
+        form.querySelector('[data-task-participant-picker]').hidden = false;
         form.action = @js(route('crm.tasks.store'));
         document.getElementById('company-task-method').disabled = true;
         document.getElementById('companyTaskModalTitle').textContent = 'Dodaj zadanie';
@@ -2424,6 +2426,7 @@ document.addEventListener("DOMContentLoaded", function(){ openUserModal(); });
         const form = document.getElementById('companyTaskForm');
         if (!modal || !form) return;
 
+        form.querySelector('[data-task-participant-picker]').hidden = true;
         form.action = @js(url('/crm/tasks')) + '/' + id;
         document.getElementById('company-task-method').disabled = false;
         document.getElementById('companyTaskModalTitle').textContent = 'Edytuj zadanie';

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = dialog.querySelector('form');
     const updateKind = () => {
         const task = form.elements.calendar_kind.value === 'task';
-        dialog.querySelectorAll('[data-crm-task-fields]').forEach(section => {
+        dialog.querySelectorAll('[data-crm-task-fields], [data-task-participant-picker]').forEach(section => {
             section.hidden = !task;
             section.querySelectorAll('input,select,textarea').forEach(field => field.disabled = !task);
         });

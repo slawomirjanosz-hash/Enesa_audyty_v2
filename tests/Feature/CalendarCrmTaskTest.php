@@ -91,3 +91,28 @@ test('new calendar tasks require CRM permissions and enabled CRM while meetings 
     $owner = calendarCrmUser();
     $this->actingAs($owner)->post(route('calendar.store'), $data)->assertForbidden();
 });
+
+test('calendar and CRM task creation save selected participants and require each confirmation', function () {
+    Mail::fake();
+    $owner = calendarCrmUser();
+    $participant = calendarCrmUser();
+    $data = [
+        'title' => 'Uczestnicy od utworzenia',
+        'calendar_kind' => 'task',
+        'due_date' => '2026-11-24',
+        'scheduled_time' => '12:30',
+        'status' => 'done',
+        'priority' => 'medium',
+        'participants' => [$owner->id, $participant->id],
+    ];
+    $this->actingAs($owner)->post(route('calendar.store'), $data)->assertSessionHasNoErrors();
+    $task = Task::sole();
+    expect($task->participants->modelKeys())->toBe([$participant->id]);
+    expect($task->status)->toBe('in_progress');
+    $this->actingAs($participant)->get(route('board.mine'))->assertOk()->assertSee('Uczestnicy od utworzenia');
+    $this->actingAs($owner)->post(route('crm.tasks.store'), array_replace($data, ['title' => 'Uczestnicy CRM', 'status' => 'todo']))->assertSessionHasNoErrors();
+    expect(Task::where('title', 'Uczestnicy CRM')->sole()->participants->modelKeys())->toBe([$participant->id]);
+    $outsider = User::factory()->create();
+    $this->post(route('calendar.store'), array_replace($data, ['participants' => [$outsider->id]]))->assertSessionHasErrors('participants');
+    expect(Task::count())->toBe(2);
+});

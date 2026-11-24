@@ -1,6 +1,6 @@
 @once
 @push('styles')<link rel="stylesheet" href="{{asset('css/board.css')}}"><link rel="stylesheet" href="{{asset('css/board-stages.css')}}"><link rel="stylesheet" href="{{asset('css/board-filters.css')}}">@endpush
-@push('scripts')<script src="{{asset('js/board.js')}}?v=confirmations-1" defer></script>@endpush
+@push('scripts')<script src="{{asset('js/board.js')}}?v=participants-2" defer></script>@endpush
 @endonce
 @php
     $archivedBoard = $archivedBoard ?? false;

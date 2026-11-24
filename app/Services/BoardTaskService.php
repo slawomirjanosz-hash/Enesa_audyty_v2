@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Controllers\BoardCollaborationController;
 use App\Models\Audit;
 use App\Models\BoardTask;
 use App\Models\Project;
@@ -41,7 +42,18 @@ class BoardTaskService
                 return $card;
             }
 
-            return BoardTask::create($values + [$owner instanceof Project ? 'project_id' : 'audit_id' => $owner->id, 'created_by' => $actor->id]);
+            $status = $values['status'];
+            $card = BoardTask::create(array_replace($values, ['status' => 'todo']) + [$owner instanceof Project ? 'project_id' : 'audit_id' => $owner->id, 'created_by' => $actor->id]);
+            $participants = $data['participants'] ?? [];
+            $candidates = BoardCollaborationController::candidates($card)->pluck('id')->all();
+            if (array_diff($participants, $candidates)) {
+                throw ValidationException::withMessages(['participants' => 'Wybierz aktywnych członków zespołu z dostępem do tablicy.']);
+            }
+            $card->participants()->sync(array_values(array_diff($participants, [$card->assigned_to])));
+            app(TaskCompletionService::class)->apply($card, ['status' => $status], $actor);
+            $card->save();
+
+            return $card;
         });
     }
 
