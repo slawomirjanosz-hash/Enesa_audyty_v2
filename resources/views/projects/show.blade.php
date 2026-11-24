@@ -549,6 +549,19 @@
 #pane-documents .document-action-row .field{margin:0;min-width:0;max-width:100%}
 #pane-documents .document-action-row .btn{margin-inline-start:auto}
 #pane-documents .workspace-link-form>.btn,#pane-documents .document-action-row>.btn,#pane-documents .document-section-action,#pane-documents form[enctype="multipart/form-data"]>div>.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;width:var(--document-action-width);height:var(--document-action-height);font-size:12px;white-space:nowrap;justify-self:end}
+#pane-documents .document-folder-header{display:grid;grid-template-columns:minmax(140px,1fr) minmax(500px,650px) var(--document-action-width);align-items:start;gap:12px;margin-bottom:14px}
+#pane-documents .document-folder-header h2{margin-bottom:4px;font-size:16px}
+#pane-documents .document-share-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) var(--document-action-width);align-items:end;gap:10px}
+#pane-documents .document-share-form .field{margin:0;min-width:0}
+#pane-documents .document-share-form label,#pane-documents .document-share-form input,#pane-documents .document-share-form select,#pane-documents .document-share-form .btn,#pane-documents .document-share-url,#pane-documents .project-documents-table td:first-child a{font-size:16px}
+#pane-documents .document-share-form label{margin-bottom:6px}
+#pane-documents .document-share-form input,#pane-documents .document-share-form select{width:100%;box-sizing:border-box;height:38px;padding:6px 9px}
+#pane-documents .document-share-form .btn{margin:0;width:var(--document-action-width);height:38px;white-space:nowrap}
+#pane-documents .document-folder-delete{align-self:end;justify-self:end}
+#pane-documents .document-share-links{margin:0 0 14px;padding:10px 13px;background:#f6f8f5;border-radius:8px}
+@media(max-width:1100px){#pane-documents .document-folder-header{grid-template-columns:minmax(0,1fr) var(--document-action-width)}#pane-documents .document-share-form{grid-column:1/-1;grid-row:2}#pane-documents .document-folder-delete{grid-column:2;grid-row:1}}
+@media(max-width:700px){#pane-documents .document-share-form{grid-template-columns:1fr}#pane-documents .document-share-form .btn{justify-self:end}}
+#pane-documents .document-folder-header-readonly{grid-template-columns:minmax(0,1fr)}
 @media(max-width:700px){#pane-documents .workspace-link-form,#pane-documents form[enctype="multipart/form-data"]>div{grid-template-columns:1fr}#pane-documents .document-action-row .field{flex:1 1 100%}}
 </style>
     @include('documents.external-links',['owner'=>$project,'canManageLinks'=>$canEdit,'compactHelp'=>true])
@@ -566,21 +579,23 @@
 
     @foreach($project->documentFolders as $folder)
     <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap">
+        <div class="document-folder-header {{$canEdit ? '' : 'document-folder-header-readonly'}}">
             <div><h2 style="margin-bottom:4px"><i class="ti ti-folder" style="color:var(--green)"></i> {{$folder->name}}</h2><small style="color:#66736b">{{$folder->documents->count()}} plików · {{\App\Models\Document::formatBytes((int)$folder->documents->sum('size'))}}</small></div>
-            @if($canEdit)<form method="POST" action="{{route('projects.document-folders.destroy',[$project,$folder])}}" onsubmit="return confirm('Usunąć pusty katalog i wyłączyć wszystkie jego linki?')">@csrf @method('DELETE')<button class="btn btn-red document-section-action" @disabled($folder->documents->isNotEmpty()) title="{{$folder->documents->isNotEmpty()?'Najpierw usuń dokumenty z katalogu':'Usuń katalog'}}">Usuń katalog</button></form>@endif
-        </div>
         @if($canEdit)
-        <div style="margin:14px 0;padding:13px;background:#f6f8f5;border-radius:8px">
-            <form method="POST" action="{{route('projects.document-folders.shares.store',[$project,$folder])}}" class="document-action-row">@csrf
+            <form method="POST" action="{{route('projects.document-folders.shares.store',[$project,$folder])}}" class="document-share-form">@csrf
                 <div class="field"><label>Uprawnienia linku</label><select name="access_level"><option value="view">Tylko przeglądanie</option><option value="upload">Przeglądanie i dodawanie plików</option></select></div>
                 <div class="field"><label>Ważny do (opcjonalnie)</label><input type="datetime-local" name="expires_at" min="{{now()->addMinute()->format('Y-m-d\TH:i')}}"></div>
                 <button class="btn btn-soft"><i class="ti ti-link"></i> Utwórz link</button>
             </form>
+            <form class="document-folder-delete" method="POST" action="{{route('projects.document-folders.destroy',[$project,$folder])}}" onsubmit="return confirm('Usunąć pusty katalog i wyłączyć wszystkie jego linki?')">@csrf @method('DELETE')<button class="btn btn-red document-section-action" @disabled($folder->documents->isNotEmpty()) title="{{$folder->documents->isNotEmpty()?'Najpierw usuń dokumenty z katalogu':'Usuń katalog'}}">Usuń katalog</button></form>
+        @endif
+        </div>
+        @if($canEdit && $folder->shares->isNotEmpty())
+        <div class="document-share-links">
             @foreach($folder->shares as $share)
                 @php($shareUrl = URL::signedRoute('public.project-documents.show', $share))
                 <div style="display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap;opacity:{{$share->isAvailable()?1:.55}}">
-                    <input id="share-url-{{$share->id}}" value="{{$shareUrl}}" readonly style="flex:1;min-width:260px;border:1px solid #d8d3c8;border-radius:6px;padding:7px">
+                    <input class="document-share-url" id="share-url-{{$share->id}}" value="{{$shareUrl}}" readonly style="flex:1;min-width:0;width:260px;border:1px solid #d8d3c8;border-radius:6px;padding:7px">
                     <span class="badge">{{$share->allowsUpload()?'Może dodawać':'Tylko podgląd'}}</span>
                     @if($share->expires_at)<small>do {{$share->expires_at->format('d.m.Y H:i')}}</small>@endif
                     @if($share->isAvailable())<button type="button" class="btn btn-soft" onclick="copyShareLink('share-url-{{$share->id}}',this)">Kopiuj</button><form method="POST" action="{{route('projects.document-folders.shares.revoke',[$project,$folder,$share])}}">@csrf @method('PATCH')<button class="btn btn-red">Wyłącz</button></form>@else<span class="badge badge-red">Nieaktywny</span>@endif
