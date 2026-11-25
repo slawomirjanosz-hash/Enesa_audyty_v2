@@ -103,6 +103,11 @@ class CalendarController extends Controller
         $selectedProjectIds = array_map('intval', $validated['project_ids'] ?? []);
         abort_if(array_diff($selectedProjectIds, $calendarProjects->pluck('id')->all()), 403);
         $showProjects = $request->boolean('show_projects', true);
+        if ($showProjects) {
+            foreach ($calendarProjects as $calendarProject) {
+                app(\App\Services\ProjectScheduleDelayService::class)->syncProject($calendarProject->id);
+            }
+        }
         if (! $showProjects) {
             $tasksQuery->whereNull('project_id');
         } elseif ($projectScope === 'selected') {

@@ -102,6 +102,9 @@ class ProjectController extends Controller
         $fullAccess = app(AuditorAccessService::class)->hasFullAccess($user);
         $canViewSchedule = $fullAccess || $user->canAny(['projects.schedule.view', 'projects.schedule.manage']);
         $canManageSchedule = $fullAccess || $user->can('projects.schedule.manage');
+        if ($canViewSchedule) {
+            app(\App\Services\ProjectScheduleDelayService::class)->syncProject($project->id);
+        }
         $canViewFinances = $fullAccess || $user->canAny(['projects.finances.view', 'projects.finances.manage']);
         $canViewRequirements = $fullAccess || $user->canAny(['projects.requirements.view', 'projects.requirements.manage']);
         // Price permissions are deliberately independent from operational full access.
@@ -124,6 +127,7 @@ class ProjectController extends Controller
             'kind' => $task->is_milestone ? 'milestone' : 'task', 'id' => 'task-'.$task->id, 'db_id' => $task->id, 'name' => $task->title,
             'start' => $task->start_date->format('Y-m-d'), 'end' => $task->due_date->format('Y-m-d'),
             'progress' => $task->progress, 'color' => '#7C3AED',
+            ...$task->scheduleDelayPayload(),
             'assignee' => $task->assignedUser?->name,
             'schedule_cost' => $task->schedule_cost,
             'participant_ids' => $task->participants->pluck('id')->all(),

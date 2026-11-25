@@ -9,6 +9,9 @@ stop() {
 trap stop TERM INT
 echo 'Task reminder worker started (Europe/Warsaw, 08:00–08:59).'
 while true; do
+    php artisan projects:sync-schedule-delays &
+    child=$!
+    wait "$child" || echo 'Project schedule delay check failed.' >&2
     php artisan tasks:send-overdue-reminders --scheduled &
     child=$!
     wait "$child" || echo 'Task reminder check failed; inspect task_reminders logs.' >&2

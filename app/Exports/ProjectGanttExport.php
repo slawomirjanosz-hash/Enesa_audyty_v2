@@ -20,6 +20,9 @@ class ProjectGanttExport implements FromArray, ShouldAutoSize, WithHeadings, Wit
 
     public function __construct(Project|Audit $project)
     {
+        if ($project instanceof Project) {
+            app(\App\Services\ProjectScheduleDelayService::class)->syncProject($project->id);
+        }
         $this->tasks = $project->tasks()
             ->with(['assignedUser', 'dependency'])
             ->orderBy('project_position')

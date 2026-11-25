@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Services\BoardTaskService;
+use App\Services\ProjectScheduleDelayService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,15 +18,42 @@ class Task extends Model
 
     public function save(array $options = [])
     {
-        return DB::transaction(fn () => parent::save($options));
+        return DB::transaction(function () use ($options) {
+            if ($this->project_id) {
+                DB::table('projects')->where('id', $this->project_id)->lockForUpdate()->first();
+            }
+
+            return parent::save($options);
+        }, 3);
     }
 
     protected static function booted(): void
     {
+        static::saving(function (Task $task): void {
+            if (! $task->project_id) {
+                return;
+            }
+            if (! $task->exists || $task->isDirty('depends_on_task_id')) {
+                $task->schedule_dependency_anchor = $task->depends_on_task_id
+                    ? self::where('project_id', $task->project_id)->find($task->depends_on_task_id)?->due_date
+                    : null;
+                $task->schedule_dependency_shift = 0;
+            }
+            if (! $task->exists || $task->isDirty(['progress', 'status'])) {
+                $task->schedule_completed_on = $task->scheduleIsComplete()
+                    ? ($task->schedule_completed_on ?? now('Europe/Warsaw')->startOfDay()) : null;
+            }
+        });
         static::updating(function (Task $task): void {
             $task->board_revision = (int) $task->getRawOriginal('board_revision') + 1;
         });
         static::updated(fn (Task $task) => app(BoardTaskService::class)->stageUpdated($task));
+        static::saved(function (Task $task): void {
+            if ($task->project_id && ($task->wasRecentlyCreated || $task->wasChanged(['start_date', 'due_date', 'progress', 'status', 'depends_on_task_id']))) {
+                app(ProjectScheduleDelayService::class)->syncProject($task->project_id);
+                $task->refresh();
+            }
+        });
         static::deleting(function (Task $task): void {
             BoardTask::where('stage_task_id', $task->id)->update(['stage_task_id' => null, 'stage_offset_days' => null, 'revision' => DB::raw('revision + 1')]);
             $task->dependents()->update(['depends_on_task_id' => null]);
@@ -44,6 +73,9 @@ class Task extends Model
         'schedule_cost' => 'decimal:2',
         'project_position' => 'integer',
         'is_milestone' => 'boolean',
+        'schedule_dependency_anchor' => 'date',
+        'schedule_dependency_shift' => 'integer',
+        'schedule_completed_on' => 'date',
     ];
 
     public function assignedUser(): BelongsTo
@@ -120,5 +152,28 @@ class Task extends Model
     public function scopeOverdue($query)
     {
         return $query->where('due_date', '<', now())->where('status', '!=', 'done');
+    }
+
+    public function scheduleIsComplete(): bool
+    {
+        return $this->progress >= 100 || $this->status === 'done';
+    }
+
+    public function scheduleEffectiveEnd(): ?Carbon
+    {
+        if (! $this->due_date) {
+            return null;
+        }
+        $today = Carbon::parse(now('Europe/Warsaw')->toDateString(), $this->due_date->timezone);
+        $end = $this->scheduleIsComplete() ? ($this->schedule_completed_on ?? $this->due_date) : $today;
+
+        return $end->greaterThan($this->due_date) ? $end->copy() : $this->due_date->copy();
+    }
+
+    public function scheduleDelayPayload(): array
+    {
+        $end = $this->scheduleEffectiveEnd();
+
+        return ['overdue_end' => $end?->toDateString(), 'overdue_days' => $end && $this->due_date ? (int) $this->due_date->diffInDays($end) : 0];
     }
 }

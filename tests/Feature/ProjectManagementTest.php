@@ -524,6 +524,7 @@ test('project editor changes an internal project into a client project', functio
 });
 
 test('project manager manages schedule tasks finances and requirements', function () {
+    $this->travelTo(\Carbon\Carbon::parse('2026-01-01')); // Exercise planned-date edits/imports before elapsed delays begin.
     $manager = User::factory()->create();
     $manager->assignRole('admin');
     $project = Project::create([
@@ -1212,6 +1213,7 @@ test('client card follows audit and project module visibility', function () {
 });
 
 test('gantt excel can be exported and imported into another project with dependencies', function () {
+    $this->travelTo(\Carbon\Carbon::parse('2026-01-01')); // Exercise planned-date edits/imports before elapsed delays begin.
     $manager = User::factory()->create();
     $manager->assignRole('admin');
     $source = Project::create([
@@ -1284,6 +1286,7 @@ test('gantt excel can be exported and imported into another project with depende
 });
 
 test('gantt import accepts the previous export format with dependency names', function () {
+    $this->travelTo(\Carbon\Carbon::parse('2026-01-01')); // Exercise planned-date edits/imports before elapsed delays begin.
     $manager = User::factory()->create();
     $manager->assignRole('admin');
     $project = Project::create([
@@ -1319,6 +1322,7 @@ test('gantt import accepts the previous export format with dependency names', fu
 });
 
 test('gantt import recognizes dependency column from external schedule and repairs existing tasks', function () {
+    $this->travelTo(\Carbon\Carbon::parse('2026-01-01')); // Exercise planned-date edits/imports before elapsed delays begin.
     $manager = User::factory()->create();
     $manager->assignRole('admin');
     $project = Project::create([

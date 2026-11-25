@@ -29,6 +29,7 @@ for ((i=0;i<100;i++)); do
     sleep 0.1
 done
 [[ "$ready" == true ]]
+grep -q 'projects:sync-schedule-delays' "$REMINDER_TEST_LOG"
 ! grep -q 'schedule:work\|schedule:run\|accounts:block' "$REMINDER_TEST_LOG"
 server_pid=$(<"$REMINDER_TEST_PID")
 kill -0 "$server_pid"

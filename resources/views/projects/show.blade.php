@@ -196,7 +196,7 @@
             <button type="button" class="tool-btn" id="gantt-today"><i class="ti ti-calendar-event"></i> Dzisiaj</button>
             <span class="legend" style="margin:0 0 0 auto"><span><i class="dot" style="background:#7C3AED"></i>Zadania</span><span><i class="dot" style="background:#f59e0b;transform:rotate(45deg);border-radius:1px"></i>Kamienie milowe</span><span>Linie: dziś i koniec projektu {{ $project->end_date?->format('d.m.Y') ?? '—' }}</span></span>
         </div>
-        <div class="gantt-progress-legend"><strong>Kolor według postępu:</strong><span><i style="background:#8b5cf6"></i>0–10%</span><span><i style="background:#facc15"></i>11–25%</span><span><i style="background:#fb923c"></i>26–50%</span><span><i style="background:#1d4ed8"></i>51–75%</span><span><i style="background:#60a5fa"></i>76–99%</span><span><i style="background:#22c55e"></i>100%</span></div>
+        <div class="gantt-progress-legend"><strong>Kolor według postępu:</strong><span><i style="background:#8b5cf6"></i>0–10%</span><span><i style="background:#facc15"></i>11–25%</span><span><i style="background:#fb923c"></i>26–50%</span><span><i style="background:#1d4ed8"></i>51–75%</span><span><i style="background:#60a5fa"></i>76–99%</span><span><i style="background:#22c55e"></i>100%</span><span><i style="background:#ef4444"></i>Przekroczenie terminu</span></div>
         @if($canManageSchedule)<div class="gantt-help"><strong>Obsługa:</strong> przeciągnij pasek w pionie, aby zmienić kolejność, lub w poziomie, aby przesunąć termin; przeciągnij jego krawędź, aby zmienić czas trwania; przeciągnij uchwyt postępu, aby zapisać procent wykonania.</div>@endif
         <div id="project-frappe-gantt" class="frappe-gantt-wrap"></div>
     </div>
@@ -676,6 +676,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.0/dist/frappe-gantt.min.js"></script>
 <script src="{{asset('js/project-gantt-colors.js')}}?v=1"></script>
+<script src="{{asset('js/project-gantt-delays.js')}}?v=1"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 const projectTimelineItems = @json($timelineItems);
@@ -981,7 +982,8 @@ function initProjectGantt() {
         const elapsed=Math.max(0,Math.min(100,Math.round((new Date()-new Date(rangeStart+'T00:00:00'))/total*100)));
         tasks.unshift({id:'project-range',name:'Okres projektu',start:rangeStart,end:projectEndDate,progress:elapsed,dependencies:'',custom_class:'project-range-row'});
     }
-    projectGantt = new Gantt('#project-frappe-gantt', tasks, {
+    const DelayGantt = ProjectGanttDelays.withRange(Gantt, projectTimelineItems);
+    projectGantt = new DelayGantt('#project-frappe-gantt', tasks, {
         view_mode: projectGanttMode,
         language: 'en',
         popup_trigger: 'click',
@@ -994,7 +996,8 @@ function initProjectGantt() {
             const person = source?.assignee ? '<div style="margin-top:4px">Osoba: ' + escapeProjectHtml(source.assignee) + '</div>' : '';
             const dependency = source?.dependencies ? projectTimelineItems.find(item => item.id === source.dependencies)?.name : null;
             const dates = source?.is_milestone ? localDate(task._start || task.start) : localDate(task._start || task.start) + ' – ' + localDate(task._end || task.end);
-            return '<div class="details-container"><strong>' + escapeProjectHtml(task.name) + '</strong><div>' + kind + ' · ' + task.progress + '%</div><div>' + dates + '</div>' + person + (dependency ? '<div>Zależne od: ' + escapeProjectHtml(dependency) + '</div>' : '') + '</div>';
+            const delay = Number(source?.overdue_days) > 0 ? '<div style="color:#ef4444">Przekroczenie terminu: ' + Number(source.overdue_days) + ' dni</div>' : '';
+            return '<div class="details-container"><strong>' + escapeProjectHtml(task.name) + '</strong><div>' + kind + ' · ' + task.progress + '%</div><div>' + dates + '</div>' + delay + person + (dependency ? '<div>Zależne od: ' + escapeProjectHtml(dependency) + '</div>' : '') + '</div>';
         },
         on_view_change: () => setTimeout(() => { applyGanttProgressColors(); renderGanttDateMarkers(); }, 0),
     });
@@ -1004,6 +1007,7 @@ function initProjectGantt() {
 
 function applyGanttProgressColors() {
     ProjectGanttColors.apply(document.getElementById('project-frappe-gantt'));
+    ProjectGanttDelays.draw(document.getElementById('project-frappe-gantt'), projectGantt, projectTimelineItems);
 }
 
 function ganttMarkerX(date, kind) {

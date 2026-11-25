@@ -6,7 +6,6 @@ use App\Exports\ProjectGanttExport;
 use App\Models\Project;
 use App\Models\Task;
 use App\Services\ProjectGanttImportService;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -91,7 +90,6 @@ class ProjectScheduleController extends Controller
         if (array_key_exists('depends_on_task_id', $data)) {
             $this->validateTaskDependency($project, $task, $data['depends_on_task_id']);
         }
-        $oldEnd = $task->due_date?->copy();
         $data['status'] ??= match (true) {
             $data['progress'] >= 100 => 'done',
             $data['progress'] > 0 => 'in_progress',
@@ -107,13 +105,6 @@ class ProjectScheduleController extends Controller
                 $task->participants()->sync($participants);
             }
         });
-        if ($oldEnd && $task->due_date) {
-            $shiftDays = (int) $oldEnd->diffInDays($task->due_date, false);
-            if ($shiftDays !== 0) {
-                $visited = [$task->id];
-                $this->shiftDependentTasks($project, $task, $shiftDays, $visited);
-            }
-        }
 
         if ($request->expectsJson()) {
             $task->load(['assignedUser', 'participants']);
@@ -225,12 +216,15 @@ class ProjectScheduleController extends Controller
         $project = Project::where('public_gantt_token', $token)
             ->with(['tasks.assignedUser', 'tasks.dependency'])
             ->firstOrFail();
+        app(\App\Services\ProjectScheduleDelayService::class)->syncProject($project->id);
+        $project->load(['tasks.assignedUser', 'tasks.dependency']);
         $timelineItems = $project->tasks->filter(fn ($task) => $task->start_date && $task->due_date)->map(fn ($task) => [
             'id' => 'task-'.$task->id,
             'name' => $task->title,
             'start' => $task->start_date->format('Y-m-d'),
             'end' => $task->due_date->format('Y-m-d'),
             'progress' => $task->progress,
+            ...$task->scheduleDelayPayload(),
             'dependencies' => $task->depends_on_task_id ? 'task-'.$task->depends_on_task_id : '',
             'kind' => $task->is_milestone ? 'milestone' : 'task',
             'is_milestone' => $task->is_milestone,
@@ -264,22 +258,6 @@ class ProjectScheduleController extends Controller
         }
     }
 
-    private function shiftDependentTasks(Project $project, Task $task, int $days, array &$visited): void
-    {
-        $dependents = Task::where('project_id', $project->id)->where('depends_on_task_id', $task->id)->get();
-        foreach ($dependents as $dependent) {
-            if (in_array($dependent->id, $visited, true)) {
-                continue;
-            }
-            $visited[] = $dependent->id;
-            $dependent->update([
-                'start_date' => Carbon::parse($dependent->start_date)->addDays($days),
-                'due_date' => Carbon::parse($dependent->due_date)->addDays($days),
-            ]);
-            $this->shiftDependentTasks($project, $dependent, $days, $visited);
-        }
-    }
-
     private function taskTimelinePayload(Project $project, Task $task): array
     {
         return [
@@ -290,6 +268,7 @@ class ProjectScheduleController extends Controller
             'start' => $task->start_date?->format('Y-m-d'),
             'end' => $task->due_date?->format('Y-m-d'),
             'progress' => $task->progress,
+            ...$task->scheduleDelayPayload(),
             'status' => $task->status,
             'priority' => $task->priority,
             'description' => $task->description,
