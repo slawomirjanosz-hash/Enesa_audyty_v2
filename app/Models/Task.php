@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Services\BoardTaskService;
 use App\Services\ProjectScheduleDelayService;
+use App\Services\ScheduleTaskAssignment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Task extends Model
 {
@@ -47,7 +50,11 @@ class Task extends Model
         static::updating(function (Task $task): void {
             $task->board_revision = (int) $task->getRawOriginal('board_revision') + 1;
         });
-        static::updated(fn (Task $task) => app(BoardTaskService::class)->stageUpdated($task));
+        static::created(fn (Task $task) => app(ScheduleTaskAssignment::class)->sync($task));
+        static::updated(function (Task $task): void {
+            app(BoardTaskService::class)->stageUpdated($task);
+            app(ScheduleTaskAssignment::class)->sync($task);
+        });
         static::saved(function (Task $task): void {
             if ($task->project_id && ($task->wasRecentlyCreated || $task->wasChanged(['start_date', 'due_date', 'progress', 'status', 'depends_on_task_id']))) {
                 app(ProjectScheduleDelayService::class)->syncProject($task->project_id);
@@ -55,6 +62,9 @@ class Task extends Model
             }
         });
         static::deleting(function (Task $task): void {
+            if (Schema::hasColumn('board_tasks', 'source_stage_id')) {
+                BoardTask::where('source_stage_id', $task->id)->delete();
+            }
             BoardTask::where('stage_task_id', $task->id)->update(['stage_task_id' => null, 'stage_offset_days' => null, 'revision' => DB::raw('revision + 1')]);
             $task->dependents()->update(['depends_on_task_id' => null]);
         });
@@ -81,6 +91,11 @@ class Task extends Model
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function scheduleCard(): HasOne
+    {
+        return $this->hasOne(BoardTask::class, 'source_stage_id')->withTrashed();
     }
 
     public function createdBy(): BelongsTo

@@ -10,6 +10,7 @@ use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class BoardTaskService
@@ -21,6 +22,7 @@ class BoardTaskService
             $stage = ! empty($data['stage_task_id']) ? $owner->tasks()->lockForUpdate()->findOrFail($data['stage_task_id']) : null;
             if ($card) {
                 $card = BoardTask::lockForUpdate()->findOrFail($card->id);
+                abort_if($card->source_stage_id, 403, 'Nazwę, termin i osobę odpowiedzialną zmień w etapie harmonogramu.');
                 abort_unless($card->revision === (int) $data['revision'], 409, 'Zadanie zmieniło się w międzyczasie. Odśwież tablicę.');
             }
             if (! empty($data['assigned_to']) && ! User::whereKey($data['assigned_to'])->where('is_active', true)->whereDoesntHave('roles', fn ($r) => $r->whereIn('name', ['client_admin', 'client_user']))->exists()) {
@@ -62,19 +64,21 @@ class BoardTaskService
         if (! $stage->wasChanged('due_date')) {
             return;
         }
-        BoardTask::where('stage_task_id', $stage->id)->lockForUpdate()->get()->each(function (BoardTask $card) use ($stage) {
-            if (! $stage->due_date) {
-                return;
-            } // Keep the last known date when the stage becomes undated.
-            $offset = $card->stage_offset_days;
-            if ($offset === null) {
-                $old = $stage->getRawOriginal('due_date');
-                $offset = $old && $card->due_date ? (int) Carbon::parse($old)->startOfDay()->diffInDays($card->due_date, false) : 0;
-                if (! $old && $card->due_date) {
-                    $offset = (int) $stage->due_date->diffInDays($card->due_date, false);
+        BoardTask::where('stage_task_id', $stage->id)
+            ->when(Schema::hasColumn('board_tasks', 'source_stage_id'), fn ($query) => $query->whereNull('source_stage_id'))
+            ->lockForUpdate()->get()->each(function (BoardTask $card) use ($stage) {
+                if (! $stage->due_date) {
+                    return;
+                } // Keep the last known date when the stage becomes undated.
+                $offset = $card->stage_offset_days;
+                if ($offset === null) {
+                    $old = $stage->getRawOriginal('due_date');
+                    $offset = $old && $card->due_date ? (int) Carbon::parse($old)->startOfDay()->diffInDays($card->due_date, false) : 0;
+                    if (! $old && $card->due_date) {
+                        $offset = (int) $stage->due_date->diffInDays($card->due_date, false);
+                    }
                 }
-            }
-            $card->update(['due_date' => $stage->due_date->copy()->addDays($offset), 'stage_offset_days' => $offset, 'revision' => $card->revision + 1]);
-        });
+                $card->update(['due_date' => $stage->due_date->copy()->addDays($offset), 'stage_offset_days' => $offset, 'revision' => $card->revision + 1]);
+            });
     }
 }

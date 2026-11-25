@@ -13,6 +13,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
 use App\Services\CrmTaskCreator;
+use App\Services\ProjectScheduleDelayService;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
@@ -87,7 +88,7 @@ class CalendarController extends Controller
         $showUnassigned = $scope === 'team' && $request->boolean('unassigned');
 
         $tasksQuery = Task::query()
-            ->with(['assignedUser', 'participants', 'company', 'project', 'crmOpportunity'])
+            ->with(['assignedUser', 'participants', 'company', 'project', 'crmOpportunity', 'scheduleCard.participants'])
             ->whereNotNull('due_date')
             ->whereBetween('due_date', [$gridStart->toDateString(), $gridEnd->toDateString()])
             ->orderBy('due_date')
@@ -105,7 +106,7 @@ class CalendarController extends Controller
         $showProjects = $request->boolean('show_projects', true);
         if ($showProjects) {
             foreach ($calendarProjects as $calendarProject) {
-                app(\App\Services\ProjectScheduleDelayService::class)->syncProject($calendarProject->id);
+                app(ProjectScheduleDelayService::class)->syncProject($calendarProject->id);
             }
         }
         if (! $showProjects) {
@@ -127,7 +128,8 @@ class CalendarController extends Controller
         $tasksQuery->where(function ($query) use ($calendarUserIds, $showUnassigned) {
             if ($calendarUserIds) {
                 $query->whereIn('assigned_to', $calendarUserIds)
-                    ->orWhereHas('participants', fn ($participants) => $participants->whereKey($calendarUserIds));
+                    ->orWhereHas('participants', fn ($participants) => $participants->whereKey($calendarUserIds))
+                    ->orWhereHas('scheduleCard', fn ($card) => $card->whereHas('participants', fn ($participants) => $participants->whereKey($calendarUserIds)));
             } elseif (! $showUnassigned) {
                 $query->whereNotNull('assigned_to')->orWhereHas('participants');
             }
@@ -136,7 +138,13 @@ class CalendarController extends Controller
             }
         });
 
-        $tasks = $tasksQuery->get();
+        $tasks = $tasksQuery->get()->filter(fn ($task) => ! $task->schedule_card_created || ($task->scheduleCard && ! $task->scheduleCard->trashed()));
+        $tasks->each(function (Task $task): void {
+            if ($task->scheduleCard) {
+                $task->status = $task->scheduleCard->status;
+                $task->setRelation('participants', $task->scheduleCard->participants);
+            }
+        });
         $personalTasks = BoardTask::calendarEntries()->with('assignee')
             ->whereBetween('due_date', [$gridStart->toDateString(), $gridEnd->toDateString()])
             ->where(function ($query) use ($calendarUserIds, $showUnassigned) {

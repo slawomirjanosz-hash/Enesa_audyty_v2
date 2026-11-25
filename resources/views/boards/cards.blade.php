@@ -47,7 +47,7 @@
         <div class="board-card-actions">
         @if($canStatus && count(app(\App\Services\TaskCompletionService::class)->people($crmTask ?? $card)) > 1)<small class="board-muted">Wybierz „Zrobione”, aby potwierdzić własne wykonanie.</small>@endif
         @if($canStatus)<label class="board-status-label">Status<select data-card-status aria-label="Status: {{$card->title}}">@foreach(['todo'=>'Do zrobienia','in_progress'=>'W trakcie','done'=>'Zrobione'] as $value=>$text)<option value="{{$value}}" @selected($card->status===$value)>{{$text}}</option>@endforeach</select></label>@else<span class="board-muted">{{$label}}</span>@endif
-        @if($canEditCard)<button type="button" data-board-edit data-values="{{json_encode($card->only(['id','revision','title','description','stage_task_id','assigned_to','status'])+['due_date'=>$card->due_date?->format('Y-m-d')])}}" data-update-url="{{route('board.update',$card)}}">Edytuj</button>@endif
+        @if($canEditCard && !$card->source_stage_id)<button type="button" data-board-edit data-values="{{json_encode($card->only(['id','revision','title','description','stage_task_id','assigned_to','status'])+['due_date'=>$card->due_date?->format('Y-m-d')])}}" data-update-url="{{route('board.update',$card)}}">Edytuj</button>@endif
         </div>
         @if($archivedBoard)<p class="board-muted">Zarchiwizowano: {{$card->deleted_at?->format('d.m.Y H:i')}}</p>@endif
         @if($canArchive)<button type="button" data-board-archive data-restore="{{$archivedBoard ? '1' : '0'}}" data-archive-url="{{route('board.archive',[$crmTask ? 'crm' : 'board',$card->id])}}">{{$archivedBoard ? 'Przywróć' : 'Archiwizuj'}}</button>@endif

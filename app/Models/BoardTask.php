@@ -21,7 +21,7 @@ class BoardTask extends Model
         return $query->whereNull('project_id')->whereNull('audit_id')->whereIn('calendar_kind', ['task', 'meeting']);
     }
 
-    protected $fillable = ['project_id', 'audit_id', 'stage_task_id', 'assigned_to', 'created_by', 'title', 'description', 'status', 'due_date', 'stage_offset_days', 'revision'];
+    protected $fillable = ['source_stage_id', 'project_id', 'audit_id', 'stage_task_id', 'assigned_to', 'created_by', 'title', 'description', 'status', 'due_date', 'stage_offset_days', 'revision'];
 
     protected $casts = ['completion_confirmations' => 'array', 'due_date' => 'date', 'stage_offset_days' => 'integer', 'revision' => 'integer', 'assigned_to' => 'integer'];
 

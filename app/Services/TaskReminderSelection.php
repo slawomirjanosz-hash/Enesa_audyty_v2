@@ -15,6 +15,8 @@ class TaskReminderSelection
     {
         $date = now('Europe/Warsaw')->toDateString();
         $tasks = Task::with(['company', 'assignedUser.roles', 'participants.roles', 'project.members', 'audit'])
+            ->where('schedule_card_created', false)
+            ->whereDoesntHave('scheduleCard')
             ->where('due_date', '<', $date)->where('status', '!=', 'done')->get();
         $cards = BoardTask::with(['assignee.roles', 'participants.roles', 'project.members', 'project.company', 'audit.company'])
             ->where('due_date', '<', $date)->where('status', '!=', 'done')->get();
