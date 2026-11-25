@@ -16,3 +16,13 @@
 .plant-profile-table-client{--profile-columns:28px minmax(160px,1fr) 60px minmax(130px,200px) 160px}.plant-profile-table-client .profile-responsible-cell{padding-top:7px}.plant-profile-table-client .profile-actions-cell .iso-action-btn{width:100%;text-align:center;text-decoration:none!important}
 
 .iso-help{display:inline-flex;align-items:center}.iso-help .iso-point-help{padding:0;cursor:help}.iso-help .iso-point-tooltip{font-weight:400;line-height:1.5;z-index:1000}.iso-help:hover .iso-point-tooltip,.iso-help:focus-within .iso-point-tooltip{display:block}.iso-help .iso-point-tooltip p{margin:0;font:inherit;color:inherit}.iso-help .iso-point-tooltip ul{margin:8px 0 0;padding-left:18px}.iso-help .iso-point-tooltip li{margin:4px 0}.iso-help .iso-point-tooltip strong{display:block;margin-top:8px}.iso-upload-help{position:relative}.iso-upload-help .iso-point-tooltip{top:auto;bottom:calc(100% + 7px);width:min(400px,calc(100vw - 80px));max-width:none}.iso-docs .iso-doc-box{overflow:visible}.iso-docs-head>.iso-point-title{flex:1}
+
+/* Align the profile name with the responsible person and row actions. */
+.plant-profile-table .iso-profile-number,
+.plant-profile-table .profile-identity,
+.plant-profile-table .profile-responsible-cell,
+.plant-profile-table .profile-actions-cell{align-self:center}
+.plant-profile-table .profile-identity{display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px}
+.plant-profile-table .profile-identity small{white-space:nowrap}
+.plant-profile-table .profile-status-cell>[aria-label="Status ankiety"]{align-items:center}
+.plant-profile-table .profile-status-cell>[aria-label="Status ankiety"]>strong{box-sizing:border-box;font-size:12px;line-height:1.5}
