@@ -67,7 +67,7 @@
 @php
     $previousMonth = $month->subMonth()->format('Y-m');
     $nextMonth = $month->addMonth()->format('Y-m');
-    $calendarFilterQuery = ['project_scope' => $projectScope, 'project_ids' => $selectedProjectIds, 'show_leaves' => (int)$showLeaves, 'show_sick_leave' => (int)$showSickLeave];
+    $calendarFilterQuery = ['show_projects' => (int)$showProjects, 'project_scope' => $projectScope, 'project_ids' => $selectedProjectIds, 'show_leaves' => (int)$showLeaves, 'show_sick_leave' => (int)$showSickLeave];
     $queryBase = $calendarFilterQuery + ['scope' => $scope] + ($selectedUserIds ? ['user_ids' => $selectedUserIds] : []) + ($showUnassigned ? ['unassigned' => 1] : []);
     $statusLabels = ['todo' => 'Do zrobienia', 'in_progress' => 'W trakcie', 'done' => 'Wykonane'];
 @endphp

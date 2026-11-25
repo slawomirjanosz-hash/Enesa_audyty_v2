@@ -62,6 +62,7 @@ class CalendarController extends Controller
             'project_scope' => ['nullable', 'in:all,selected'],
             'project_ids' => ['nullable', 'array', 'max:500'],
             'project_ids.*' => ['integer', 'distinct'],
+            'show_projects' => ['nullable', 'boolean'],
             'show_leaves' => ['nullable', 'boolean'],
             'show_sick_leave' => ['nullable', 'boolean'],
         ]);
@@ -101,7 +102,10 @@ class CalendarController extends Controller
         $projectScope = $validated['project_scope'] ?? 'all';
         $selectedProjectIds = array_map('intval', $validated['project_ids'] ?? []);
         abort_if(array_diff($selectedProjectIds, $calendarProjects->pluck('id')->all()), 403);
-        if ($projectScope === 'selected') {
+        $showProjects = $request->boolean('show_projects', true);
+        if (! $showProjects) {
+            $tasksQuery->whereNull('project_id');
+        } elseif ($projectScope === 'selected') {
             $tasksQuery->where(fn ($query) => $query->whereNull('project_id')->orWhereIn('project_id', $selectedProjectIds));
         }
         $showLeaves = $request->boolean('show_leaves', true);
@@ -217,7 +221,7 @@ class CalendarController extends Controller
         return view('calendar.index', compact(
             'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'hrEventsByDate', 'users',
             'scope', 'selectedUserIds', 'showUnassigned', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities',
-            'calendarProjects', 'projectsEnabled', 'projectScope', 'selectedProjectIds', 'showLeaves', 'showSickLeave', 'canViewCalendarLeaves'
+            'showProjects', 'calendarProjects', 'projectsEnabled', 'projectScope', 'selectedProjectIds', 'showLeaves', 'showSickLeave', 'canViewCalendarLeaves'
         ));
     }
 }

@@ -4,9 +4,11 @@
     <input type="hidden" name="scope" value="{{ $scope }}">
     @foreach($selectedUserIds as $id)<input type="hidden" name="user_ids[]" value="{{ $id }}">@endforeach
     @if($showUnassigned)<input type="hidden" name="unassigned" value="1">@endif
+    <input type="hidden" name="show_projects" value="0">
     @if($projectsEnabled)
+        <label class="calendar-btn"><input type="checkbox" name="show_projects" value="1" @checked($showProjects)> Projekty</label>
         <details class="calendar-people calendar-projects">
-            <summary class="calendar-btn">Projekty · {{ $projectScope === 'all' ? 'Wszystkie' : count($selectedProjectIds).' wybr.' }}</summary>
+            <summary class="calendar-btn">{{ $projectScope === 'all' ? 'Wszystkie' : count($selectedProjectIds).' wybr.' }}</summary>
             <div class="calendar-people-options">
                 <label><input type="radio" name="project_scope" value="all" @checked($projectScope === 'all')> Wszystkie projekty</label>
                 <label><input type="radio" name="project_scope" value="selected" @checked($projectScope === 'selected')> Wybrane projekty</label>

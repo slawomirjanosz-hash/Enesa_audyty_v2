@@ -163,5 +163,19 @@ test('calendar combines project selection with independent leave and sick leave 
     $this->actingAs($user)->get($url)->assertOk()->assertSee('Pokaż wszystkie osoby')
         ->assertViewHas('tasksByDate', fn ($days) => $days->flatten()->pluck('title')->all() === ['Termin FILTER-1'])
         ->assertViewHas('hrEventsByDate', fn ($days) => $days->flatten(1)->pluck('class')->all() === ['sick-leave']);
+    foreach ([0, 1] as $projects) {
+        foreach ([0, 1] as $leaves) {
+            foreach ([0, 1] as $sick) {
+                foreach (['all', 'selected'] as $selection) {
+                    $this->get(route('calendar.index', ['month' => '2026-11', 'scope' => 'team', 'show_projects' => $projects, 'project_scope' => $selection, 'project_ids' => [$project->id], 'show_leaves' => $leaves, 'show_sick_leave' => $sick]))
+                        ->assertOk()
+                        ->assertViewHas('showProjects', (bool) $projects)
+                        ->assertViewHas('selectedProjectIds', [$project->id])
+                        ->assertViewHas('tasksByDate', fn ($days) => $days->flatten()->count() === ($projects ? ($selection === 'all' ? 2 : 1) : 0))
+                        ->assertViewHas('hrEventsByDate', fn ($days) => $days->flatten(1)->count() === $leaves + $sick);
+                }
+            }
+        }
+    }
     $this->get(route('calendar.index', ['month' => '2026-11', 'project_scope' => 'selected', 'project_ids' => [999999]]))->assertForbidden();
 });
