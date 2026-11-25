@@ -36,7 +36,7 @@ class ProjectProtocolController extends Controller
         if (! empty($data['work_order_id'])) {
             $source = $this->sourceOrder($project, (int) $data['work_order_id']);
             $scope = collect($source->text_sections)->where('placement', 'before_price')
-                ->map(fn ($section) => $section['name'].": ".trim(strip_tags(str_replace(['</p>', '</li>', '<br>'], "\n", $section['content']))))
+                ->map(fn ($section) => $section['name'].': '.trim(strip_tags(str_replace(['</p>', '</li>', '<br>'], "\n", $section['content']))))
                 ->implode("\n\n");
             $protocol = new ProjectProtocol([
                 'direction' => 'supplier', 'work_order_id' => $source->id,

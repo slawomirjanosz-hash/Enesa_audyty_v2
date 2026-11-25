@@ -7,6 +7,7 @@ use App\Models\CompanySettings;
 use App\Models\Offer;
 use App\Models\Project;
 use App\Models\ProjectProtocol;
+use App\Models\ProjectWorkOrder;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
@@ -152,7 +153,7 @@ class ProjectController extends Controller
             'canViewServicePrices' => $canViewServicePrices,
             'canViewDocuments' => $canViewDocuments,
             'canViewWorkOrders' => $canViewWorkOrders, 'canManageWorkOrders' => $canManageWorkOrders,
-            'workOrders' => $canViewWorkOrders ? \App\Models\ProjectWorkOrder::where('project_id', $project->id)->latest()->get() : collect(),
+            'workOrders' => $canViewWorkOrders ? ProjectWorkOrder::where('project_id', $project->id)->latest()->get() : collect(),
             'canViewProtocols' => $canViewProtocols,
             'canManageProtocols' => $canManageProtocols,
             'protocols' => $canViewProtocols ? ProjectProtocol::where('project_id', $project->id)->latest()->get(['id', 'project_id', 'number', 'title', 'acceptance_date', 'supplier_snapshot', 'client_snapshot', 'direction', 'kind', 'outcome', 'invoice_decision', 'items', 'items_mode', 'revision', 'created_at']) : collect(),

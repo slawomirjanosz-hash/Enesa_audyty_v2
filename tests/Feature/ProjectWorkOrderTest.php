@@ -1,13 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProjectWorkOrderController;
 use App\Models\Company;
 use App\Models\CompanySettings;
 use App\Models\Offer;
 use App\Models\Project;
-use App\Models\ProjectWorkOrder;
 use App\Models\ProjectProtocol;
-use App\Models\Task;
+use App\Models\ProjectWorkOrder;
 use App\Models\User;
 use App\Services\ProjectWorkOrderDocument;
 use Spatie\Permission\Models\Permission;
@@ -149,12 +147,12 @@ test('saved templates cannot issue and a linked protocol keeps its work order re
     $this->data['is_template'] = false;
     $order = saveWorkOrder($this);
     $this->patch(route('projects.work-orders.transition', [$this->project, $order]), ['revision' => 1, 'status' => 'issued'])->assertSessionHasNoErrors();
-    $protocolData = ['revision'=>0, 'work_order_id'=>$order->id, 'supplier_company_id'=>$this->supplier->id,
-        'direction'=>'supplier', 'title'=>'Odbiór montażu', 'acceptance_date'=>null, 'kind'=>'partial', 'outcome'=>'accepted',
-        'invoice_decision'=>'no', 'description'=>'Wykonano montaż.', 'items_mode'=>'manual', 'manual_items_description'=>'Zakup i montaż'];
+    $protocolData = ['revision' => 0, 'work_order_id' => $order->id, 'supplier_company_id' => $this->supplier->id,
+        'direction' => 'supplier', 'title' => 'Odbiór montażu', 'acceptance_date' => null, 'kind' => 'partial', 'outcome' => 'accepted',
+        'invoice_decision' => 'no', 'description' => 'Wykonano montaż.', 'items_mode' => 'manual', 'manual_items_description' => 'Zakup i montaż'];
     $this->post(route('projects.protocols.store', $this->project), $protocolData)->assertSessionHasNoErrors()->assertRedirect();
     $protocol = ProjectProtocol::firstOrFail();
-    expect((int)$protocol->work_order_id)->toBe($order->id)->and($protocol->acceptance_date)->toBeNull();
-    $this->put(route('projects.protocols.update', [$this->project, $protocol]), array_replace($protocolData, ['revision'=>1,'work_order_id'=>null]))->assertSessionHasErrors('work_order_id');
-    $this->post(route('projects.protocols.store', $this->project), array_replace($protocolData, ['supplier_company_id'=>$this->customer->id]))->assertSessionHasErrors('supplier_company_id');
+    expect((int) $protocol->work_order_id)->toBe($order->id)->and($protocol->acceptance_date)->toBeNull();
+    $this->put(route('projects.protocols.update', [$this->project, $protocol]), array_replace($protocolData, ['revision' => 1, 'work_order_id' => null]))->assertSessionHasErrors('work_order_id');
+    $this->post(route('projects.protocols.store', $this->project), array_replace($protocolData, ['supplier_company_id' => $this->customer->id]))->assertSessionHasErrors('supplier_company_id');
 });

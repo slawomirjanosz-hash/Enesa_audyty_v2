@@ -59,6 +59,7 @@ use App\Http\Controllers\ProjectFinanceController;
 use App\Http\Controllers\ProjectProtocolController;
 use App\Http\Controllers\ProjectRequirementController;
 use App\Http\Controllers\ProjectScheduleController;
+use App\Http\Controllers\ProjectWorkOrderController;
 use App\Http\Controllers\PublicProjectDocumentFolderController;
 use App\Http\Controllers\PublicSurveyController;
 use App\Http\Controllers\Settings;
@@ -516,14 +517,14 @@ Route::get('/shared/project-folder/{share}/documents/{document}', [PublicProject
 
 Route::get('/public/audit-gantt/{token}', [AuditGanttShareController::class, 'show'])->middleware(['app.module:audits', 'throttle:60,1'])->name('audits.public-gantt');
 Route::prefix('projects')->name('projects.')->middleware(['auth', 'staff.role', 'app.module:projects'])->group(function () {
-    Route::get('/{project}/work-orders/create', [\App\Http\Controllers\ProjectWorkOrderController::class, 'create'])->name('work-orders.create');
-    Route::post('/{project}/work-orders', [\App\Http\Controllers\ProjectWorkOrderController::class, 'store'])->name('work-orders.store');
-    Route::get('/{project}/work-orders/{workOrder}', [\App\Http\Controllers\ProjectWorkOrderController::class, 'show'])->name('work-orders.show');
-    Route::get('/{project}/work-orders/{workOrder}/edit', [\App\Http\Controllers\ProjectWorkOrderController::class, 'edit'])->name('work-orders.edit');
-    Route::put('/{project}/work-orders/{workOrder}', [\App\Http\Controllers\ProjectWorkOrderController::class, 'update'])->name('work-orders.update');
-    Route::patch('/{project}/work-orders/{workOrder}/status', [\App\Http\Controllers\ProjectWorkOrderController::class, 'transition'])->name('work-orders.transition');
-    Route::delete('/{project}/work-orders/{workOrder}', [\App\Http\Controllers\ProjectWorkOrderController::class, 'destroy'])->name('work-orders.destroy');
-    Route::get('/{project}/work-orders/{workOrder}/document', [\App\Http\Controllers\ProjectWorkOrderController::class, 'document'])->name('work-orders.document');
+    Route::get('/{project}/work-orders/create', [ProjectWorkOrderController::class, 'create'])->name('work-orders.create');
+    Route::post('/{project}/work-orders', [ProjectWorkOrderController::class, 'store'])->name('work-orders.store');
+    Route::get('/{project}/work-orders/{workOrder}', [ProjectWorkOrderController::class, 'show'])->name('work-orders.show');
+    Route::get('/{project}/work-orders/{workOrder}/edit', [ProjectWorkOrderController::class, 'edit'])->name('work-orders.edit');
+    Route::put('/{project}/work-orders/{workOrder}', [ProjectWorkOrderController::class, 'update'])->name('work-orders.update');
+    Route::patch('/{project}/work-orders/{workOrder}/status', [ProjectWorkOrderController::class, 'transition'])->name('work-orders.transition');
+    Route::delete('/{project}/work-orders/{workOrder}', [ProjectWorkOrderController::class, 'destroy'])->name('work-orders.destroy');
+    Route::get('/{project}/work-orders/{workOrder}/document', [ProjectWorkOrderController::class, 'document'])->name('work-orders.document');
     Route::get('/{project}/protocols/create', [ProjectProtocolController::class, 'create'])->name('protocols.create');
     Route::post('/{project}/protocols', [ProjectProtocolController::class, 'store'])->name('protocols.store');
     Route::get('/{project}/protocols/{protocol}/edit', [ProjectProtocolController::class, 'edit'])->name('protocols.edit');

@@ -6,6 +6,7 @@ use App\Http\Controllers\BoardCollaborationController;
 use App\Mail\TaskAssigned;
 use App\Models\CrmOpportunity;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -43,7 +44,7 @@ class CrmTaskCreator
         if (! $canManageTeam) {
             $data['assigned_to'] = $request->user()->id;
         }
-        if (! empty($data['assigned_to']) && \App\Models\User::find($data['assigned_to'])?->hasRole('superadmin')) {
+        if (! empty($data['assigned_to']) && User::find($data['assigned_to'])?->hasRole('superadmin')) {
             throw ValidationException::withMessages(['assigned_to' => 'Wybierz pracownika.'])->errorBag($errorBag);
         }
         if (! empty($data['crm_opportunity_id']) && ! CrmOpportunity::query()
