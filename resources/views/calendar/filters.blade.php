@@ -5,7 +5,7 @@
     @foreach($selectedUserIds as $id)<input type="hidden" name="user_ids[]" value="{{ $id }}">@endforeach
     @if($showUnassigned)<input type="hidden" name="unassigned" value="1">@endif
     @if($projectsEnabled)
-        <details class="calendar-people">
+        <details class="calendar-people calendar-projects">
             <summary class="calendar-btn">Projekty · {{ $projectScope === 'all' ? 'Wszystkie' : count($selectedProjectIds).' wybr.' }}</summary>
             <div class="calendar-people-options">
                 <label><input type="radio" name="project_scope" value="all" @checked($projectScope === 'all')> Wszystkie projekty</label>

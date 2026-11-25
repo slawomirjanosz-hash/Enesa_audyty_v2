@@ -56,6 +56,10 @@
     .calendar-dot { width:8px;height:8px;border-radius:50%;display:inline-block; }
     @media(max-width:800px) { .calendar-stats{grid-template-columns:repeat(2,1fr)}.calendar-header h1{font-size:21px}.calendar-actions{width:100%}.calendar-filter{flex:1;min-width:150px} }
 .calendar-people{position:relative}.calendar-people summary{list-style:none;cursor:pointer}.calendar-people summary::-webkit-details-marker{display:none}.calendar-people-options{position:absolute;right:0;top:100%;z-index:5;min-width:min(240px,75vw);padding:10px;background:#fff;border:1px solid #e5e1d8;border-radius:8px;box-shadow:0 8px 22px #0002}.calendar-people-list{max-height:260px;overflow:auto;margin-bottom:8px}.calendar-people-list label{display:block;padding:4px}
+.calendar-projects .calendar-people-options{left:0;right:auto;width:min(360px,calc(100vw - 64px));min-width:0;box-sizing:border-box;margin-top:4px}
+.calendar-projects .calendar-people-options label{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+.calendar-projects .calendar-people-options input{flex:0 0 auto;width:auto;margin:3px 0 0}
+.calendar-projects .calendar-people-list{margin-top:8px;padding-right:6px}
 </style>
 @endpush
 
