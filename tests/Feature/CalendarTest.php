@@ -147,3 +147,21 @@ test('disabled calendar module disappears from navigation and rejects direct acc
 
     $this->actingAs($admin)->get(route('calendar.index'))->assertForbidden();
 });
+
+test('calendar combines project selection with independent leave and sick leave toggles', function () {
+    $user = User::factory()->create();
+    $user->assignRole(Role::findOrCreate('superadmin'));
+    $project = Project::create(['name' => 'Wybrany projekt', 'number' => 'FILTER-1', 'manager_id' => $user->id, 'status' => 'active']);
+    $other = Project::create(['name' => 'Drugi projekt', 'number' => 'FILTER-2', 'manager_id' => $user->id, 'status' => 'active']);
+    foreach ([$project, $other] as $item) {
+        Task::create(['title' => 'Termin '.$item->number, 'project_id' => $item->id, 'assigned_to' => $user->id, 'status' => 'todo', 'due_date' => '2026-11-25']);
+    }
+    foreach (['annual', 'sick_leave'] as $type) {
+        HrLeave::create(['user_id' => $user->id, 'type' => $type, 'approval_status' => 'approved', 'start_date' => '2026-11-25', 'end_date' => '2026-11-25', 'days' => 1]);
+    }
+    $url = route('calendar.index', ['month' => '2026-11', 'scope' => 'team', 'project_scope' => 'selected', 'project_ids' => [$project->id], 'show_leaves' => 0, 'show_sick_leave' => 1]);
+    $this->actingAs($user)->get($url)->assertOk()->assertSee('Pokaż wszystkie osoby')
+        ->assertViewHas('tasksByDate', fn ($days) => $days->flatten()->pluck('title')->all() === ['Termin FILTER-1'])
+        ->assertViewHas('hrEventsByDate', fn ($days) => $days->flatten(1)->pluck('class')->all() === ['sick-leave']);
+    $this->get(route('calendar.index', ['month' => '2026-11', 'project_scope' => 'selected', 'project_ids' => [999999]]))->assertForbidden();
+});

@@ -8,6 +8,7 @@ use App\Models\CompanySettings;
 use App\Models\CrmOpportunity;
 use App\Models\HrBusinessTrip;
 use App\Models\HrLeave;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\AuditorAccessService;
@@ -15,6 +16,7 @@ use App\Services\CrmTaskCreator;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -57,6 +59,11 @@ class CalendarController extends Controller
             'user_ids' => ['nullable', 'array'],
             'user_ids.*' => ['integer', 'distinct'],
             'unassigned' => ['nullable', 'boolean'],
+            'project_scope' => ['nullable', 'in:all,selected'],
+            'project_ids' => ['nullable', 'array', 'max:500'],
+            'project_ids.*' => ['integer', 'distinct'],
+            'show_leaves' => ['nullable', 'boolean'],
+            'show_sick_leave' => ['nullable', 'boolean'],
         ]);
 
         $month = isset($validated['month'])
@@ -88,6 +95,18 @@ class CalendarController extends Controller
 
         $crmEnabled = CompanySettings::moduleIsEnabled('crm');
         $projectsEnabled = CompanySettings::moduleIsEnabled('projects');
+        $calendarProjects = $projectsEnabled
+            ? Project::orderBy('name')->get()->filter(fn ($project) => Gate::forUser($user)->allows('view', $project))
+            : collect();
+        $projectScope = $validated['project_scope'] ?? 'all';
+        $selectedProjectIds = array_map('intval', $validated['project_ids'] ?? []);
+        abort_if(array_diff($selectedProjectIds, $calendarProjects->pluck('id')->all()), 403);
+        if ($projectScope === 'selected') {
+            $tasksQuery->where(fn ($query) => $query->whereNull('project_id')->orWhereIn('project_id', $selectedProjectIds));
+        }
+        $showLeaves = $request->boolean('show_leaves', true);
+        $showSickLeave = $request->boolean('show_sick_leave', true);
+        $canViewCalendarLeaves = CompanySettings::moduleIsEnabled('hr') && ($user->hasRole('superadmin') || $user->canAny(['system.full_access', 'hr.leaves.view']));
         if (! $crmEnabled && ! $projectsEnabled) {
             $tasksQuery->whereRaw('1 = 0');
         } elseif (! $crmEnabled) {
@@ -162,6 +181,9 @@ class CalendarController extends Controller
                 ->whereDate('end_date', '>=', $gridStart)
                 ->when($hrUserIds, fn ($query) => $query->whereIn('user_id', $hrUserIds))->get();
             foreach ($leaves as $leave) {
+                if ($leave->type === 'sick_leave' ? ! $showSickLeave : ! $showLeaves) {
+                    continue;
+                }
                 $date = CarbonImmutable::parse($leave->start_date);
                 $lastDate = CarbonImmutable::parse($leave->end_date);
                 while ($date->lte($lastDate)) {
@@ -194,7 +216,8 @@ class CalendarController extends Controller
 
         return view('calendar.index', compact(
             'month', 'gridStart', 'gridEnd', 'days', 'tasksByDate', 'hrEventsByDate', 'users',
-            'scope', 'selectedUserIds', 'showUnassigned', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities'
+            'scope', 'selectedUserIds', 'showUnassigned', 'canViewTeam', 'stats', 'personalByDate', 'canCreateCrmTasks', 'canAssignCrmTeam', 'taskUsers', 'taskCompanies', 'taskOpportunities',
+            'calendarProjects', 'projectsEnabled', 'projectScope', 'selectedProjectIds', 'showLeaves', 'showSickLeave', 'canViewCalendarLeaves'
         ));
     }
 }
