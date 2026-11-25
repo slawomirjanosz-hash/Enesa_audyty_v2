@@ -479,6 +479,9 @@
                     @if($canAccessModule('audits.passports.view'))
                     <li><a href="{{ route('energy-passports.index') }}" class="nav-link {{ request()->routeIs('energy-passports.*') ? 'active' : '' }}">Paszporty energetyczne</a></li>
                     @endif
+                </ul>
+            </li>
+            @endif
 
             @if(($appBrand?->moduleEnabled('cylinders') ?? false) && ($layoutHasFullAccess || $canAccessModule('cylinders.view')))
             <li class="nav-item nav-group {{ request()->routeIs('cylinders.*') ? 'open' : '' }}">
@@ -509,10 +512,6 @@
                 <style>.expense-nav-pulse{animation:expense-nav-pulse 1.8s ease-in-out infinite}@keyframes expense-nav-pulse{50%{opacity:.58}}@media(prefers-reduced-motion:reduce){.expense-nav-pulse{animation:none}}</style>
                 <script src="{{asset('js/expense-nav.js')}}" defer></script>
             @endonce
-            @endif
-
-                </ul>
-            </li>
             @endif
 
             @if($appModuleEnabled('crm') && ($canAccessModule('crm.view') || $layoutCanAccessCrmTasks))

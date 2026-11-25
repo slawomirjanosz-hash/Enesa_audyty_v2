@@ -17,6 +17,40 @@ beforeEach(function () {
     }
 });
 
+test('independent sidebar modules remain visible outside the audit group', function (bool $auditsEnabled) {
+    CompanySettings::create([
+        'name' => 'PRINŻ test',
+        'enabled_modules' => array_merge(['dashboard', 'expenses', 'warehouse', 'cylinders'], $auditsEnabled ? ['audits'] : []),
+    ]);
+    $user = User::factory()->create();
+    $user->assignRole('superadmin');
+    $html = $this->actingAs($user)->get(route('dashboard'))->assertOk()->getContent();
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    foreach (['expenses.index', 'warehouse.index'] as $route) {
+        expect($xpath->query('//aside[@id="sidebar"]/nav/ul/li/a[@href="'.route($route).'"]')->length)->toBe(1);
+        $this->get(route($route))->assertOk();
+    }
+    expect($xpath->query('//aside[@id="sidebar"]/nav/ul/li/ul[@id="cylinders-navigation"]')->length)->toBe(1);
+    $this->get(route('cylinders.index'))->assertOk();
+})->with([false, true]);
+
+test('invoice menu respects its own permissions independently of audit access', function () {
+    CompanySettings::create(['name' => 'PRINŻ test', 'enabled_modules' => ['dashboard', 'expenses', 'audits']]);
+    $role = Role::findOrCreate('invoice_menu_test');
+    $role->givePermissionTo(Permission::findOrCreate('dashboard.view'));
+    $user = User::factory()->create()->assignRole($role);
+    $this->actingAs($user)->get(route('dashboard'))->assertOk()->assertDontSee('Rozliczenia faktur');
+    $this->get(route('expenses.index'))->assertForbidden();
+    $user->givePermissionTo(Permission::findOrCreate('expenses.use'));
+    $this->get(route('dashboard'))->assertOk()->assertSee('Rozliczenia faktur')->assertDontSee('System Audytów');
+    $this->get(route('expenses.index'))->assertOk();
+    CompanySettings::firstOrFail()->update(['enabled_modules' => ['dashboard', 'audits']]);
+    $this->get(route('dashboard'))->assertOk()->assertDontSee('Rozliczenia faktur');
+    $this->get(route('expenses.index'))->assertForbidden();
+});
+
 test('superadmin configures modules for the whole application in company settings', function () {
     $superadmin = User::factory()->create();
     $superadmin->assignRole('superadmin');
